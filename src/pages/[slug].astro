@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getStaticPage, getStaticPages } from '../utils/api';
+import { marked } from 'marked';
+
+// Récupérer la page statique spécifique
+const slug = Astro.params.slug;
+const page = await getStaticPage(slug);
+
+// Convertir le contenu Markdown en HTML
+const contentHtml = page ? marked(page.content) : '';
+
+// Vérifier si c'est une page connue (à propos, contact, etc.)
+const staticPages = await getStaticPages();
+const isKnownPage = staticPages.some(p => p.slug === slug);
+---
+
+<BaseLayout title={page?.title || 'Page non trouvée'}>
+    <section>
+        {page ? (
+            <div class="max-w-4xl mx-auto">
+                {page.header_image_url && (
+                    <img src={page.header_image_url} alt={page.title} class="w-full h-64 object-cover rounded-lg mb-6">
+                )}
+                
+                <h1 class="text-4xl font-bold mb-6">{page.title}</h1>
+                
+                <div class="prose max-w-none">
+                    <set:html>{contentHtml}</set:html>
+                </div>
+            </div>
+        ) : (
+            <div class="text-center py-12">
+                <h1 class="text-3xl font-bold mb-4">Page non trouvée</h1>
+                <p class="text-gray-600">La page que vous recherchez n'existe pas.</p>
+                <a href="/" class="text-blue-600 hover:underline mt-4 inline-block">← Retour à l'accueil</a>
+            </div>
+        )}
+    </section>
+</BaseLayout>

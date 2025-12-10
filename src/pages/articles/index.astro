@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getBlogPosts } from '../../utils/api';
+
+// Récupérer tous les articles de blog
+const blogPosts = await getBlogPosts();
+---
+
+<BaseLayout title="Articles">
+    <section>
+        <h1 class="text-3xl font-bold mb-6">Nos articles</h1>
+        
+        {blogPosts.length > 0 ? (
+            <div class="grid md:grid-cols-2 gap-6">
+                {blogPosts.map((post) => (
+                    <article key={post.id} class="bg-white p-6 rounded-lg shadow-md">
+                        {post.header_image_url && (
+                            <img src={post.header_image_url} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4">
+                        )}
+                        <h2 class="text-2xl font-semibold mb-2">{post.title}</h2>
+                        <p class="text-gray-600 text-sm mb-2">
+                            Par {post.author} • {new Date(post.date).toLocaleDateString('fr-FR')}
+                        </p>
+                        <p class="text-gray-600 mb-4">{post.introduction}</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {post.categories.map((category, index) => (
+                                <span key={index} class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-sm">
+                                    {category}
+                                </span>
+                            ))}
+                        </div>
+                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire plus</a>
+                    </article>
+                ))}
+            </div>
+        ) : (
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-gray-600">Aucun article trouvé.</p>
+            </div>
+        )}
+    </section>
+</BaseLayout>

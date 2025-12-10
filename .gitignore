@@ -1,0 +1,26 @@
+# Fichiers de dépendances
+node_modules/
+
+# Fichiers de build
+dist/
+build/
+
+# Fichiers de cache
+.cache/
+
+# Fichiers de configuration IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Fichiers de logs
+*.log
+
+# Fichiers de configuration locale
+.env.local
+
+# Fichiers de configuration Railway
+.railway/
+
+# Fichiers de build Docker
+docker-compose.override.yml

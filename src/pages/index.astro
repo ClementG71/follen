@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getHomepage, getBlogPosts } from '../utils/api';
+
+// Récupérer les données depuis Wagtail
+const homepage = await getHomepage();
+const blogPosts = await getBlogPosts();
+---
+
+<BaseLayout title="Accueil">
+    <section class="text-center py-12">
+        {homepage ? (
+            <>
+                <h1 class="text-4xl font-bold mb-4">{homepage.hero.title || 'Bienvenue sur mon blog'}</h1>
+                <p class="text-xl mb-8">{homepage.hero.subtitle || 'Découvrez des articles passionnants sur divers sujets'}</p>
+                
+                {homepage.hero.cta_text && homepage.hero.cta_link && (
+                    <a href={homepage.hero.cta_link} class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                        {homepage.hero.cta_text}
+                    </a>
+                )}
+            </>
+        ) : (
+            <>
+                <h1 class="text-4xl font-bold mb-4">Bienvenue sur mon blog</h1>
+                <p class="text-xl mb-8">Découvrez des articles passionnants sur divers sujets</p>
+            </>
+        )}
+        
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+            {homepage?.features?.map((feature, index) => (
+                <div key={index} class="bg-white p-6 rounded-lg shadow-md">
+                    {feature.icon && <div class="text-4xl mb-4">{feature.icon}</div>}
+                    <h2 class="text-2xl font-semibold mb-2">{feature.title}</h2>
+                    <p class="text-gray-600">{feature.description}</p>
+                </div>
+            )) || [
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold mb-2">Derniers articles</h2>
+                    <p class="text-gray-600">Consultez nos articles récents</p>
+                </div>,
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold mb-2">À propos</h2>
+                    <p class="text-gray-600">En savoir plus sur nous</p>
+                </div>,
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold mb-2">Contact</h2>
+                    <p class="text-gray-600">N'hésitez pas à nous contacter</p>
+                </div>
+            ]}
+        </div>
+    </section>
+    
+    {blogPosts.length > 0 && (
+        <section class="mt-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">Derniers articles</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                {blogPosts.slice(0, 3).map((post) => (
+                    <article key={post.id} class="bg-white p-6 rounded-lg shadow-md">
+                        {post.header_image_url && (
+                            <img src={post.header_image_url} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4">
+                        )}
+                        <h3 class="text-xl font-semibold mb-2">{post.title}</h3>
+                        <p class="text-gray-600 text-sm mb-2">
+                            Par {post.author} • {new Date(post.date).toLocaleDateString('fr-FR')}
+                        </p>
+                        <p class="text-gray-600 mb-4">{post.introduction}</p>
+                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire plus</a>
+                    </article>
+                ))}
+            </div>
+        </section>
+    )}
+</BaseLayout>
