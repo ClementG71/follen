@@ -1,9 +1,13 @@
+---
+const { title = 'Follen' } = Astro.props;
+---
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title || 'Follen'}</title>
+    <title>{title}</title>
 </head>
 <body class="font-sans">
     <header class="bg-blue-600 text-white p-4">
