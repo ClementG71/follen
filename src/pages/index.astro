@@ -7,12 +7,12 @@ const homepage = await getHomepage();
 const blogPosts = await getBlogPosts();
 ---
 
-<BaseLayout title="Accueil">
+<BaseLayout title="Accueil Follen">
     <section class="text-center py-12">
         {homepage ? (
             <>
-                <h1 class="text-4xl font-bold mb-4">{homepage.hero.title || 'Bienvenue sur mon blog'}</h1>
-                <p class="text-xl mb-8">{homepage.hero.subtitle || 'Découvrez des articles passionnants sur divers sujets'}</p>
+                <h1 class="text-4xl font-bold mb-4">{homepage.hero.title || 'Bienvenue sur Follen'}</h1>
+                <p class="text-xl mb-8">{homepage.hero.subtitle || 'Découvrez des articles Follen passionnants sur divers sujets'}</p>
                 
                 {homepage.hero.cta_text && homepage.hero.cta_link && (
                     <a href={homepage.hero.cta_link} class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
@@ -36,16 +36,16 @@ const blogPosts = await getBlogPosts();
                 </div>
             )) || [
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">Derniers articles</h2>
-                    <p class="text-gray-600">Consultez nos articles récents</p>
+                    <h2 class="text-2xl font-semibold mb-2">Derniers articles Follen</h2>
+                    <p class="text-gray-600">Consultez nos articles Follen récents</p>
                 </div>,
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">À propos</h2>
-                    <p class="text-gray-600">En savoir plus sur nous</p>
+                    <h2 class="text-2xl font-semibold mb-2">À propos de Follen</h2>
+                    <p class="text-gray-600">En savoir plus sur Follen</p>
                 </div>,
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">Contact</h2>
-                    <p class="text-gray-600">N'hésitez pas à nous contacter</p>
+                    <h2 class="text-2xl font-semibold mb-2">Contact Follen</h2>
+                    <p class="text-gray-600">N'hésitez pas à nous contacter via Follen</p>
                 </div>
             ]}
         </div>
@@ -53,7 +53,7 @@ const blogPosts = await getBlogPosts();
     
     {blogPosts.length > 0 && (
         <section class="mt-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Derniers articles</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center">Derniers articles Follen</h2>
             <div class="grid md:grid-cols-3 gap-6">
                 {blogPosts.slice(0, 3).map((post) => (
                     <article key={post.id} class="bg-white p-6 rounded-lg shadow-md">
@@ -65,7 +65,7 @@ const blogPosts = await getBlogPosts();
                             Par {post.author} • {new Date(post.date).toLocaleDateString('fr-FR')}
                         </p>
                         <p class="text-gray-600 mb-4">{post.introduction}</p>
-                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire plus</a>
+                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire l'article Follen</a>
                     </article>
                 ))}
             </div>

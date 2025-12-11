@@ -1,8 +1,8 @@
-# Frontend Astro pour Mon Blog
+# Follen - Frontend Astro
 
 Frontend moderne pour un blog utilisant Astro et Tailwind CSS, connecté à un backend Wagtail CMS.
 
-## Déploiement sur Railway
+## Déploiement de Follen sur Railway
 
 1. **Créer un nouveau projet Railway**
 2. **Connecter ce dépôt GitHub**

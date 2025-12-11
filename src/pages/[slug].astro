@@ -15,7 +15,7 @@ const staticPages = await getStaticPages();
 const isKnownPage = staticPages.some(p => p.slug === slug);
 ---
 
-<BaseLayout title={page?.title || 'Page non trouvée'}>
+<BaseLayout title={page?.title || 'Page Follen non trouvée'}>
     <section>
         {page ? (
             <div class="max-w-4xl mx-auto">
@@ -23,7 +23,7 @@ const isKnownPage = staticPages.some(p => p.slug === slug);
                     <img src={page.header_image_url} alt={page.title} class="w-full h-64 object-cover rounded-lg mb-6">
                 )}
                 
-                <h1 class="text-4xl font-bold mb-6">{page.title}</h1>
+                <h1 class="text-4xl font-bold mb-6">Follen - {page.title}</h1>
                 
                 <div class="prose max-w-none">
                     <set:html>{contentHtml}</set:html>
@@ -31,9 +31,9 @@ const isKnownPage = staticPages.some(p => p.slug === slug);
             </div>
         ) : (
             <div class="text-center py-12">
-                <h1 class="text-3xl font-bold mb-4">Page non trouvée</h1>
-                <p class="text-gray-600">La page que vous recherchez n'existe pas.</p>
-                <a href="/" class="text-blue-600 hover:underline mt-4 inline-block">← Retour à l'accueil</a>
+                <h1 class="text-3xl font-bold mb-4">Page Follen non trouvée</h1>
+                <p class="text-gray-600">La page Follen que vous recherchez n'existe pas.</p>
+                <a href="/" class="text-blue-600 hover:underline mt-4 inline-block">← Retour à l'accueil Follen</a>
             </div>
         )}
     </section>

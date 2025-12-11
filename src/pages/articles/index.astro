@@ -6,9 +6,9 @@ import { getBlogPosts } from '../../utils/api';
 const blogPosts = await getBlogPosts();
 ---
 
-<BaseLayout title="Articles">
+<BaseLayout title="Articles Follen">
     <section>
-        <h1 class="text-3xl font-bold mb-6">Nos articles</h1>
+        <h1 class="text-3xl font-bold mb-6">Articles Follen</h1>
         
         {blogPosts.length > 0 ? (
             <div class="grid md:grid-cols-2 gap-6">
@@ -29,7 +29,7 @@ const blogPosts = await getBlogPosts();
                                 </span>
                             ))}
                         </div>
-                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire plus</a>
+                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire l'article Follen</a>
                     </article>
                 ))}
             </div>

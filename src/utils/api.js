@@ -5,6 +5,12 @@ const API_BASE_URL = import.meta.env.API_BASE_URL
         ? 'https://votre-domaine-wagtail.railway.app' 
         : 'http://localhost:8000';
 
+// Fonction pour gérer les erreurs API
+function handleApiError(error, fallback = null) {
+  console.error('API Error:', error);
+  return fallback;
+}
+
 // Fonction pour récupérer la page d'accueil
 export async function getHomepage() {
     try {
@@ -14,8 +20,7 @@ export async function getHomepage() {
         }
         return await response.json();
     } catch (error) {
-        console.error('Error fetching homepage:', error);
-        return null;
+        return handleApiError(error, null);
     }
 }
 
@@ -28,8 +33,7 @@ export async function getBlogPosts() {
         }
         return await response.json();
     } catch (error) {
-        console.error('Error fetching blog posts:', error);
-        return [];
+        return handleApiError(error, []);
     }
 }
 
@@ -42,8 +46,7 @@ export async function getBlogPost(slug) {
         }
         return await response.json();
     } catch (error) {
-        console.error(`Error fetching blog post ${slug}:`, error);
-        return null;
+        return handleApiError(error, null);
     }
 }
 
@@ -56,8 +59,7 @@ export async function getStaticPages() {
         }
         return await response.json();
     } catch (error) {
-        console.error('Error fetching static pages:', error);
-        return [];
+        return handleApiError(error, []);
     }
 }
 
@@ -70,7 +72,6 @@ export async function getStaticPage(slug) {
         }
         return await response.json();
     } catch (error) {
-        console.error(`Error fetching static page ${slug}:`, error);
-        return null;
+        return handleApiError(error, null);
     }
 }
