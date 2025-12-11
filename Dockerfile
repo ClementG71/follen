@@ -1,7 +1,7 @@
-# Dockerfile pour Astro frontend sur Railway
+# Dockerfile pour Follen (Astro frontend) sur Railway
 
-# Utiliser une image Node.js officielle
-FROM node:18-alpine
+# Utiliser une image Node.js officielle (version 20 pour la compatibilité avec marked@17)
+FROM node:20-alpine
 
 # Définir le répertoire de travail
 WORKDIR /app
