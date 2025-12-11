@@ -24,5 +24,5 @@ RUN npm install -g serve
 # Exposer le port (Railway utilise la variable PORT)
 EXPOSE $PORT
 
-# Commande pour démarrer l'application
-CMD ["serve", "-s", "dist", "-l", "$PORT"]
+# Commande pour démarrer l'application en mode serveur
+CMD ["node", "./dist/server/entry.mjs"]
