@@ -1,11 +1,19 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getBlogPost } from '../../../utils/api';
+import { getBlogPost, getBlogPosts } from '../../../utils/api';
 import { marked } from 'marked';
 
+// Fonction pour générer les chemins statiques
+export async function getStaticPaths() {
+  const posts = await getBlogPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
 // Récupérer l'article spécifique
-const slug = Astro.params.slug;
-const post = await getBlogPost(slug);
+const { post } = Astro.props;
 
 // Convertir le contenu Markdown en HTML
 const contentHtml = post ? marked(post.body) : '';
