@@ -6,8 +6,6 @@ const RAW_API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL
                  || process.env.API_BASE_URL
                  || 'https://maen.tondomaine.com/api/v2';
 
-console.log('[Wagtail Config] Resolved API URL:', RAW_API_URL);
-
 // Nettoyage de l'URL pour éviter les double slashs à la fin
 const API_URL = RAW_API_URL.replace(/\/+$/, '');
 
@@ -31,21 +29,17 @@ async function fetchWagtail(endpoint, params = {}) {
     }
   });
   
-  console.log(`[Wagtail Client] Fetching: ${url.toString()}`);
-
   try {
     const res = await fetch(url.toString());
     
     if (!res.ok) {
-      console.error(`[Wagtail Client] Error ${res.status}: ${res.statusText} -> ${url}`);
+      console.error(`Wagtail API Error (${res.status}): ${res.statusText}`);
       return null;
     }
     
-    const json = await res.json();
-    console.log(`[Wagtail Client] Success: ${json.items?.length || 0} items found`);
-    return json;
+    return await res.json();
   } catch (error) {
-    console.error(`[Wagtail Client] Network Error calling ${url}:`, error);
+    console.error(`Network Error calling Wagtail API:`, error);
     return null;
   }
 }
@@ -54,44 +48,31 @@ async function fetchWagtail(endpoint, params = {}) {
  * Récupérer la page d'accueil
  */
 export async function getHomePage() {
-  console.log('[Wagtail Client] getHomePage called');
-
-  // Stratégie 1 : Chercher par slug 'accueil' (SANS CHAMPS pour tester)
+  // Stratégie 1 : Chercher par slug 'accueil'
+  // TODO: Décommenter 'fields' une fois que 'api_fields' est configuré dans le backend Wagtail
   let data = await fetchWagtail('/pages/', {
-    slug: 'accueil'
-    // fields retiré pour debug
+    slug: 'accueil',
+    // fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
   });
   
-  if (data?.items?.length > 0) {
-    console.log('[Wagtail Client] Strategy 1 (slug=accueil) SUCCESS');
-    return data.items[0];
-  }
+  if (data?.items?.length > 0) return data.items[0];
 
   // Stratégie 2 : Chercher par slug 'home'
   data = await fetchWagtail('/pages/', {
-    slug: 'home'
-    // fields retiré pour debug
+    slug: 'home',
+    // fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
   });
   
-  if (data?.items?.length > 0) {
-    console.log('[Wagtail Client] Strategy 2 (slug=home) SUCCESS');
-    return data.items[0];
-  }
+  if (data?.items?.length > 0) return data.items[0];
 
   // Stratégie 3 : Chercher par type
   data = await fetchWagtail('/pages/', {
     type: 'blog.HomePage',
     limit: '1'
-    // fields retiré pour debug
+    // fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
   });
 
-  if (data?.items?.length > 0) {
-    console.log('[Wagtail Client] Strategy 3 (type=blog.HomePage) SUCCESS');
-    return data.items[0];
-  }
-
-  console.warn('[Wagtail Client] All strategies FAILED to find homepage');
-  return null;
+  return data?.items?.[0] || null;
 }
 
 /**
@@ -102,7 +83,7 @@ export async function getHomePage() {
 export async function getBlogPosts(limit = 10, offset = 0) {
   const data = await fetchWagtail('/pages/', {
     type: 'blog.BlogPage',
-    fields: 'date,author,introduction,categories,header_image,header_image_thumbnail',
+    // fields: 'date,author,introduction,categories,header_image,header_image_thumbnail',
     order: '-date',
     limit: limit.toString(),
     offset: offset.toString()
@@ -119,7 +100,7 @@ export async function getBlogPostBySlug(slug) {
   const data = await fetchWagtail('/pages/', {
     type: 'blog.BlogPage',
     slug: slug,
-    fields: 'date,author,introduction,body,categories,header_image,header_image_large'
+    // fields: 'date,author,introduction,body,categories,header_image,header_image_large'
   });
   
   return data?.items?.[0] || null;
@@ -133,7 +114,7 @@ export async function getStaticPageBySlug(slug) {
   const data = await fetchWagtail('/pages/', {
     type: 'blog.StaticPage',
     slug: slug,
-    fields: 'content,header_image'
+    // fields: 'content,header_image'
   });
   
   return data?.items?.[0] || null;
@@ -145,7 +126,7 @@ export async function getStaticPageBySlug(slug) {
 export async function getMenuPages() {
   const data = await fetchWagtail('/pages/', {
     show_in_menus: 'true',
-    fields: 'slug,title'
+    fields: 'slug,title' // Ces champs sont standards donc safe
   });
   
   return data?.items || [];
