@@ -39,12 +39,30 @@ async function fetchWagtail(endpoint, params = {}) {
  * Récupérer la page d'accueil
  */
 export async function getHomePage() {
-  const data = await fetchWagtail('/pages/', {
+  // Stratégie 1 : Chercher par slug 'accueil' (votre configuration actuelle)
+  let data = await fetchWagtail('/pages/', {
+    slug: 'accueil',
+    fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
+  });
+  
+  if (data?.items?.length > 0) return data.items[0];
+
+  // Stratégie 2 : Chercher par slug 'home' (standard Wagtail)
+  data = await fetchWagtail('/pages/', {
+    slug: 'home',
+    fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
+  });
+  
+  if (data?.items?.length > 0) return data.items[0];
+
+  // Stratégie 3 : Chercher par type (si le slug a changé)
+  // On essaie les deux types courants
+  data = await fetchWagtail('/pages/', {
     type: 'blog.HomePage',
     fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features',
     limit: '1'
   });
-  
+
   return data?.items?.[0] || null;
 }
 
@@ -104,4 +122,3 @@ export async function getMenuPages() {
   
   return data?.items || [];
 }
-
