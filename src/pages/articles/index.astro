@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getBlogPosts } from '../../utils/api';
+import { getBlogPosts } from '../../lib/wagtail';
 
 // Récupérer tous les articles de blog
-const blogPosts = await getBlogPosts();
+const blogPosts = await getBlogPosts(20); // Limite augmentée
 ---
 
 <BaseLayout title="Articles Follen">
@@ -14,8 +14,8 @@ const blogPosts = await getBlogPosts();
             <div class="grid md:grid-cols-2 gap-6">
                 {blogPosts.map((post) => (
                     <article key={post.id} class="bg-white p-6 rounded-lg shadow-md">
-                        {post.header_image_url && (
-                            <img src={post.header_image_url} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4">
+                        {post.header_image_thumbnail && (
+                            <img src={post.header_image_thumbnail} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4">
                         )}
                         <h2 class="text-2xl font-semibold mb-2">{post.title}</h2>
                         <p class="text-gray-600 text-sm mb-2">
@@ -23,13 +23,14 @@ const blogPosts = await getBlogPosts();
                         </p>
                         <p class="text-gray-600 mb-4">{post.introduction}</p>
                         <div class="flex flex-wrap gap-2 mb-4">
+                            {/* Les catégories peuvent être des objets {name, slug} ou strings selon l'API */}
                             {post.categories.map((category, index) => (
                                 <span key={index} class="bg-gray-200 text-gray-700 px-2 py-1 rounded text-sm">
-                                    {category}
+                                    {typeof category === 'string' ? category : category.name}
                                 </span>
                             ))}
                         </div>
-                        <a href={`/articles/${post.slug}`} class="text-blue-600 hover:underline">Lire l'article Follen</a>
+                        <a href={`/articles/${post.meta.slug}`} class="text-blue-600 hover:underline">Lire l'article Follen</a>
                     </article>
                 ))}
             </div>

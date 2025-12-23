@@ -1,32 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getStaticPage, getStaticPages } from '../utils/api';
-import { marked } from 'marked';
+import { getStaticPageBySlug } from '../lib/wagtail';
 
 // Récupérer la page statique spécifique
-const slug = Astro.params.slug;
-const page = await getStaticPage(slug);
+const { slug } = Astro.params;
+const page = await getStaticPageBySlug(slug);
 
-// Convertir le contenu Markdown en HTML
-const contentHtml = page ? marked(page.content) : '';
-
-// Vérifier si c'est une page connue (à propos, contact, etc.)
-const staticPages = await getStaticPages();
-const isKnownPage = staticPages.some(p => p.slug === slug);
+// Si la page n'est pas trouvée, on pourrait rediriger vers 404
+// if (!page) return Astro.redirect('/404');
 ---
 
 <BaseLayout title={page?.title || 'Page Follen non trouvée'}>
     <section>
         {page ? (
             <div class="max-w-4xl mx-auto">
-                {page.header_image_url && (
-                    <img src={page.header_image_url} alt={page.title} class="w-full h-64 object-cover rounded-lg mb-6">
+                {page.header_image && page.header_image.meta && (
+                    <img src={page.header_image.meta.download_url} alt={page.title} class="w-full h-64 object-cover rounded-lg mb-6">
                 )}
                 
-                <h1 class="text-4xl font-bold mb-6">Follen - {page.title}</h1>
+                <h1 class="text-4xl font-bold mb-6">{page.title}</h1>
                 
                 <div class="prose max-w-none">
-                    <set:html>{contentHtml}</set:html>
+                    <set:html>{page.content}</set:html>
                 </div>
             </div>
         ) : (

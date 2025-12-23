@@ -1,10 +1,39 @@
 ---
+import { getMenuPages } from '../lib/wagtail';
+
 const { 
     title = 'Follen', 
     description = 'Blog moderne propulsé par Follen - Découvrez des articles passionnants'
 } = Astro.props;
 
 const currentYear = new Date().getFullYear();
+
+// Récupération du menu dynamique
+let menuItems = [];
+try {
+    menuItems = await getMenuPages();
+} catch (e) {
+    console.error("Erreur chargement menu:", e);
+}
+
+// Menu par défaut si l'API échoue ou est vide
+if (menuItems.length === 0) {
+    menuItems = [
+        { title: 'Accueil', meta: { slug: '' }, url: '/' }, // Cas spécial pour l'accueil
+        { title: 'Articles', meta: { slug: 'articles' }, url: '/articles' }
+    ];
+} else {
+    // Normalisation des URLs
+    menuItems = menuItems.map(item => ({
+        ...item,
+        url: item.meta.slug === 'home' ? '/' : `/${item.meta.slug}`
+    }));
+    
+    // Ajout manuel de la page articles si elle n'est pas gérée comme une page CMS
+    if (!menuItems.some(i => i.url === '/articles')) {
+        menuItems.push({ title: 'Articles', url: '/articles' });
+    }
+}
 ---
 
 <!DOCTYPE html>
@@ -35,8 +64,13 @@ const currentYear = new Date().getFullYear();
             <a href="/" class="text-xl font-bold hover:text-blue-200 transition-colors">Follen</a>
             <div class="space-x-4">
                 <a href="/" class="hover:underline hover:text-blue-200 transition-colors">Accueil</a>
-                <a href="/articles" class="hover:underline hover:text-blue-200 transition-colors">Articles</a>
-                <a href="/a-propos" class="hover:underline hover:text-blue-200 transition-colors">À propos</a>
+                {menuItems.map(item => (
+                    item.url !== '/' && (
+                        <a href={item.url} class="hover:underline hover:text-blue-200 transition-colors">
+                            {item.title}
+                        </a>
+                    )
+                ))}
             </div>
         </nav>
     </header>

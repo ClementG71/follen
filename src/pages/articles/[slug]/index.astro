@@ -1,27 +1,25 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getBlogPost } from '../../../utils/api';
-import { marked } from 'marked';
+import { getBlogPostBySlug } from '../../../lib/wagtail';
 
 // Récupérer le slug depuis les params
-const slug = Astro.params.slug;
+const { slug } = Astro.params;
 
 // Récupérer l'article spécifique depuis l'API
-const post = await getBlogPost(slug);
+const post = await getBlogPostBySlug(slug);
 
-// Convertir le contenu Markdown en HTML
-const contentHtml = post ? marked(post.body) : '';
+// Si l'article n'existe pas, redirection ou affichage d'erreur géré plus bas
 ---
 
 <BaseLayout title={post?.title || 'Article Follen non trouvé'}>
     <section>
         {post ? (
             <article class="max-w-4xl mx-auto">
-                {post.header_image_url && (
-                    <img src={post.header_image_url} alt={post.title} class="w-full h-64 object-cover rounded-lg mb-6">
+                {post.header_image_large && (
+                    <img src={post.header_image_large} alt={post.title} class="w-full h-64 object-cover rounded-lg mb-6">
                 )}
                 
-                <h1 class="text-4xl font-bold mb-4">Follen - {post.title}</h1>
+                <h1 class="text-4xl font-bold mb-4">{post.title}</h1>
                 
                 <div class="flex flex-wrap gap-4 text-gray-600 text-sm mb-6">
                     <span>Par {post.author}</span>
@@ -32,13 +30,14 @@ const contentHtml = post ? marked(post.body) : '';
                 <div class="flex flex-wrap gap-2 mb-6">
                     {post.categories.map((category, index) => (
                         <span key={index} class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                            {category}
+                            {typeof category === 'string' ? category : category.name}
                         </span>
                     ))}
                 </div>
                 
                 <div class="prose max-w-none mb-8">
-                    <set:html>{contentHtml}</set:html>
+                    {/* Le body est du HTML riche venant de Wagtail */}
+                    <set:html>{post.body}</set:html>
                 </div>
                 
                 <div class="mt-8 p-4 bg-gray-50 rounded-lg">
