@@ -56,10 +56,10 @@ async function fetchWagtail(endpoint, params = {}) {
 export async function getHomePage() {
   console.log('[Wagtail Client] getHomePage called');
 
-  // Stratégie 1 : Chercher par slug 'accueil'
+  // Stratégie 1 : Chercher par slug 'accueil' (SANS CHAMPS pour tester)
   let data = await fetchWagtail('/pages/', {
-    slug: 'accueil',
-    fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
+    slug: 'accueil'
+    // fields retiré pour debug
   });
   
   if (data?.items?.length > 0) {
@@ -69,8 +69,8 @@ export async function getHomePage() {
 
   // Stratégie 2 : Chercher par slug 'home'
   data = await fetchWagtail('/pages/', {
-    slug: 'home',
-    fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
+    slug: 'home'
+    // fields retiré pour debug
   });
   
   if (data?.items?.length > 0) {
@@ -81,8 +81,8 @@ export async function getHomePage() {
   // Stratégie 3 : Chercher par type
   data = await fetchWagtail('/pages/', {
     type: 'blog.HomePage',
-    fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features',
     limit: '1'
+    // fields retiré pour debug
   });
 
   if (data?.items?.length > 0) {
