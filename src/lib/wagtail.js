@@ -6,6 +6,8 @@ const RAW_API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL
                  || process.env.API_BASE_URL
                  || 'https://maen.tondomaine.com/api/v2';
 
+console.log('[Wagtail Config] Resolved API URL:', RAW_API_URL);
+
 // Nettoyage de l'URL pour éviter les double slashs à la fin
 const API_URL = RAW_API_URL.replace(/\/+$/, '');
 
@@ -29,17 +31,21 @@ async function fetchWagtail(endpoint, params = {}) {
     }
   });
   
+  console.log(`[Wagtail Client] Fetching: ${url.toString()}`);
+
   try {
     const res = await fetch(url.toString());
     
     if (!res.ok) {
-      console.error(`Wagtail API Error (${res.status}): ${res.statusText} -> ${url}`);
+      console.error(`[Wagtail Client] Error ${res.status}: ${res.statusText} -> ${url}`);
       return null;
     }
     
-    return await res.json();
+    const json = await res.json();
+    console.log(`[Wagtail Client] Success: ${json.items?.length || 0} items found`);
+    return json;
   } catch (error) {
-    console.error(`Network Error calling ${url}:`, error);
+    console.error(`[Wagtail Client] Network Error calling ${url}:`, error);
     return null;
   }
 }
@@ -48,13 +54,18 @@ async function fetchWagtail(endpoint, params = {}) {
  * Récupérer la page d'accueil
  */
 export async function getHomePage() {
+  console.log('[Wagtail Client] getHomePage called');
+
   // Stratégie 1 : Chercher par slug 'accueil'
   let data = await fetchWagtail('/pages/', {
     slug: 'accueil',
     fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
   });
   
-  if (data?.items?.length > 0) return data.items[0];
+  if (data?.items?.length > 0) {
+    console.log('[Wagtail Client] Strategy 1 (slug=accueil) SUCCESS');
+    return data.items[0];
+  }
 
   // Stratégie 2 : Chercher par slug 'home'
   data = await fetchWagtail('/pages/', {
@@ -62,7 +73,10 @@ export async function getHomePage() {
     fields: 'hero_title,hero_subtitle,hero_cta_text,hero_cta_link,features'
   });
   
-  if (data?.items?.length > 0) return data.items[0];
+  if (data?.items?.length > 0) {
+    console.log('[Wagtail Client] Strategy 2 (slug=home) SUCCESS');
+    return data.items[0];
+  }
 
   // Stratégie 3 : Chercher par type
   data = await fetchWagtail('/pages/', {
@@ -71,7 +85,13 @@ export async function getHomePage() {
     limit: '1'
   });
 
-  return data?.items?.[0] || null;
+  if (data?.items?.length > 0) {
+    console.log('[Wagtail Client] Strategy 3 (type=blog.HomePage) SUCCESS');
+    return data.items[0];
+  }
+
+  console.warn('[Wagtail Client] All strategies FAILED to find homepage');
+  return null;
 }
 
 /**

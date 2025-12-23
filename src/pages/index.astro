@@ -4,6 +4,9 @@ import { getHomePage, getBlogPosts } from '../lib/wagtail';
 
 // Récupérer les données depuis Wagtail
 const homepage = await getHomePage();
+
+console.log('Homepage data received in template:', !homepage ? 'NULL' : 'OK');
+
 const blogPosts = await getBlogPosts(3);
 
 // DEBUG : Récupérer la config pour l'afficher
