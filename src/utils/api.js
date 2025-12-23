@@ -1,9 +1,11 @@
 // Configuration de l'API pour communiquer avec Wagtail
-const API_BASE_URL = import.meta.env.API_BASE_URL 
-    ? import.meta.env.API_BASE_URL 
-    : import.meta.env.PROD 
-        ? 'https://votre-domaine-wagtail.railway.app' 
-        : 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.API_BASE_URL || 
+    (import.meta.env.PROD ? '' : 'http://localhost:8000');
+
+// Avertissement si non configuré en production
+if (import.meta.env.PROD && !import.meta.env.API_BASE_URL) {
+    console.warn('⚠️ API_BASE_URL non configurée en production');
+}
 
 // Fonction pour gérer les erreurs API
 function handleApiError(error, fallback = null) {

@@ -1,33 +1,53 @@
 ---
-const { title = 'Follen' } = Astro.props;
+const { 
+    title = 'Follen', 
+    description = 'Blog moderne propulsé par Follen - Découvrez des articles passionnants'
+} = Astro.props;
+
+const currentYear = new Date().getFullYear();
 ---
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="fr_FR" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
 </head>
-<body class="font-sans">
-    <header class="bg-blue-600 text-white p-4">
+<body class="font-sans bg-gray-50 min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 shadow-md">
         <nav class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-xl font-bold">Follen</a>
+            <a href="/" class="text-xl font-bold hover:text-blue-200 transition-colors">Follen</a>
             <div class="space-x-4">
-                <a href="/" class="hover:underline">Accueil</a>
-                <a href="/articles" class="hover:underline">Articles</a>
-                <a href="/a-propos" class="hover:underline">À propos</a>
+                <a href="/" class="hover:underline hover:text-blue-200 transition-colors">Accueil</a>
+                <a href="/articles" class="hover:underline hover:text-blue-200 transition-colors">Articles</a>
+                <a href="/a-propos" class="hover:underline hover:text-blue-200 transition-colors">À propos</a>
             </div>
         </nav>
     </header>
     
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 flex-grow">
         <slot />
     </main>
     
     <footer class="bg-gray-800 text-white p-4 mt-8">
         <div class="container mx-auto text-center">
-            <p>&copy; {new Date().getFullYear()} Follen. Tous droits réservés.</p>
+            <p>&copy; {currentYear} Follen. Tous droits réservés.</p>
         </div>
     </footer>
 </body>

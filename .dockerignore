@@ -1,0 +1,36 @@
+# Dépendances
+node_modules
+
+# Build local
+dist
+
+# Git
+.git
+.gitignore
+
+# Environnement
+.env
+.env.*
+.env.local
+.env.production
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Documentation
+README.md
+docs/
+
+# Tests
+*.test.js
+*.spec.js
+__tests__
+
+# Divers
+.DS_Store
+Thumbs.db
+*.log
+
