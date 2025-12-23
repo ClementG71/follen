@@ -6,25 +6,35 @@ import { getHomePage, getBlogPosts } from '../lib/wagtail';
 const homepage = await getHomePage();
 const blogPosts = await getBlogPosts(3);
 
-// Debug : afficher dans les logs serveur si les données sont récupérées
-console.log('📡 Homepage data:', homepage ? 'Loaded from Wagtail' : 'NOT FOUND - using fallback');
-console.log('📡 Blog posts:', blogPosts.length, 'articles trouvés');
+// DEBUG : Récupérer la config pour l'afficher
+const API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL;
 
 // Titre de la page
 const pageTitle = homepage?.hero_title || 'Accueil Follen';
 ---
 
 <BaseLayout title={pageTitle}>
-    <!-- Banner de debug (à supprimer en production) -->
+    <!-- Banner de debug AVANCÉ -->
     {!homepage && (
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
-            <p class="font-bold">⚠️ Mode Fallback</p>
-            <p>Les données Wagtail ne sont pas disponibles. Vérifiez :</p>
-            <ul class="list-disc ml-4 mt-2 text-sm">
-                <li>La variable <code>PUBLIC_WAGTAIL_API_URL</code> est-elle configurée ?</li>
-                <li>L'API Wagtail est-elle accessible ?</li>
-                <li>Le type de page <code>blog.HomePage</code> est-il correct ?</li>
-            </ul>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 mb-8 overflow-auto">
+            <h3 class="font-bold text-lg">🚨 DEBUG DIAGNOSTIC</h3>
+            
+            <div class="mt-4">
+                <p><strong>API URL Configurée :</strong> {API_URL || 'NON DÉFINIE'}</p>
+                <p><strong>Slug cherché :</strong> accueil</p>
+            </div>
+
+            <div class="mt-4 bg-white p-4 rounded text-xs font-mono border">
+                <p class="font-bold mb-2">Instructions pour fixer :</p>
+                <ol class="list-decimal ml-4 space-y-1">
+                    <li>Copiez l'URL ci-dessous et ouvrez-la dans votre navigateur :</li>
+                    <li class="select-all bg-gray-100 p-1 my-1 break-all">
+                        {API_URL}/pages/?slug=accueil&fields=hero_title,features&format=json
+                    </li>
+                    <li>Si cela retourne <code>"items": []</code>, le slug n'est pas "accueil".</li>
+                    <li>Si cela retourne une erreur, l'API est inaccessible.</li>
+                </ol>
+            </div>
         </div>
     )}
 
