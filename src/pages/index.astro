@@ -4,76 +4,83 @@ import { getHomePage, getBlogPosts } from '../lib/wagtail';
 
 // Récupérer les données depuis Wagtail
 const homepage = await getHomePage();
-const blogPosts = await getBlogPosts(3); // Limite à 3 articles
+const blogPosts = await getBlogPosts(3);
 
-// Fallback pour le titre
+// Debug : afficher dans les logs serveur si les données sont récupérées
+console.log('📡 Homepage data:', homepage ? 'Loaded from Wagtail' : 'NOT FOUND - using fallback');
+console.log('📡 Blog posts:', blogPosts.length, 'articles trouvés');
+
+// Titre de la page
 const pageTitle = homepage?.hero_title || 'Accueil Follen';
 ---
 
 <BaseLayout title={pageTitle}>
-    <section class="text-center py-12">
-        {homepage ? (
-            <>
-                <h1 class="text-4xl font-bold mb-4">{homepage.hero_title || 'Bienvenue sur Follen'}</h1>
-                <p class="text-xl mb-8">{homepage.hero_subtitle || 'Découvrez des articles Follen passionnants sur divers sujets'}</p>
-                
-                {homepage.hero_cta_text && homepage.hero_cta_link && (
-                    <a href={homepage.hero_cta_link} class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                        {homepage.hero_cta_text}
-                    </a>
-                )}
-            </>
-        ) : (
-            <>
-                <h1 class="text-4xl font-bold mb-4">Bienvenue sur mon blog</h1>
-                <p class="text-xl mb-8">Découvrez des articles passionnants sur divers sujets</p>
-            </>
-        )}
-        
-        <div class="grid md:grid-cols-3 gap-6 mt-12">
-            {homepage?.features?.map((feature, index) => (
-                <div key={index} class="bg-white p-6 rounded-lg shadow-md">
-                    {/* Gestion du StreamField Wagtail: value contient les données */}
-                    {feature.value.icon && <div class="text-4xl mb-4">{feature.value.icon}</div>}
-                    <h2 class="text-2xl font-semibold mb-2">{feature.value.title}</h2>
-                    <p class="text-gray-600">{feature.value.description}</p>
-                </div>
-            )) || [
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">Derniers articles Follen</h2>
-                    <p class="text-gray-600">Consultez nos articles Follen récents</p>
-                </div>,
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">À propos de Follen</h2>
-                    <p class="text-gray-600">En savoir plus sur Follen</p>
-                </div>,
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h2 class="text-2xl font-semibold mb-2">Contact Follen</h2>
-                    <p class="text-gray-600">N'hésitez pas à nous contacter via Follen</p>
-                </div>
-            ]}
+    <!-- Banner de debug (à supprimer en production) -->
+    {!homepage && (
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
+            <p class="font-bold">⚠️ Mode Fallback</p>
+            <p>Les données Wagtail ne sont pas disponibles. Vérifiez :</p>
+            <ul class="list-disc ml-4 mt-2 text-sm">
+                <li>La variable <code>PUBLIC_WAGTAIL_API_URL</code> est-elle configurée ?</li>
+                <li>L'API Wagtail est-elle accessible ?</li>
+                <li>Le type de page <code>blog.HomePage</code> est-il correct ?</li>
+            </ul>
         </div>
+    )}
+
+    <section class="text-center py-12">
+        <h1 class="text-4xl font-bold mb-4">
+            {homepage?.hero_title || 'Bienvenue sur Follen'}
+        </h1>
+        <p class="text-xl mb-8">
+            {homepage?.hero_subtitle || 'Découvrez des articles passionnants'}
+        </p>
+        
+        {homepage?.hero_cta_text && homepage?.hero_cta_link && (
+            <a href={homepage.hero_cta_link} class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                {homepage.hero_cta_text}
+            </a>
+        )}
     </section>
+
+    <!-- Features depuis Wagtail -->
+    {homepage?.features && homepage.features.length > 0 && (
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+            {homepage.features.map((feature, index) => (
+                <div key={index} class="bg-white p-6 rounded-lg shadow-md">
+                    {feature.value?.icon && <div class="text-4xl mb-4">{feature.value.icon}</div>}
+                    <h2 class="text-2xl font-semibold mb-2">{feature.value?.title || feature.title}</h2>
+                    <p class="text-gray-600">{feature.value?.description || feature.description}</p>
+                </div>
+            ))}
+        </div>
+    )}
     
-    {blogPosts.length > 0 && (
+    <!-- Articles de blog -->
+    {blogPosts.length > 0 ? (
         <section class="mt-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Derniers articles Follen</h2>
+            <h2 class="text-3xl font-bold mb-8 text-center">Derniers articles</h2>
             <div class="grid md:grid-cols-3 gap-6">
                 {blogPosts.map((post) => (
                     <article key={post.id} class="bg-white p-6 rounded-lg shadow-md">
                         {post.header_image_thumbnail && (
-                            <img src={post.header_image_thumbnail} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4">
+                            <img src={post.header_image_thumbnail} alt={post.title} class="w-full h-48 object-cover rounded-lg mb-4" />
                         )}
                         <h3 class="text-xl font-semibold mb-2">{post.title}</h3>
                         <p class="text-gray-600 text-sm mb-2">
                             Par {post.author} • {new Date(post.date).toLocaleDateString('fr-FR')}
                         </p>
                         <p class="text-gray-600 mb-4">{post.introduction}</p>
-                        {/* Utilisation de meta.slug pour l'URL */}
-                        <a href={`/articles/${post.meta.slug}`} class="text-blue-600 hover:underline">Lire l'article Follen</a>
+                        <a href={`/articles/${post.meta?.slug || post.slug}`} class="text-blue-600 hover:underline">
+                            Lire l'article
+                        </a>
                     </article>
                 ))}
             </div>
+        </section>
+    ) : (
+        <section class="mt-16 text-center text-gray-500">
+            <p>Aucun article disponible pour le moment.</p>
         </section>
     )}
 </BaseLayout>
