@@ -9,7 +9,7 @@ export default defineConfig({
   }),
   integrations: [tailwind()],
   server: {
-    host: process.env.HOST || '0.0.0.0',
-    port: parseInt(process.env.PORT) || 4321
+    host: true,
+    port: Number(process.env.PORT) || 4321
   }
 });
