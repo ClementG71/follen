@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Navbar from '../components/Navbar.astro';
 import HeroCarousel from '../components/HeroCarousel.astro';
 import ActionCardsSection from '../components/ActionCardsSection.astro';
 import { getHomePage, getBlogPosts } from '../lib/wagtail';
@@ -43,19 +42,7 @@ const mockCarouselSlides = [
 const carouselSlides = mockCarouselSlides; 
 ---
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Follen - Votre guide vers un mode de vie durable" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
-</head>
-<body class="font-sans bg-gray-50 min-h-screen">
-    <!-- Navbar -->
-    <Navbar currentPath="/" />
-
+<BaseLayout title={title}>
     <!-- Hero Carousel -->
     <HeroCarousel articles={carouselSlides} interval={5000} />
 
@@ -167,25 +154,7 @@ const carouselSlides = mockCarouselSlides;
             )}
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center gap-2 mb-4 md:mb-0">
-                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">F</span>
-                    </div>
-                    <span class="font-bold text-xl">Follen</span>
-                </div>
-                <p class="text-gray-400 text-sm">
-                    &copy; {new Date().getFullYear()} Follen. Tous droits réservés.
-                </p>
-            </div>
-        </div>
-    </footer>
-</body>
-</html>
+</BaseLayout>
 
 <style>
     /* Line clamp pour les textes tronqués */

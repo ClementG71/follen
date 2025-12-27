@@ -1,0 +1,74 @@
+---
+const currentYear = new Date().getFullYear();
+
+// Données Mock (simulant une réponse API Settings)
+const footerData = {
+    col1: {
+        title: "À propos",
+        content: "Follen est votre guide vers un mode de vie plus durable et respectueux de l'environnement."
+    },
+    col2: {
+        title: "Liens rapides",
+        links: [
+            { label: "Mentions légales", href: "/mentions-legales" },
+            { label: "Confidentialité", href: "/confidentialite" },
+            { label: "Plan du site", href: "/plan" }
+        ]
+    },
+    col3: {
+        title: "Contact",
+        email: "contact@follen.com",
+        address: "Paris, France"
+    }
+};
+---
+
+<footer class="bg-gray-900 text-gray-300 py-16">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-12 mb-12">
+            <!-- Col 1: About -->
+            <div>
+                <h3 class="text-white font-bold text-lg mb-6">{footerData.col1.title}</h3>
+                <p class="leading-relaxed text-gray-400">
+                    {footerData.col1.content}
+                </p>
+            </div>
+
+            <!-- Col 2: Links -->
+            <div>
+                <h3 class="text-white font-bold text-lg mb-6">{footerData.col2.title}</h3>
+                <ul class="space-y-3">
+                    {footerData.col2.links.map(link => (
+                        <li>
+                            <a href={link.href} class="hover:text-blue-400 transition-colors">
+                                {link.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <!-- Col 3: Contact -->
+            <div>
+                <h3 class="text-white font-bold text-lg mb-6">{footerData.col3.title}</h3>
+                <div class="space-y-3 text-gray-400">
+                    <p class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <a href={`mailto:${footerData.col3.email}`} class="hover:text-white transition-colors">
+                            {footerData.col3.email}
+                        </a>
+                    </p>
+                    <p class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span>{footerData.col3.address}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+            &copy; {currentYear} Follen. Tous droits réservés.
+        </div>
+    </div>
+</footer>
+

@@ -1,39 +1,11 @@
 ---
-import { getMenuPages } from '../lib/wagtail';
+import DoubleNavbar from '../components/DoubleNavbar.astro';
+import Footer from '../components/Footer.astro';
 
 const { 
     title = 'Follen', 
     description = 'Blog moderne propulsé par Follen - Découvrez des articles passionnants'
 } = Astro.props;
-
-const currentYear = new Date().getFullYear();
-
-// Récupération du menu dynamique
-let menuItems = [];
-try {
-    menuItems = await getMenuPages();
-} catch (e) {
-    console.error("Erreur chargement menu:", e);
-}
-
-// Menu par défaut si l'API échoue ou est vide
-if (menuItems.length === 0) {
-    menuItems = [
-        { title: 'Accueil', meta: { slug: '' }, url: '/' }, // Cas spécial pour l'accueil
-        { title: 'Articles', meta: { slug: 'articles' }, url: '/articles' }
-    ];
-} else {
-    // Normalisation des URLs
-    menuItems = menuItems.map(item => ({
-        ...item,
-        url: item.meta.slug === 'home' ? '/' : `/${item.meta.slug}`
-    }));
-    
-    // Ajout manuel de la page articles si elle n'est pas gérée comme une page CMS
-    if (!menuItems.some(i => i.url === '/articles')) {
-        menuItems.push({ title: 'Articles', url: '/articles' });
-    }
-}
 ---
 
 <!DOCTYPE html>
@@ -59,30 +31,14 @@ if (menuItems.length === 0) {
     <title>{title}</title>
 </head>
 <body class="font-sans bg-gray-50 min-h-screen flex flex-col">
-    <header class="bg-blue-600 text-white p-4 shadow-md">
-        <nav class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-xl font-bold hover:text-blue-200 transition-colors">Follen</a>
-            <div class="space-x-4">
-                <a href="/" class="hover:underline hover:text-blue-200 transition-colors">Accueil</a>
-                {menuItems.map(item => (
-                    item.url !== '/' && (
-                        <a href={item.url} class="hover:underline hover:text-blue-200 transition-colors">
-                            {item.title}
-                        </a>
-                    )
-                ))}
-            </div>
-        </nav>
-    </header>
     
-    <main class="container mx-auto p-4 flex-grow">
+    <DoubleNavbar />
+    
+    <main class="flex-grow">
         <slot />
     </main>
     
-    <footer class="bg-gray-800 text-white p-4 mt-8">
-        <div class="container mx-auto text-center">
-            <p>&copy; {currentYear} Follen. Tous droits réservés.</p>
-        </div>
-    </footer>
+    <Footer />
+
 </body>
 </html>

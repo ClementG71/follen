@@ -1,0 +1,122 @@
+---
+import { getMenuPages } from '../lib/wagtail';
+
+// Récupération des liens via l'API (si disponible)
+const menuPages = await getMenuPages();
+
+// Liens Top Bar (Mock ou API)
+const topLinks = [
+    { label: 'Devenir partenaire', href: '/partenaires', icon: 'handshake' },
+    { label: 'Contact', href: '/contact', icon: 'mail' },
+];
+
+// Liens Main Nav (Mock ou fusion API)
+const mainLinks = [
+    { label: 'Accueil', href: '/' },
+    { label: 'Agriculture', href: '/agriculture', hasDropdown: true },
+    { label: 'Intérieur', href: '/interieur' },
+    { label: 'Écologie', href: '/ecologie', hasDropdown: true },
+];
+---
+
+<header class="w-full z-50">
+    <!-- Top Bar (Blue) -->
+    <div class="bg-blue-600 text-white text-sm py-2 px-4">
+        <div class="container mx-auto flex justify-end items-center gap-6">
+            {topLinks.map(link => (
+                <a href={link.href} class="flex items-center gap-2 hover:text-blue-100 transition-colors">
+                    <span>{link.label}</span>
+                </a>
+            ))}
+        </div>
+    </div>
+
+    <!-- Main Navbar (White, Sticky) -->
+    <nav class="sticky top-0 bg-white/95 backdrop-blur shadow-sm border-b border-gray-100 z-40">
+        <div class="container mx-auto px-4 h-20">
+            <!-- Grid Layout: 1fr - Auto - 1fr -->
+            <div class="grid grid-cols-[1fr_auto_1fr] items-center h-full">
+                
+                <!-- Left Links (Desktop) -->
+                <div class="hidden md:flex items-center justify-start gap-8">
+                    <a href="/" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                        Accueil
+                    </a>
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                            Agriculture
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <!-- Dropdown (Simple hover) -->
+                        <div class="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
+                            <a href="/agriculture/permaculture" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Permaculture</a>
+                            <a href="/agriculture/regeneratrice" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Régénératrice</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Logo -->
+                <div class="flex justify-center">
+                    <a href="/" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
+                            <span class="text-white font-bold text-xl">F</span>
+                        </div>
+                        <span class="font-bold text-2xl text-gray-900 tracking-tight hidden sm:block">Follen</span>
+                    </a>
+                </div>
+
+                <!-- Right Links (Desktop) -->
+                <div class="hidden md:flex items-center justify-end gap-8">
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                            Écologie
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
+                            <a href="/ecologie/zerodechet" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Zéro Déchet</a>
+                            <a href="/ecologie/climat" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Climat</a>
+                        </div>
+                    </div>
+                    <a href="/interieur" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                        Intérieur
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button (Visible only on mobile) -->
+                <div class="md:hidden flex justify-end col-start-3">
+                    <button id="mobile-menu-toggle" class="p-2 text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Overlay (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-lg h-screen pb-40 overflow-y-auto">
+            <div class="p-4 flex flex-col gap-4">
+                {mainLinks.map(link => (
+                    <a href={link.href} class="block py-3 text-lg text-gray-800 font-medium border-b border-gray-50 last:border-0">
+                        {link.label}
+                    </a>
+                ))}
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <p class="text-sm text-gray-500 mb-2 uppercase tracking-wide">Liens utiles</p>
+                    {topLinks.map(link => (
+                        <a href={link.href} class="block py-2 text-blue-600 font-medium">
+                            {link.label}
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<script>
+    const btn = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    btn?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden');
+    });
+</script>
+
