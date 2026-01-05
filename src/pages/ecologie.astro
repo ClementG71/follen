@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectorBanner from '../components/mockup/SectorBanner.astro';
+import MiniCarousel from '../components/mockup/MiniCarousel.astro';
+import ActionCardsSection from '../components/ActionCardsSection.astro';
+import ContactBanner from '../components/mockup/ContactBanner.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données du secteur Écologie
+const sectorTitle = "Écologie";
+const sectorSubtitle = "Agir ensemble pour la transition écologique";
+
+// Articles pour le Mini Carrousel (3 articles)
+const miniCarouselArticles = [
+    {
+        id: 1,
+        title: "Zéro déchet : par où commencer ?",
+        excerpt: "Guide pratique pour débuter votre transition vers un mode de vie zéro déchet, étape par étape.",
+        image: "https://placehold.co/1200x400/0d9488/ffffff?text=Z%C3%A9ro+D%C3%A9chet",
+        href: "/ecologie/zerodechet-guide",
+        category: "Zéro Déchet"
+    },
+    {
+        id: 2,
+        title: "Climat : les actions locales qui comptent",
+        excerpt: "Comment agir concrètement à son échelle pour lutter contre le changement climatique.",
+        image: "https://placehold.co/1200x400/0f766e/ffffff?text=Actions+Climat",
+        href: "/ecologie/actions-climat",
+        category: "Climat"
+    },
+    {
+        id: 3,
+        title: "Biodiversité : protéger le vivant au quotidien",
+        excerpt: "Des gestes simples pour préserver la biodiversité dans votre jardin et votre quartier.",
+        image: "https://placehold.co/1200x400/0d9488/ffffff?text=Biodiversit%C3%A9",
+        href: "/ecologie/biodiversite",
+        category: "Biodiversité"
+    }
+];
+
+// Cartes d'action spécifiques au secteur (4 cartes)
+const sectorActionCards = [
+    {
+        title: "Principes",
+        description: "Les fondamentaux de l'écologie : sobriété, circularité, respect du vivant et justice environnementale.",
+        iconName: "book",
+        link: "/ecologie/principes",
+        linkText: "Lire les principes"
+    },
+    {
+        title: "Boîte à outils",
+        description: "Calculateurs d'empreinte carbone, guides pratiques, alternatives durables et ressources pédagogiques.",
+        iconName: "wrench",
+        link: "/ecologie/outils",
+        linkText: "Consulter les outils"
+    },
+    {
+        title: "Mobilisations",
+        description: "Calendrier des actions, manifestations et événements pour s'engager collectivement.",
+        iconName: "megaphone",
+        link: "/ecologie/mobilisations",
+        linkText: "Voir les événements"
+    },
+    {
+        title: "Collectifs",
+        description: "Rejoignez les collectifs locaux et associations partenaires engagées pour l'environnement.",
+        iconName: "handshake",
+        link: "/ecologie/collectifs",
+        linkText: "Trouver un collectif"
+    }
+];
+
+// Contacts/Représentants du secteur
+const sectorContacts = [
+    {
+        name: "Julie Climat",
+        role: "Responsable secteur Écologie",
+        photoUrl: "https://placehold.co/128/0d9488/ffffff?text=JC"
+    },
+    {
+        name: "Thomas Vert",
+        role: "Chargé de mission Zéro Déchet",
+        photoUrl: "https://placehold.co/128/0f766e/ffffff?text=TV"
+    },
+    {
+        name: "Léa Nature",
+        role: "Experte Biodiversité",
+        photoUrl: "https://placehold.co/128/0d9488/ffffff?text=LN"
+    }
+];
+---
+
+<BaseLayout title="Écologie - Follen">
+    <!-- 1. Bandeau Secteur -->
+    <SectorBanner 
+        title={sectorTitle}
+        subtitle={sectorSubtitle}
+        bgColor="bg-teal-700"
+    />
+
+    <!-- 2. Mini Carrousel -->
+    <MiniCarousel articles={miniCarouselArticles} />
+
+    <!-- 3. Action Cards x4 -->
+    <ActionCardsSection 
+        title="Ressources Écologie"
+        description="Tout pour agir en faveur de l'environnement"
+        cards={sectorActionCards}
+    />
+
+    <!-- 4. Bandeau Contact -->
+    <ContactBanner 
+        contacts={sectorContacts}
+        contactButtonText="Contacter l'équipe Écologie"
+        contactButtonLink="/ecologie/contact"
+    />
+
+    <!-- 5. Newsletter -->
+    <Newsletter 
+        title="Newsletter Écologie"
+        description="Recevez les actualités du secteur Écologie directement dans votre boîte mail."
+    />
+</BaseLayout>
+

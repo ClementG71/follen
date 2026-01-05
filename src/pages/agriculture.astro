@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectorBanner from '../components/mockup/SectorBanner.astro';
+import MiniCarousel from '../components/mockup/MiniCarousel.astro';
+import ActionCardsSection from '../components/ActionCardsSection.astro';
+import ContactBanner from '../components/mockup/ContactBanner.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données du secteur Agriculture
+const sectorTitle = "Agriculture";
+const sectorSubtitle = "Promouvoir une agriculture durable et responsable";
+
+// Articles pour le Mini Carrousel (3 articles)
+const miniCarouselArticles = [
+    {
+        id: 1,
+        title: "Permaculture : les fondamentaux à connaître",
+        excerpt: "Découvrez les principes de base de la permaculture et comment les appliquer dans votre jardin ou exploitation.",
+        image: "https://placehold.co/1200x400/166534/ffffff?text=Permaculture",
+        href: "/agriculture/permaculture-fondamentaux",
+        category: "Permaculture"
+    },
+    {
+        id: 2,
+        title: "Agriculture régénératrice : l'avenir de nos sols",
+        excerpt: "Comment l'agriculture régénératrice peut restaurer la santé des sols et augmenter la biodiversité.",
+        image: "https://placehold.co/1200x400/15803d/ffffff?text=Agriculture+R%C3%A9g%C3%A9n%C3%A9ratrice",
+        href: "/agriculture/regeneratrice-sols",
+        category: "Régénératrice"
+    },
+    {
+        id: 3,
+        title: "Circuits courts : valoriser la production locale",
+        excerpt: "Les avantages des circuits courts pour les producteurs et les consommateurs.",
+        image: "https://placehold.co/1200x400/166534/ffffff?text=Circuits+Courts",
+        href: "/agriculture/circuits-courts",
+        category: "Distribution"
+    }
+];
+
+// Cartes d'action spécifiques au secteur (4 cartes)
+const sectorActionCards = [
+    {
+        title: "Principes",
+        description: "Découvrez les principes fondamentaux qui guident notre action pour une agriculture durable et respectueuse de l'environnement.",
+        iconName: "book",
+        link: "/agriculture/principes",
+        linkText: "Lire les principes"
+    },
+    {
+        title: "Boîte à outils",
+        description: "Accédez à tous les outils pratiques, guides, fiches techniques et ressources pour votre exploitation agricole.",
+        iconName: "wrench",
+        link: "/agriculture/outils",
+        linkText: "Consulter les outils"
+    },
+    {
+        title: "Formations",
+        description: "Participez à nos formations sur les techniques agricoles durables, la permaculture et l'agroécologie.",
+        iconName: "megaphone",
+        link: "/agriculture/formations",
+        linkText: "Voir les formations"
+    },
+    {
+        title: "Réseau",
+        description: "Rejoignez notre réseau d'agriculteurs engagés et partagez vos expériences avec la communauté.",
+        iconName: "handshake",
+        link: "/agriculture/reseau",
+        linkText: "Rejoindre le réseau"
+    }
+];
+
+// Contacts/Représentants du secteur
+const sectorContacts = [
+    {
+        name: "Pierre Levert",
+        role: "Responsable secteur Agriculture",
+        photoUrl: "https://placehold.co/128/166534/ffffff?text=PL"
+    },
+    {
+        name: "Claire Moisson",
+        role: "Chargée de mission Permaculture",
+        photoUrl: "https://placehold.co/128/15803d/ffffff?text=CM"
+    },
+    {
+        name: "Antoine Racine",
+        role: "Expert Agroécologie",
+        photoUrl: "https://placehold.co/128/166534/ffffff?text=AR"
+    }
+];
+---
+
+<BaseLayout title="Agriculture - Follen">
+    <!-- 1. Bandeau Secteur -->
+    <SectorBanner 
+        title={sectorTitle}
+        subtitle={sectorSubtitle}
+        bgColor="bg-green-700"
+    />
+
+    <!-- 2. Mini Carrousel -->
+    <MiniCarousel articles={miniCarouselArticles} />
+
+    <!-- 3. Action Cards x4 -->
+    <ActionCardsSection 
+        title="Ressources Agriculture"
+        description="Tout ce dont vous avez besoin pour une agriculture durable"
+        cards={sectorActionCards}
+    />
+
+    <!-- 4. Bandeau Contact -->
+    <ContactBanner 
+        contacts={sectorContacts}
+        contactButtonText="Contacter l'équipe Agriculture"
+        contactButtonLink="/agriculture/contact"
+    />
+
+    <!-- 5. Newsletter -->
+    <Newsletter 
+        title="Newsletter Agriculture"
+        description="Recevez les actualités du secteur Agriculture directement dans votre boîte mail."
+    />
+</BaseLayout>
+

@@ -1,21 +1,16 @@
 ---
-import { getMenuPages } from '../lib/wagtail';
-
-// Récupération des liens via l'API (si disponible)
-const menuPages = await getMenuPages();
-
-// Liens Top Bar (Mock ou API)
+// Liens Top Bar
 const topLinks = [
-    { label: 'Devenir partenaire', href: '/partenaires', icon: 'handshake' },
-    { label: 'Contact', href: '/contact', icon: 'mail' },
+    { label: 'Devenir partenaire', href: '/partenaires' },
+    { label: 'Contact', href: '/contact' },
 ];
 
-// Liens Main Nav (Mock ou fusion API)
+// Liens Main Nav
 const mainLinks = [
     { label: 'Accueil', href: '/' },
-    { label: 'Agriculture', href: '/agriculture', hasDropdown: true },
+    { label: 'Agriculture', href: '/agriculture' },
     { label: 'Intérieur', href: '/interieur' },
-    { label: 'Écologie', href: '/ecologie', hasDropdown: true },
+    { label: 'Écologie', href: '/ecologie' },
 ];
 ---
 
@@ -42,17 +37,9 @@ const mainLinks = [
                     <a href="/" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
                         Accueil
                     </a>
-                    <div class="relative group">
-                        <button class="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                            Agriculture
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <!-- Dropdown (Simple hover) -->
-                        <div class="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
-                            <a href="/agriculture/permaculture" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Permaculture</a>
-                            <a href="/agriculture/regeneratrice" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Régénératrice</a>
-                        </div>
-                    </div>
+                    <a href="/agriculture" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                        Agriculture
+                    </a>
                 </div>
 
                 <!-- Center Logo -->
@@ -67,16 +54,9 @@ const mainLinks = [
 
                 <!-- Right Links (Desktop) -->
                 <div class="hidden md:flex items-center justify-end gap-8">
-                    <div class="relative group">
-                        <button class="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 transition-colors">
-                            Écologie
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0">
-                            <a href="/ecologie/zerodechet" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Zéro Déchet</a>
-                            <a href="/ecologie/climat" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">Climat</a>
-                        </div>
-                    </div>
+                    <a href="/ecologie" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
+                        Écologie
+                    </a>
                     <a href="/interieur" class="font-medium text-gray-700 hover:text-blue-600 transition-colors">
                         Intérieur
                     </a>
@@ -92,7 +72,7 @@ const mainLinks = [
         </div>
         
         <!-- Mobile Menu Overlay (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-lg h-screen pb-40 overflow-y-auto">
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-lg">
             <div class="p-4 flex flex-col gap-4">
                 {mainLinks.map(link => (
                     <a href={link.href} class="block py-3 text-lg text-gray-800 font-medium border-b border-gray-50 last:border-0">
@@ -119,4 +99,3 @@ const mainLinks = [
         menu?.classList.toggle('hidden');
     });
 </script>
-

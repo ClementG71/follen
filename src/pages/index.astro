@@ -1,167 +1,226 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCarousel from '../components/HeroCarousel.astro';
+import ScrollSnapCarousel from '../components/mockup/ScrollSnapCarousel.astro';
+import InstitutionalLinks from '../components/mockup/InstitutionalLinks.astro';
+import NewsFeed from '../components/mockup/NewsFeed.astro';
 import ActionCardsSection from '../components/ActionCardsSection.astro';
-import { getHomePage, getBlogPosts } from '../lib/wagtail';
+import Newsletter from '../components/mockup/Newsletter.astro';
 
-// Récupération des données Wagtail
-const homepage = await getHomePage();
-const blogPosts = await getBlogPosts(3);
-
-const title = homepage?.hero_title || 'Accueil Follen';
-
-// Données mock pour le carrousel (à remplacer par des vraies données Wagtail plus tard)
-const mockCarouselSlides = [
+// Données mock pour le carrousel Hero (5 articles)
+const carouselArticles = [
     {
-        title: "L'agriculture régénératrice : l'avenir de nos sols",
-        image_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80",
-        link: "/articles/agriculture-regeneratrice",
-        category: "Agriculture"
+        id: 1,
+        title: "Mobilisation du 5 décembre : Tous ensemble pour la défense de nos droits",
+        excerpt: "La mobilisation historique du 5 décembre a rassemblé des milliers de membres dans les rues. Revivez les moments forts de cette journée importante.",
+        image: "https://placehold.co/1920x700/1e3a5f/ffffff?text=Mobilisation+5+d%C3%A9cembre",
+        href: "/articles/mobilisation-5-decembre",
+        category: "Actualité"
     },
     {
-        title: "Créer un intérieur éco-responsable et design",
-        image_url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1920&q=80",
-        link: "/articles/interieur-eco-responsable",
-        category: "Intérieur"
+        id: 2,
+        title: "Nouveaux accords salariaux : Des avancées significatives",
+        excerpt: "Les négociations ont abouti à des améliorations importantes pour nos conditions de travail. Découvrez les détails des nouveaux accords.",
+        image: "https://placehold.co/1920x700/1e40af/ffffff?text=Accords+Salariaux",
+        href: "/articles/accords-salariaux",
+        category: "Négociations"
     },
     {
-        title: "Les gestes simples pour réduire son empreinte carbone",
-        image_url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80",
-        link: "/articles/reduire-empreinte-carbone",
-        category: "Écologie"
+        id: 3,
+        title: "Assemblée générale annuelle : Retour sur l'année écoulée",
+        excerpt: "L'assemblée générale a permis de faire un bilan complet de nos actions et de définir nos orientations pour l'année à venir.",
+        image: "https://placehold.co/1920x700/1e3a8a/ffffff?text=Assembl%C3%A9e+G%C3%A9n%C3%A9rale",
+        href: "/articles/assemblee-generale",
+        category: "Vie syndicale"
     },
     {
-        title: "Permaculture : transformer son jardin en écosystème",
-        image_url: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1920&q=80",
-        link: "/articles/permaculture-jardin",
-        category: "Agriculture"
+        id: 4,
+        title: "Formation continue : Nouvelles sessions disponibles",
+        excerpt: "Inscrivez-vous dès maintenant aux prochaines sessions de formation pour développer vos compétences professionnelles.",
+        image: "https://placehold.co/1920x700/1e40af/ffffff?text=Formation+Continue",
+        href: "/articles/formation-continue",
+        category: "Formation"
+    },
+    {
+        id: 5,
+        title: "Plateforme Élan Commun : Outils et ressources à votre disposition",
+        excerpt: "Découvrez la nouvelle plateforme qui met à votre disposition tous les outils nécessaires pour faciliter votre engagement syndical.",
+        image: "https://placehold.co/1920x700/1e3a5f/ffffff?text=%C3%89lan+Commun",
+        href: "/articles/elan-commun",
+        category: "Ressources"
     }
 ];
 
-// Utilise les vraies données si disponibles, sinon les mock
-const carouselSlides = mockCarouselSlides; 
+// Liens institutionnels
+const institutionalLinks = [
+    {
+        label: "Site FSU",
+        href: "https://www.fsu.fr",
+        icon: "external",
+        color: "blue" as const
+    },
+    {
+        label: "Actus Élan Commun",
+        href: "https://elan-commun.fr/actus",
+        icon: "external",
+        color: "blue" as const
+    },
+    {
+        label: "Autre",
+        href: "/autre",
+        icon: "external",
+        color: "slate" as const
+    }
+];
+
+// Articles pour le News Feed (12 articles)
+const newsFeedArticles = [
+    {
+        id: 1,
+        title: "Réunion sectorielle du 15 janvier",
+        date: "2025-01-10",
+        category: "Réunions",
+        href: "/articles/reunion-sectorielle",
+        thumbnail: "https://placehold.co/48/1e40af/ffffff?text=RS"
+    },
+    {
+        id: 2,
+        title: "Nouveaux outils numériques disponibles",
+        date: "2025-01-08",
+        category: "Ressources",
+        href: "/articles/outils-numeriques"
+    },
+    {
+        id: 3,
+        title: "Appel à candidatures pour la commission",
+        date: "2025-01-05",
+        category: "Appels",
+        href: "/articles/candidatures-commission"
+    },
+    {
+        id: 4,
+        title: "Bilan de l'année 2024",
+        date: "2025-01-02",
+        category: "Bilan",
+        href: "/articles/bilan-2024",
+        thumbnail: "https://placehold.co/48/1e3a5f/ffffff?text=2024"
+    },
+    {
+        id: 5,
+        title: "Point sur les négociations en cours",
+        date: "2024-12-28",
+        category: "Négociations",
+        href: "/articles/negociations-en-cours"
+    },
+    {
+        id: 6,
+        title: "Formation : Maîtriser les outils collaboratifs",
+        date: "2024-12-25",
+        category: "Formation",
+        href: "/articles/formation-collaboratif"
+    },
+    {
+        id: 7,
+        title: "Journée de solidarité : Retour en images",
+        date: "2024-12-20",
+        category: "Événements",
+        href: "/articles/journee-solidarite",
+        thumbnail: "https://placehold.co/48/1e40af/ffffff?text=JS"
+    },
+    {
+        id: 8,
+        title: "Nouvelle circulaire : Ce qu'il faut savoir",
+        date: "2024-12-18",
+        category: "Actualité",
+        href: "/articles/nouvelle-circulaire"
+    },
+    {
+        id: 9,
+        title: "Rencontre avec les partenaires sociaux",
+        date: "2024-12-15",
+        category: "Rencontres",
+        href: "/articles/rencontre-partenaires"
+    },
+    {
+        id: 10,
+        title: "Guide pratique : Vos droits au travail",
+        date: "2024-12-12",
+        category: "Guides",
+        href: "/articles/guide-droits-travail"
+    },
+    {
+        id: 11,
+        title: "Assemblée locale : Compte-rendu",
+        date: "2024-12-10",
+        category: "Assemblées",
+        href: "/articles/assemblee-locale"
+    },
+    {
+        id: 12,
+        title: "Campagne d'adhésion 2025",
+        date: "2024-12-08",
+        category: "Campagne",
+        href: "/articles/campagne-adhesion-2025"
+    }
+];
+
+// Cartes d'action
+const actionCards = [
+    {
+        title: "Rejoindre la FSU",
+        description: "Adhérez à notre organisation et participez à la défense de vos droits et à la construction d'une école publique de qualité.",
+        iconName: "handshake",
+        link: "/adherer",
+        linkText: "Adhérer maintenant"
+    },
+    {
+        title: "Consulter les ressources",
+        description: "Accédez à notre bibliothèque de documents, guides pratiques et outils pour faciliter votre engagement syndical.",
+        iconName: "book",
+        link: "/ressources",
+        linkText: "Voir les ressources"
+    },
+    {
+        title: "Nous contacter",
+        description: "Une question ? Un besoin d'information ? Notre équipe est à votre écoute pour vous accompagner dans vos démarches.",
+        iconName: "mail",
+        link: "/contact",
+        linkText: "Envoyer un message"
+    }
+];
 ---
 
-<BaseLayout title={title}>
-    <!-- Hero Carousel -->
-    <HeroCarousel articles={carouselSlides} interval={5000} />
+<BaseLayout title="Accueil - Follen">
+    <!-- 1. Hero Carousel -->
+    <ScrollSnapCarousel articles={carouselArticles} />
 
-    <!-- Section Hero Wagtail (si données disponibles) -->
-    {homepage?.hero_title && (
-        <section class="py-16 bg-white">
-            <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                    {homepage.hero_title}
-                </h1>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-                    {homepage.hero_subtitle}
-                </p>
-                
-                {homepage.hero_cta_text && homepage.hero_cta_link && (
-                    <a 
-                        href={homepage.hero_cta_link} 
-                        class="inline-block bg-emerald-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl"
-                    >
-                        {homepage.hero_cta_text}
-                    </a>
-                )}
-            </div>
-        </section>
-    )}
-
-    <!-- Section Features (StreamField) -->
-    {homepage?.features && homepage.features.length > 0 && (
-        <section class="py-20 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Nos engagements</h2>
-                <div class="grid md:grid-cols-3 gap-8">
-                    {homepage.features.map((block) => (
-                        <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                            {block.value.icon && (
-                                <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
-                                    <span class="text-2xl">{block.value.icon}</span>
-                                </div>
-                            )}
-                            <h3 class="text-xl font-semibold text-gray-900 mb-3">
-                                {block.value.title}
-                            </h3>
-                            <p class="text-gray-600 leading-relaxed">
-                                {block.value.description}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    )}
-
-    <!-- Section Actions (Nouveau composant) -->
-    <ActionCardsSection />
-
-    <!-- Section Articles -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900">Derniers articles</h2>
-                <a href="/articles" class="text-emerald-600 font-medium hover:text-emerald-700 transition-colors flex items-center gap-2">
-                    Voir tout
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-            </div>
-            
-            {blogPosts.length > 0 ? (
-                <div class="grid md:grid-cols-3 gap-8">
-                    {blogPosts.map((post) => (
-                        <article class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                            {post.header_image_thumbnail ? (
-                                <div class="aspect-[16/10] overflow-hidden">
-                                    <img 
-                                        src={post.header_image_thumbnail} 
-                                        alt={post.title} 
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                </div>
-                            ) : (
-                                <div class="aspect-[16/10] bg-gradient-to-br from-emerald-400 to-teal-500"></div>
-                            )}
-                            <div class="p-6">
-                                <p class="text-sm text-gray-500 mb-2">
-                                    {new Date(post.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                </p>
-                                <h3 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
-                                    {post.title}
-                                </h3>
-                                <p class="text-gray-600 mb-4 line-clamp-2">{post.introduction}</p>
-                                <a 
-                                    href={`/articles/${post.meta?.slug}`} 
-                                    class="inline-flex items-center text-emerald-600 font-medium hover:gap-3 gap-2 transition-all"
-                                >
-                                    Lire la suite
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            ) : (
-                <div class="text-center py-12 text-gray-500">
-                    <p>Aucun article disponible pour le moment.</p>
-                </div>
-            )}
+    <!-- 2. Lien Plus d'articles -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <a 
+                href="/articles" 
+                class="inline-flex items-center text-slate-600 hover:text-blue-700 transition-colors font-medium"
+            >
+                Voir tous les articles
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
         </div>
     </section>
-</BaseLayout>
 
-<style>
-    /* Line clamp pour les textes tronqués */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>
+    <!-- 3. Liens Institutionnels -->
+    <InstitutionalLinks links={institutionalLinks} />
+
+    <!-- 4. News Feed -->
+    <NewsFeed articles={newsFeedArticles} title="Actualités" />
+
+    <!-- 5. Action Cards -->
+    <ActionCardsSection 
+        title="Agir avec nous"
+        description="Découvrez comment vous engager et participer à nos actions"
+        cards={actionCards}
+    />
+
+    <!-- 6. Newsletter -->
+    <Newsletter />
+</BaseLayout>

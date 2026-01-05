@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectorBanner from '../components/mockup/SectorBanner.astro';
+import MiniCarousel from '../components/mockup/MiniCarousel.astro';
+import ActionCardsSection from '../components/ActionCardsSection.astro';
+import ContactBanner from '../components/mockup/ContactBanner.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données du secteur Intérieur
+const sectorTitle = "Intérieur";
+const sectorSubtitle = "Créer des espaces de vie sains et durables";
+
+// Articles pour le Mini Carrousel (3 articles)
+const miniCarouselArticles = [
+    {
+        id: 1,
+        title: "Décoration éco-responsable : tendances 2025",
+        excerpt: "Les dernières tendances en matière de décoration durable et respectueuse de l'environnement.",
+        image: "https://placehold.co/1200x400/7c3aed/ffffff?text=D%C3%A9co+%C3%89co",
+        href: "/interieur/tendances-2025",
+        category: "Tendances"
+    },
+    {
+        id: 2,
+        title: "Matériaux naturels : le guide complet",
+        excerpt: "Comment choisir et utiliser des matériaux naturels pour votre intérieur : bois, lin, chanvre, liège...",
+        image: "https://placehold.co/1200x400/6d28d9/ffffff?text=Mat%C3%A9riaux+Naturels",
+        href: "/interieur/materiaux-naturels",
+        category: "Matériaux"
+    },
+    {
+        id: 3,
+        title: "Purifier l'air intérieur naturellement",
+        excerpt: "Les meilleures plantes et techniques pour améliorer la qualité de l'air dans votre maison.",
+        image: "https://placehold.co/1200x400/7c3aed/ffffff?text=Qualit%C3%A9+Air",
+        href: "/interieur/purifier-air",
+        category: "Bien-être"
+    }
+];
+
+// Cartes d'action spécifiques au secteur (4 cartes)
+const sectorActionCards = [
+    {
+        title: "Principes",
+        description: "Découvrez les principes d'un habitat sain : ventilation, matériaux, éclairage naturel et économies d'énergie.",
+        iconName: "book",
+        link: "/interieur/principes",
+        linkText: "Lire les principes"
+    },
+    {
+        title: "Boîte à outils",
+        description: "Guides pratiques, tutoriels DIY et conseils pour transformer votre intérieur de manière écologique.",
+        iconName: "wrench",
+        link: "/interieur/outils",
+        linkText: "Consulter les outils"
+    },
+    {
+        title: "Inspirations",
+        description: "Galerie de projets réalisés, avant/après et idées créatives pour tous les budgets.",
+        iconName: "megaphone",
+        link: "/interieur/inspirations",
+        linkText: "Voir les inspirations"
+    },
+    {
+        title: "Artisans",
+        description: "Notre réseau d'artisans et professionnels engagés dans la rénovation et décoration durables.",
+        iconName: "handshake",
+        link: "/interieur/artisans",
+        linkText: "Trouver un artisan"
+    }
+];
+
+// Contacts/Représentants du secteur
+const sectorContacts = [
+    {
+        name: "Émilie Maison",
+        role: "Responsable secteur Intérieur",
+        photoUrl: "https://placehold.co/128/7c3aed/ffffff?text=EM"
+    },
+    {
+        name: "Lucas Bois",
+        role: "Expert Matériaux durables",
+        photoUrl: "https://placehold.co/128/6d28d9/ffffff?text=LB"
+    },
+    {
+        name: "Marine Déco",
+        role: "Architecte d'intérieur",
+        photoUrl: "https://placehold.co/128/7c3aed/ffffff?text=MD"
+    }
+];
+---
+
+<BaseLayout title="Intérieur - Follen">
+    <!-- 1. Bandeau Secteur -->
+    <SectorBanner 
+        title={sectorTitle}
+        subtitle={sectorSubtitle}
+        bgColor="bg-violet-700"
+    />
+
+    <!-- 2. Mini Carrousel -->
+    <MiniCarousel articles={miniCarouselArticles} />
+
+    <!-- 3. Action Cards x4 -->
+    <ActionCardsSection 
+        title="Ressources Intérieur"
+        description="Tout pour créer un intérieur sain et durable"
+        cards={sectorActionCards}
+    />
+
+    <!-- 4. Bandeau Contact -->
+    <ContactBanner 
+        contacts={sectorContacts}
+        contactButtonText="Contacter l'équipe Intérieur"
+        contactButtonLink="/interieur/contact"
+    />
+
+    <!-- 5. Newsletter -->
+    <Newsletter 
+        title="Newsletter Intérieur"
+        description="Recevez les actualités du secteur Intérieur directement dans votre boîte mail."
+    />
+</BaseLayout>
+
