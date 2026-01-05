@@ -7,8 +7,8 @@ import ContactBanner from '../components/mockup/ContactBanner.astro';
 import Newsletter from '../components/mockup/Newsletter.astro';
 
 // Données du secteur Agriculture
-const sectorTitle = "Agriculture";
-const sectorSubtitle = "Promouvoir une agriculture durable et responsable";
+const sectorTitle = "La FSU au ministère de l'agriculture";
+// Pas de sous-titre demandé
 
 // Articles pour le Mini Carrousel (3 articles)
 const miniCarouselArticles = [
@@ -94,18 +94,18 @@ const sectorContacts = [
     <!-- 1. Bandeau Secteur -->
     <SectorBanner 
         title={sectorTitle}
-        subtitle={sectorSubtitle}
         bgColor="bg-green-700"
     />
 
     <!-- 2. Mini Carrousel -->
     <MiniCarousel articles={miniCarouselArticles} />
 
-    <!-- 3. Action Cards x4 -->
+    <!-- 3. Action Cards x4 (Layout Carré) -->
     <ActionCardsSection 
         title="Ressources Agriculture"
         description="Tout ce dont vous avez besoin pour une agriculture durable"
         cards={sectorActionCards}
+        layout="square" 
     />
 
     <!-- 4. Bandeau Contact -->
@@ -121,4 +121,3 @@ const sectorContacts = [
         description="Recevez les actualités du secteur Agriculture directement dans votre boîte mail."
     />
 </BaseLayout>
-

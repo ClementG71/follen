@@ -24,12 +24,14 @@ interface Props {
     title?: string;
     description?: string;
     cards?: CardData[];
+    layout?: 'grid' | 'square';
 }
 
 const { 
     title = "Agir avec Follen",
     description = "Découvrez comment vous pouvez participer à notre mission",
-    cards = [] 
+    cards = [],
+    layout = 'grid'
 } = Astro.props;
 
 // Mock data si aucune donnée n'est fournie
@@ -68,7 +70,12 @@ const displayCards = cards.length > 0 ? cards : [
         </div>
 
         <!-- Cards Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8">
+        <div class:list={[
+            "grid gap-y-16 gap-x-8",
+            layout === 'square' 
+                ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto" // Layout carré centré
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"    // Layout standard
+        ]}>
             {displayCards.map((card) => (
                 <div class="relative mt-8">
                     {/* Carte Fond Bleu */}
@@ -108,4 +115,3 @@ const displayCards = cards.length > 0 ? cards : [
         </div>
     </div>
 </section>
-

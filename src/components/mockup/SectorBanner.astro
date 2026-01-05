@@ -18,33 +18,32 @@ const {
 const hasBgImage = !!bgImage;
 ---
 
-<section 
-    class:list={[
-        'relative py-20 md:py-28 overflow-hidden',
-        !hasBgImage && bgColor
-    ]}
-    style={hasBgImage ? `background-image: url(${bgImage}); background-size: cover; background-position: center;` : undefined}
->
-    {hasBgImage && (
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-700/80"></div>
-    )}
-    
-    {!hasBgImage && (
-        <!-- Texture overlay (optionnel) -->
-        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-    )}
-    
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="max-w-4xl">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+<div class="container mx-auto px-4 md:px-6 py-8">
+    <section 
+        class:list={[
+            'relative py-12 md:py-16 overflow-hidden rounded-2xl shadow-lg flex flex-col items-center justify-center text-center',
+            !hasBgImage && bgColor
+        ]}
+        style={hasBgImage ? `background-image: url(${bgImage}); background-size: cover; background-position: center;` : undefined}
+    >
+        {hasBgImage && (
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-700/80"></div>
+        )}
+        
+        {!hasBgImage && (
+            <!-- Texture overlay (optionnel) -->
+            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        )}
+        
+        <div class="relative z-10 px-6 max-w-4xl">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                 {title}
             </h1>
             {subtitle && (
-                <p class="text-xl md:text-2xl text-blue-100">
+                <p class="text-lg md:text-xl text-blue-100 mt-4">
                     {subtitle}
                 </p>
             )}
         </div>
-    </div>
-</section>
-
+    </section>
+</div>
