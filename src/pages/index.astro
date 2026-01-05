@@ -12,7 +12,7 @@ const carouselArticles = [
         id: 1,
         title: "Mobilisation du 5 décembre : Tous ensemble pour la défense de nos droits",
         excerpt: "La mobilisation historique du 5 décembre a rassemblé des milliers de membres dans les rues. Revivez les moments forts de cette journée importante.",
-        image: "https://placehold.co/1920x700/1e3a5f/ffffff?text=Mobilisation+5+d%C3%A9cembre",
+        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Mobilisation+5+d%C3%A9cembre",
         href: "/articles/mobilisation-5-decembre",
         category: "Actualité"
     },
@@ -20,7 +20,7 @@ const carouselArticles = [
         id: 2,
         title: "Nouveaux accords salariaux : Des avancées significatives",
         excerpt: "Les négociations ont abouti à des améliorations importantes pour nos conditions de travail. Découvrez les détails des nouveaux accords.",
-        image: "https://placehold.co/1920x700/1e40af/ffffff?text=Accords+Salariaux",
+        image: "https://placehold.co/1920x700/B83E4D/ffffff?text=Accords+Salariaux",
         href: "/articles/accords-salariaux",
         category: "Négociations"
     },
@@ -28,7 +28,7 @@ const carouselArticles = [
         id: 3,
         title: "Assemblée générale annuelle : Retour sur l'année écoulée",
         excerpt: "L'assemblée générale a permis de faire un bilan complet de nos actions et de définir nos orientations pour l'année à venir.",
-        image: "https://placehold.co/1920x700/1e3a8a/ffffff?text=Assembl%C3%A9e+G%C3%A9n%C3%A9rale",
+        image: "https://placehold.co/1920x700/9E3542/ffffff?text=Assembl%C3%A9e+G%C3%A9n%C3%A9rale",
         href: "/articles/assemblee-generale",
         category: "Vie syndicale"
     },
@@ -36,7 +36,7 @@ const carouselArticles = [
         id: 4,
         title: "Formation continue : Nouvelles sessions disponibles",
         excerpt: "Inscrivez-vous dès maintenant aux prochaines sessions de formation pour développer vos compétences professionnelles.",
-        image: "https://placehold.co/1920x700/1e40af/ffffff?text=Formation+Continue",
+        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Formation+Continue",
         href: "/articles/formation-continue",
         category: "Formation"
     },
@@ -44,7 +44,7 @@ const carouselArticles = [
         id: 5,
         title: "Plateforme Élan Commun : Outils et ressources à votre disposition",
         excerpt: "Découvrez la nouvelle plateforme qui met à votre disposition tous les outils nécessaires pour faciliter votre engagement syndical.",
-        image: "https://placehold.co/1920x700/1e3a5f/ffffff?text=%C3%89lan+Commun",
+        image: "https://placehold.co/1920x700/B83E4D/ffffff?text=%C3%89lan+Commun",
         href: "/articles/elan-commun",
         category: "Ressources"
     }
@@ -56,7 +56,7 @@ const institutionalLinks = [
         label: "Site FSU",
         href: "https://www.fsu.fr",
         icon: "external",
-        color: "blue" as const
+        color: "blue" as const // Mappé sur follen-red dans le composant
     },
     {
         label: "Actus Élan Commun",
@@ -80,7 +80,7 @@ const newsFeedArticles = [
         date: "2025-01-10",
         category: "Réunions",
         href: "/articles/reunion-sectorielle",
-        thumbnail: "https://placehold.co/48/1e40af/ffffff?text=RS"
+        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=RS"
     },
     {
         id: 2,
@@ -102,7 +102,7 @@ const newsFeedArticles = [
         date: "2025-01-02",
         category: "Bilan",
         href: "/articles/bilan-2024",
-        thumbnail: "https://placehold.co/48/1e3a5f/ffffff?text=2024"
+        thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2024"
     },
     {
         id: 5,
@@ -124,7 +124,7 @@ const newsFeedArticles = [
         date: "2024-12-20",
         category: "Événements",
         href: "/articles/journee-solidarite",
-        thumbnail: "https://placehold.co/48/1e40af/ffffff?text=JS"
+        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=JS"
     },
     {
         id: 8,
@@ -203,7 +203,7 @@ const actionCards = [
         <div class="container mx-auto px-6 text-center mt-8">
             <a 
                 href="/articles" 
-                class="inline-flex items-center justify-center px-8 py-3 border-2 border-slate-200 rounded-full font-semibold text-slate-600 hover:border-blue-600 hover:text-blue-700 hover:bg-white transition-all duration-300"
+                class="inline-flex items-center justify-center px-8 py-3 border-2 border-slate-200 rounded-full font-semibold text-slate-600 hover:border-follen-red hover:text-follen-red hover:bg-white transition-all duration-300"
             >
                 Voir toute l'actualité
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,6 +218,8 @@ const actionCards = [
         title="Agir avec nous"
         description="Découvrez comment vous engager et participer à nos actions"
         cards={actionCards}
+        cardColor="bg-follen-red"
+        iconColor="text-follen-red"
     />
 
     <!-- 5. Newsletter -->

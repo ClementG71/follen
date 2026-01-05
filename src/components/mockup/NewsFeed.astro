@@ -28,7 +28,7 @@ const { articles, title = "Actualités" } = Astro.props;
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {articles.map((article) => (
-                <article class="group bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-all border border-slate-100 hover:border-blue-200">
+                <article class="group bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-all border border-slate-100 hover:border-follen-red-100">
                     <a href={article.href} class="block">
                         {/* Micro-vignette (optionnelle) */}
                         {article.thumbnail && (
@@ -43,13 +43,13 @@ const { articles, title = "Actualités" } = Astro.props;
                         
                         {/* Badge Catégorie */}
                         <div class="mb-2">
-                            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-blue-700 bg-blue-50 px-2 py-1 rounded">
+                            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-follen-red bg-follen-red-light px-2 py-1 rounded">
                                 {article.category}
                             </span>
                         </div>
                         
                         {/* Titre */}
-                        <h3 class="text-base font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                        <h3 class="text-base font-bold text-slate-900 mb-2 group-hover:text-follen-red transition-colors line-clamp-2">
                             {article.title}
                         </h3>
                         
@@ -76,4 +76,3 @@ const { articles, title = "Actualités" } = Astro.props;
         overflow: hidden;
     }
 </style>
-

@@ -16,11 +16,11 @@ const {
 } = Astro.props;
 ---
 
-<section class="py-16 bg-blue-700 text-white">
+<section class="py-16 bg-follen-red text-white">
     <div class="container mx-auto px-6">
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
-            <p class="text-blue-100 mb-8 text-lg">{description}</p>
+            <p class="text-follen-red-light mb-8 text-lg">{description}</p>
             
             <!-- Formulaire Newsletter -->
             <form class="flex flex-col sm:flex-row gap-4 mb-6" id="newsletter-form">
@@ -28,11 +28,11 @@ const {
                     type="email" 
                     placeholder="Votre adresse email"
                     required
-                    class="flex-1 px-6 py-4 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    class="flex-1 px-6 py-4 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-follen-red-light"
                 />
                 <button 
                     type="submit"
-                    class="bg-white text-blue-700 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap"
+                    class="bg-white text-follen-red px-8 py-4 rounded-lg font-semibold hover:bg-follen-red-light transition-colors whitespace-nowrap"
                 >
                     S'abonner
                 </button>
@@ -42,7 +42,7 @@ const {
             <div>
                 <a 
                     href={historyLink}
-                    class="inline-flex items-center text-blue-100 hover:text-white transition-colors text-sm"
+                    class="inline-flex items-center text-follen-red-light hover:text-white transition-colors text-sm"
                 >
                     {historyLinkText}
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,4 +61,3 @@ const {
         console.log('Newsletter subscription');
     });
 </script>
-

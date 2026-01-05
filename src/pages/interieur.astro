@@ -16,7 +16,7 @@ const miniCarouselArticles = [
         id: 1,
         title: "Décoration éco-responsable : tendances 2025",
         excerpt: "Les dernières tendances en matière de décoration durable et respectueuse de l'environnement.",
-        image: "https://placehold.co/1200x400/7c3aed/ffffff?text=D%C3%A9co+%C3%89co",
+        image: "https://placehold.co/1200x400/EDAE49/ffffff?text=D%C3%A9co+%C3%89co",
         href: "/interieur/tendances-2025",
         category: "Tendances"
     },
@@ -24,7 +24,7 @@ const miniCarouselArticles = [
         id: 2,
         title: "Matériaux naturels : le guide complet",
         excerpt: "Comment choisir et utiliser des matériaux naturels pour votre intérieur : bois, lin, chanvre, liège...",
-        image: "https://placehold.co/1200x400/6d28d9/ffffff?text=Mat%C3%A9riaux+Naturels",
+        image: "https://placehold.co/1200x400/D99E40/ffffff?text=Mat%C3%A9riaux+Naturels",
         href: "/interieur/materiaux-naturels",
         category: "Matériaux"
     },
@@ -32,7 +32,7 @@ const miniCarouselArticles = [
         id: 3,
         title: "Purifier l'air intérieur naturellement",
         excerpt: "Les meilleures plantes et techniques pour améliorer la qualité de l'air dans votre maison.",
-        image: "https://placehold.co/1200x400/7c3aed/ffffff?text=Qualit%C3%A9+Air",
+        image: "https://placehold.co/1200x400/EDAE49/ffffff?text=Qualit%C3%A9+Air",
         href: "/interieur/purifier-air",
         category: "Bien-être"
     }
@@ -75,17 +75,17 @@ const sectorContacts = [
     {
         name: "Émilie Maison",
         role: "Responsable secteur Intérieur",
-        photoUrl: "https://placehold.co/128/7c3aed/ffffff?text=EM"
+        photoUrl: "https://placehold.co/128/EDAE49/ffffff?text=EM"
     },
     {
         name: "Lucas Bois",
         role: "Expert Matériaux durables",
-        photoUrl: "https://placehold.co/128/6d28d9/ffffff?text=LB"
+        photoUrl: "https://placehold.co/128/D99E40/ffffff?text=LB"
     },
     {
         name: "Marine Déco",
         role: "Architecte d'intérieur",
-        photoUrl: "https://placehold.co/128/7c3aed/ffffff?text=MD"
+        photoUrl: "https://placehold.co/128/EDAE49/ffffff?text=MD"
     }
 ];
 ---
@@ -95,7 +95,7 @@ const sectorContacts = [
     <SectorBanner 
         title={sectorTitle}
         subtitle={sectorSubtitle}
-        bgColor="bg-violet-700"
+        bgColor="bg-follen-yellow"
     />
 
     <!-- 2. Mini Carrousel -->
@@ -107,6 +107,8 @@ const sectorContacts = [
         description="Tout pour créer un intérieur sain et durable"
         cards={sectorActionCards}
         layout="square"
+        cardColor="bg-follen-yellow"
+        iconColor="text-follen-yellow"
     />
 
     <!-- 4. Bandeau Contact -->

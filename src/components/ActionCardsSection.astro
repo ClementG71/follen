@@ -25,13 +25,17 @@ interface Props {
     description?: string;
     cards?: CardData[];
     layout?: 'grid' | 'square';
+    cardColor?: string; // Classe Tailwind pour le fond (ex: bg-follen-red)
+    iconColor?: string; // Classe Tailwind pour l'icône (ex: text-follen-red)
 }
 
 const { 
     title = "Agir avec Follen",
     description = "Découvrez comment vous pouvez participer à notre mission",
     cards = [],
-    layout = 'grid'
+    layout = 'grid',
+    cardColor = "bg-follen-red",
+    iconColor = "text-follen-red"
 } = Astro.props;
 
 // Mock data si aucune donnée n'est fournie
@@ -78,12 +82,12 @@ const displayCards = cards.length > 0 ? cards : [
         ]}>
             {displayCards.map((card) => (
                 <div class="relative mt-8">
-                    {/* Carte Fond Bleu */}
-                    <div class="bg-blue-600 rounded-2xl p-8 pt-12 h-full flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                    {/* Carte Fond Couleur */}
+                    <div class:list={["rounded-2xl p-8 pt-12 h-full flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1", cardColor]}>
                         
                         {/* Icône Flottante (Position Absolute) */}
                         <div class="absolute -top-10 left-8">
-                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md text-blue-600 p-4 border-4 border-gray-50">
+                            <div class:list={["w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-md p-4 border-4 border-gray-50", iconColor]}>
                                 <Fragment set:html={icons[card.iconName] || icons.default} />
                             </div>
                         </div>
@@ -93,7 +97,7 @@ const displayCards = cards.length > 0 ? cards : [
                             {card.title}
                         </h3>
                         
-                        <p class="text-blue-100 mb-8 flex-grow leading-relaxed">
+                        <p class="text-white/90 mb-8 flex-grow leading-relaxed">
                             {card.description}
                         </p>
 
@@ -101,7 +105,7 @@ const displayCards = cards.length > 0 ? cards : [
                         {card.link && (
                             <a 
                                 href={card.link} 
-                                class="inline-flex items-center text-white font-bold hover:text-blue-200 transition-colors group"
+                                class="inline-flex items-center text-white font-bold hover:text-white/80 transition-colors group"
                             >
                                 {card.linkText || "Voir détails"}
                                 <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

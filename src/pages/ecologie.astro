@@ -16,7 +16,7 @@ const miniCarouselArticles = [
         id: 1,
         title: "Zéro déchet : par où commencer ?",
         excerpt: "Guide pratique pour débuter votre transition vers un mode de vie zéro déchet, étape par étape.",
-        image: "https://placehold.co/1200x400/0d9488/ffffff?text=Z%C3%A9ro+D%C3%A9chet",
+        image: "https://placehold.co/1200x400/2374AB/ffffff?text=Z%C3%A9ro+D%C3%A9chet",
         href: "/ecologie/zerodechet-guide",
         category: "Zéro Déchet"
     },
@@ -24,7 +24,7 @@ const miniCarouselArticles = [
         id: 2,
         title: "Climat : les actions locales qui comptent",
         excerpt: "Comment agir concrètement à son échelle pour lutter contre le changement climatique.",
-        image: "https://placehold.co/1200x400/0f766e/ffffff?text=Actions+Climat",
+        image: "https://placehold.co/1200x400/1D6391/ffffff?text=Actions+Climat",
         href: "/ecologie/actions-climat",
         category: "Climat"
     },
@@ -32,7 +32,7 @@ const miniCarouselArticles = [
         id: 3,
         title: "Biodiversité : protéger le vivant au quotidien",
         excerpt: "Des gestes simples pour préserver la biodiversité dans votre jardin et votre quartier.",
-        image: "https://placehold.co/1200x400/0d9488/ffffff?text=Biodiversit%C3%A9",
+        image: "https://placehold.co/1200x400/2374AB/ffffff?text=Biodiversit%C3%A9",
         href: "/ecologie/biodiversite",
         category: "Biodiversité"
     }
@@ -75,17 +75,17 @@ const sectorContacts = [
     {
         name: "Julie Climat",
         role: "Responsable secteur Écologie",
-        photoUrl: "https://placehold.co/128/0d9488/ffffff?text=JC"
+        photoUrl: "https://placehold.co/128/2374AB/ffffff?text=JC"
     },
     {
         name: "Thomas Vert",
         role: "Chargé de mission Zéro Déchet",
-        photoUrl: "https://placehold.co/128/0f766e/ffffff?text=TV"
+        photoUrl: "https://placehold.co/128/1D6391/ffffff?text=TV"
     },
     {
         name: "Léa Nature",
         role: "Experte Biodiversité",
-        photoUrl: "https://placehold.co/128/0d9488/ffffff?text=LN"
+        photoUrl: "https://placehold.co/128/2374AB/ffffff?text=LN"
     }
 ];
 ---
@@ -95,7 +95,7 @@ const sectorContacts = [
     <SectorBanner 
         title={sectorTitle}
         subtitle={sectorSubtitle}
-        bgColor="bg-teal-700"
+        bgColor="bg-follen-blue"
     />
 
     <!-- 2. Mini Carrousel -->
@@ -107,6 +107,8 @@ const sectorContacts = [
         description="Tout pour agir en faveur de l'environnement"
         cards={sectorActionCards}
         layout="square"
+        cardColor="bg-follen-blue"
+        iconColor="text-follen-blue"
     />
 
     <!-- 4. Bandeau Contact -->

@@ -16,7 +16,7 @@ const miniCarouselArticles = [
         id: 1,
         title: "Permaculture : les fondamentaux à connaître",
         excerpt: "Découvrez les principes de base de la permaculture et comment les appliquer dans votre jardin ou exploitation.",
-        image: "https://placehold.co/1200x400/166534/ffffff?text=Permaculture",
+        image: "https://placehold.co/1200x400/43AA8B/ffffff?text=Permaculture",
         href: "/agriculture/permaculture-fondamentaux",
         category: "Permaculture"
     },
@@ -24,7 +24,7 @@ const miniCarouselArticles = [
         id: 2,
         title: "Agriculture régénératrice : l'avenir de nos sols",
         excerpt: "Comment l'agriculture régénératrice peut restaurer la santé des sols et augmenter la biodiversité.",
-        image: "https://placehold.co/1200x400/15803d/ffffff?text=Agriculture+R%C3%A9g%C3%A9n%C3%A9ratrice",
+        image: "https://placehold.co/1200x400/3B9679/ffffff?text=Agriculture+R%C3%A9g%C3%A9n%C3%A9ratrice",
         href: "/agriculture/regeneratrice-sols",
         category: "Régénératrice"
     },
@@ -32,7 +32,7 @@ const miniCarouselArticles = [
         id: 3,
         title: "Circuits courts : valoriser la production locale",
         excerpt: "Les avantages des circuits courts pour les producteurs et les consommateurs.",
-        image: "https://placehold.co/1200x400/166534/ffffff?text=Circuits+Courts",
+        image: "https://placehold.co/1200x400/43AA8B/ffffff?text=Circuits+Courts",
         href: "/agriculture/circuits-courts",
         category: "Distribution"
     }
@@ -75,17 +75,17 @@ const sectorContacts = [
     {
         name: "Pierre Levert",
         role: "Responsable secteur Agriculture",
-        photoUrl: "https://placehold.co/128/166534/ffffff?text=PL"
+        photoUrl: "https://placehold.co/128/43AA8B/ffffff?text=PL"
     },
     {
         name: "Claire Moisson",
         role: "Chargée de mission Permaculture",
-        photoUrl: "https://placehold.co/128/15803d/ffffff?text=CM"
+        photoUrl: "https://placehold.co/128/3B9679/ffffff?text=CM"
     },
     {
         name: "Antoine Racine",
         role: "Expert Agroécologie",
-        photoUrl: "https://placehold.co/128/166534/ffffff?text=AR"
+        photoUrl: "https://placehold.co/128/43AA8B/ffffff?text=AR"
     }
 ];
 ---
@@ -94,7 +94,7 @@ const sectorContacts = [
     <!-- 1. Bandeau Secteur -->
     <SectorBanner 
         title={sectorTitle}
-        bgColor="bg-green-700"
+        bgColor="bg-follen-green"
     />
 
     <!-- 2. Mini Carrousel -->
@@ -106,6 +106,8 @@ const sectorContacts = [
         description="Tout ce dont vous avez besoin pour une agriculture durable"
         cards={sectorActionCards}
         layout="square" 
+        cardColor="bg-follen-green"
+        iconColor="text-follen-green"
     />
 
     <!-- 4. Bandeau Contact -->
