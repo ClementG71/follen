@@ -193,34 +193,33 @@ const actionCards = [
     <!-- 1. Hero Carousel -->
     <ScrollSnapCarousel articles={carouselArticles} />
 
-    <!-- 2. Lien Plus d'articles -->
-    <section class="py-8 bg-white">
-        <div class="container mx-auto px-6 text-center">
+    <!-- 2. Liens Institutionnels (remontés) -->
+    <InstitutionalLinks links={institutionalLinks} />
+
+    <!-- 3. News Feed + Lien voir tout -->
+    <div class="bg-slate-50 pb-16">
+        <NewsFeed articles={newsFeedArticles} title="Actualités" />
+        
+        <div class="container mx-auto px-6 text-center mt-8">
             <a 
                 href="/articles" 
-                class="inline-flex items-center text-slate-600 hover:text-blue-700 transition-colors font-medium"
+                class="inline-flex items-center justify-center px-8 py-3 border-2 border-slate-200 rounded-full font-semibold text-slate-600 hover:border-blue-600 hover:text-blue-700 hover:bg-white transition-all duration-300"
             >
-                Voir tous les articles
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                Voir toute l'actualité
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
             </a>
         </div>
-    </section>
+    </div>
 
-    <!-- 3. Liens Institutionnels -->
-    <InstitutionalLinks links={institutionalLinks} />
-
-    <!-- 4. News Feed -->
-    <NewsFeed articles={newsFeedArticles} title="Actualités" />
-
-    <!-- 5. Action Cards -->
+    <!-- 4. Action Cards -->
     <ActionCardsSection 
         title="Agir avec nous"
         description="Découvrez comment vous engager et participer à nos actions"
         cards={actionCards}
     />
 
-    <!-- 6. Newsletter -->
+    <!-- 5. Newsletter -->
     <Newsletter />
 </BaseLayout>
