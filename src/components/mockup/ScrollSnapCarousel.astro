@@ -1,0 +1,172 @@
+---
+// ScrollSnapCarousel.astro - Carrousel Hero avec CSS Scroll Snap
+
+interface Slide {
+    id: number;
+    title: string;
+    excerpt: string;
+    image: string;
+    href: string;
+    category?: string;
+}
+
+interface Props {
+    articles: Slide[];
+}
+
+const { articles } = Astro.props;
+---
+
+<section class="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-slate-900">
+    <!-- Scroll Container -->
+    <div class="scroll-container h-full flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+        {articles.map((article, index) => (
+            <div 
+                class="carousel-slide flex-shrink-0 w-full h-full snap-start relative"
+                data-index={index}
+            >
+                <!-- Image Background -->
+                <img 
+                    src={article.image} 
+                    alt={article.title}
+                    class="absolute inset-0 w-full h-full object-cover"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                />
+                
+                <!-- Overlay Gradient -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                
+                <!-- Content Overlay -->
+                <div class="absolute bottom-0 left-0 right-0 p-8 md:p-16 z-10 max-w-4xl">
+                    {article.category && (
+                        <span class="inline-block text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+                            {article.category}
+                        </span>
+                    )}
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                        {article.title}
+                    </h2>
+                    <p class="text-lg md:text-xl text-blue-100 mb-6 max-w-2xl">
+                        {article.excerpt}
+                    </p>
+                    <a 
+                        href={article.href}
+                        class="inline-flex items-center bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors shadow-lg"
+                    >
+                        Lire l'article
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        ))}
+    </div>
+
+    <!-- Scroll Indicators -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        {articles.map((_, index) => (
+            <button 
+                class="carousel-dot w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-colors"
+                data-index={index}
+                aria-label={`Aller au slide ${index + 1}`}
+            ></button>
+        ))}
+    </div>
+
+    <!-- Navigation Arrows (Optional - for keyboard/mouse navigation) -->
+    <button 
+        class="carousel-prev absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/40 transition-colors"
+        aria-label="Slide précédent"
+    >
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </button>
+    <button 
+        class="carousel-next absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/40 transition-colors"
+        aria-label="Slide suivant"
+    >
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
+</section>
+
+<script>
+    // Navigation simple avec les dots et les flèches
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.scroll-container');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        const slides = document.querySelectorAll('.carousel-slide');
+        
+        if (!container || slides.length === 0) return;
+
+        function updateDots() {
+            const scrollLeft = container.scrollLeft;
+            const slideWidth = container.clientWidth;
+            const currentIndex = Math.round(scrollLeft / slideWidth);
+            
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.remove('bg-white/50');
+                    dot.classList.add('bg-white');
+                } else {
+                    dot.classList.remove('bg-white');
+                    dot.classList.add('bg-white/50');
+                }
+            });
+        }
+
+        function goToSlide(index) {
+            const slideWidth = container.clientWidth;
+            container.scrollTo({
+                left: slideWidth * index,
+                behavior: 'smooth'
+            });
+        }
+
+        // Event listeners
+        container.addEventListener('scroll', updateDots);
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => goToSlide(index));
+        });
+
+        prevBtn?.addEventListener('click', () => {
+            const currentIndex = Math.round(container.scrollLeft / container.clientWidth);
+            goToSlide(currentIndex > 0 ? currentIndex - 1 : slides.length - 1);
+        });
+
+        nextBtn?.addEventListener('click', () => {
+            const currentIndex = Math.round(container.scrollLeft / container.clientWidth);
+            goToSlide(currentIndex < slides.length - 1 ? currentIndex + 1 : 0);
+        });
+
+        // Initial dot state
+        updateDots();
+    });
+</script>
+
+<style>
+    .scroll-container {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+    
+    .scrollbar-hide {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+

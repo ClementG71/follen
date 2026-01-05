@@ -1,0 +1,79 @@
+---
+// NewsFeed.astro - Grille de petites cartes compactes
+
+interface Article {
+    id: number;
+    title: string;
+    date: string;
+    category: string;
+    href: string;
+    thumbnail?: string; // Optionnel - micro-vignette
+}
+
+interface Props {
+    articles: Article[];
+    title?: string;
+}
+
+const { articles, title = "Actualités" } = Astro.props;
+---
+
+<section class="py-16 bg-slate-50">
+    <div class="container mx-auto px-6">
+        {title && (
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                {title}
+            </h2>
+        )}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {articles.map((article) => (
+                <article class="group bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-all border border-slate-100 hover:border-blue-200">
+                    <a href={article.href} class="block">
+                        {/* Micro-vignette (optionnelle) */}
+                        {article.thumbnail && (
+                            <div class="w-12 h-12 mb-3 rounded-full overflow-hidden bg-slate-200">
+                                <img 
+                                    src={article.thumbnail} 
+                                    alt={article.title}
+                                    class="w-full h-full object-cover"
+                                />
+                            </div>
+                        )}
+                        
+                        {/* Badge Catégorie */}
+                        <div class="mb-2">
+                            <span class="inline-block text-xs font-semibold uppercase tracking-wide text-blue-700 bg-blue-50 px-2 py-1 rounded">
+                                {article.category}
+                            </span>
+                        </div>
+                        
+                        {/* Titre */}
+                        <h3 class="text-base font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                            {article.title}
+                        </h3>
+                        
+                        {/* Date */}
+                        <p class="text-xs text-slate-500">
+                            {new Date(article.date).toLocaleDateString('fr-FR', { 
+                                day: 'numeric', 
+                                month: 'long', 
+                                year: 'numeric' 
+                            })}
+                        </p>
+                    </a>
+                </article>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+

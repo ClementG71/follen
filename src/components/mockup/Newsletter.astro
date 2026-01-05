@@ -1,0 +1,64 @@
+---
+// Newsletter.astro - Bloc newsletter réutilisable
+
+interface Props {
+    title?: string;
+    description?: string;
+    historyLink?: string;
+    historyLinkText?: string;
+}
+
+const { 
+    title = "Restez informé",
+    description = "Recevez nos dernières actualités et communiqués directement dans votre boîte mail.",
+    historyLink = "/newsletters",
+    historyLinkText = "Voir l'historique des newsletters"
+} = Astro.props;
+---
+
+<section class="py-16 bg-blue-700 text-white">
+    <div class="container mx-auto px-6">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
+            <p class="text-blue-100 mb-8 text-lg">{description}</p>
+            
+            <!-- Formulaire Newsletter -->
+            <form class="flex flex-col sm:flex-row gap-4 mb-6" id="newsletter-form">
+                <input 
+                    type="email" 
+                    placeholder="Votre adresse email"
+                    required
+                    class="flex-1 px-6 py-4 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+                <button 
+                    type="submit"
+                    class="bg-white text-blue-700 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors whitespace-nowrap"
+                >
+                    S'abonner
+                </button>
+            </form>
+            
+            <!-- Lien Historique -->
+            <div>
+                <a 
+                    href={historyLink}
+                    class="inline-flex items-center text-blue-100 hover:text-white transition-colors text-sm"
+                >
+                    {historyLinkText}
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('newsletter-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Logique de soumission à implémenter
+        console.log('Newsletter subscription');
+    });
+</script>
+

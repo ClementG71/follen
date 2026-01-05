@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectorBanner from '../components/mockup/SectorBanner.astro';
+import MiniCarousel from '../components/mockup/MiniCarousel.astro';
+import ActionCardsSection from '../components/ActionCardsSection.astro';
+import ContactBanner from '../components/mockup/ContactBanner.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données du secteur (exemple : Éducation)
+const sectorTitle = "Éducation";
+const sectorSubtitle = "Défendre et promouvoir l'éducation publique";
+
+// Articles pour le Mini Carrousel (3 articles)
+const miniCarouselArticles = [
+    {
+        id: 1,
+        title: "Réforme des programmes : Point d'étape",
+        excerpt: "Où en sommes-nous des discussions sur la réforme des programmes ? Retour sur les dernières négociations.",
+        image: "https://placehold.co/1200x400/1e3a5f/ffffff?text=R%C3%A9forme+Programmes",
+        href: "/secteurs/education/reforme-programmes",
+        category: "Réforme"
+    },
+    {
+        id: 2,
+        title: "Conditions de travail : Enquête nationale",
+        excerpt: "Participez à notre grande enquête sur les conditions de travail dans l'éducation nationale.",
+        image: "https://placehold.co/1200x400/1e40af/ffffff?text=Conditions+Travail",
+        href: "/secteurs/education/enquete-conditions-travail",
+        category: "Enquête"
+    },
+    {
+        id: 3,
+        title: "Formation continue : Nouvelles offres",
+        excerpt: "Découvrez les nouvelles sessions de formation continue disponibles pour le secteur éducation.",
+        image: "https://placehold.co/1200x400/1e3a8a/ffffff?text=Formation+Continue",
+        href: "/secteurs/education/formation-continue",
+        category: "Formation"
+    }
+];
+
+// Cartes d'action spécifiques au secteur (4 cartes)
+const sectorActionCards = [
+    {
+        title: "Principes",
+        description: "Découvrez les principes fondamentaux qui guident notre action dans le secteur de l'éducation et les valeurs que nous défendons.",
+        iconName: "book",
+        link: "/secteurs/education/principes",
+        linkText: "Lire les principes"
+    },
+    {
+        title: "Boîte à outils",
+        description: "Accédez à tous les outils pratiques, guides, modèles de documents et ressources nécessaires à votre engagement syndical.",
+        iconName: "wrench",
+        link: "/secteurs/education/outils",
+        linkText: "Consulter les outils"
+    },
+    {
+        title: "Instances",
+        description: "Informations sur les différentes instances représentatives, commissions et groupes de travail du secteur éducation.",
+        iconName: "megaphone",
+        link: "/secteurs/education/instances",
+        linkText: "Voir les instances"
+    },
+    {
+        title: "Élan commun",
+        description: "Découvrez comment notre secteur s'inscrit dans la démarche Élan commun et les actions menées en collaboration.",
+        iconName: "handshake",
+        link: "/secteurs/education/elan-commun",
+        linkText: "En savoir plus"
+    }
+];
+
+// Contacts/Représentants du secteur
+const sectorContacts = [
+    {
+        name: "Marie Dupont",
+        role: "Secrétaire générale secteur Éducation",
+        photoUrl: "https://placehold.co/128/1e40af/ffffff?text=MD"
+    },
+    {
+        name: "Jean Martin",
+        role: "Secrétaire adjoint",
+        photoUrl: "https://placehold.co/128/1e3a5f/ffffff?text=JM"
+    },
+    {
+        name: "Sophie Bernard",
+        role: "Responsable commissions",
+        photoUrl: "https://placehold.co/128/1e3a8a/ffffff?text=SB"
+    }
+];
+---
+
+<BaseLayout title={`${sectorTitle} - Site Institutionnel`}>
+    <!-- 1. Bandeau Secteur -->
+    <SectorBanner 
+        title={sectorTitle}
+        subtitle={sectorSubtitle}
+        bgColor="bg-blue-700"
+    />
+
+    <!-- 2. Mini Carrousel -->
+    <MiniCarousel articles={miniCarouselArticles} />
+
+    <!-- 3. Action Cards x4 -->
+    <ActionCardsSection 
+        title="Ressources et outils"
+        description="Tout ce dont vous avez besoin pour votre engagement dans le secteur Éducation"
+        cards={sectorActionCards}
+    />
+
+    <!-- 4. Bandeau Contact -->
+    <ContactBanner 
+        contacts={sectorContacts}
+        contactButtonText="Contacter l'équipe du secteur Éducation"
+        contactButtonLink="/secteurs/education/contact"
+    />
+
+    <!-- 5. Newsletter -->
+    <Newsletter 
+        title="Newsletter du secteur Éducation"
+        description="Recevez les actualités spécifiques au secteur Éducation directement dans votre boîte mail."
+    />
+</BaseLayout>
+

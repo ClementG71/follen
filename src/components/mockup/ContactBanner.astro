@@ -1,0 +1,73 @@
+---
+// ContactBanner.astro - Bandeau avec photos rondes des représentants
+
+interface Contact {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+interface Props {
+    contacts: Contact[];
+    contactButtonText?: string;
+    contactButtonLink?: string;
+}
+
+const { 
+    contacts,
+    contactButtonText = "Contacter l'équipe",
+    contactButtonLink = "/contact"
+} = Astro.props;
+---
+
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-12 text-center">
+                Vos représentants
+            </h2>
+            
+            <!-- Grille des contacts -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                {contacts.map((contact) => (
+                    <div class="text-center">
+                        <!-- Photo ronde -->
+                        <div class="mb-4 flex justify-center">
+                            <div class="w-32 h-32 rounded-full overflow-hidden bg-slate-200 border-4 border-blue-100 shadow-lg">
+                                <img 
+                                    src={contact.photoUrl} 
+                                    alt={contact.name}
+                                    class="w-full h-full object-cover"
+                                />
+                            </div>
+                        </div>
+                        
+                        <!-- Nom -->
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">
+                            {contact.name}
+                        </h3>
+                        
+                        <!-- Rôle -->
+                        <p class="text-slate-600">
+                            {contact.role}
+                        </p>
+                    </div>
+                ))}
+            </div>
+            
+            <!-- Bouton Contact -->
+            <div class="text-center">
+                <a 
+                    href={contactButtonLink}
+                    class="inline-flex items-center bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl"
+                >
+                    {contactButtonText}
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
