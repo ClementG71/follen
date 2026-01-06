@@ -1,0 +1,280 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Données factices pour les newsletters
+const newsletters = [
+    {
+        id: 1,
+        date: new Date(2025, 11, 15),
+        title: "Bilan 2025 : une année de mobilisation syndicale",
+        excerpt: "Retour sur les grandes actions et les victoires obtenues cette année grâce à votre engagement collectif.",
+        externalUrl: "https://newsletter.example.com/bilan-2025"
+    },
+    {
+        id: 2,
+        date: new Date(2025, 10, 28),
+        title: "Réforme des retraites : où en sommes-nous ?",
+        excerpt: "Point complet sur l'avancement du dossier et les prochaines étapes de notre mobilisation.",
+        externalUrl: "https://newsletter.example.com/retraites-nov"
+    },
+    {
+        id: 3,
+        date: new Date(2025, 10, 10),
+        title: "Élections professionnelles : votre voix compte",
+        excerpt: "Tout savoir sur les prochaines élections et pourquoi il est crucial de voter FSU.",
+        externalUrl: "https://newsletter.example.com/elections-pro"
+    },
+    {
+        id: 4,
+        date: new Date(2025, 9, 25),
+        title: "Conditions de travail : nouvelles avancées",
+        excerpt: "Découvrez les dernières négociations et les améliorations obtenues pour votre quotidien professionnel.",
+        externalUrl: "https://newsletter.example.com/conditions-oct"
+    },
+    {
+        id: 5,
+        date: new Date(2025, 9, 8),
+        title: "Formation syndicale : inscriptions ouvertes",
+        excerpt: "Notre programme de formations pour la rentrée est disponible. Renforcez vos compétences militantes !",
+        externalUrl: "https://newsletter.example.com/formations-automne"
+    },
+    {
+        id: 6,
+        date: new Date(2025, 8, 20),
+        title: "Rentrée 2025 : les enjeux majeurs",
+        excerpt: "Analyse des défis qui nous attendent et des actions prévues pour cette nouvelle année.",
+        externalUrl: "https://newsletter.example.com/rentree-2025"
+    },
+    {
+        id: 7,
+        date: new Date(2025, 6, 12),
+        title: "Été solidaire : restez mobilisés",
+        excerpt: "Même en vacances, l'actualité syndicale continue. Voici les points essentiels à retenir.",
+        externalUrl: "https://newsletter.example.com/ete-2025"
+    },
+    {
+        id: 8,
+        date: new Date(2025, 5, 28),
+        title: "Grève nationale : bilan et perspectives",
+        excerpt: "Retour sur la journée de mobilisation du 15 juin et analyse des résultats obtenus.",
+        externalUrl: "https://newsletter.example.com/greve-juin"
+    },
+    {
+        id: 9,
+        date: new Date(2025, 4, 15),
+        title: "1er Mai : une mobilisation historique",
+        excerpt: "Plus de 2 millions de personnes dans les rues. Récit d'une journée de lutte exceptionnelle.",
+        externalUrl: "https://newsletter.example.com/1er-mai-2025"
+    },
+    {
+        id: 10,
+        date: new Date(2025, 3, 2),
+        title: "Droit de grève : nos libertés en danger",
+        excerpt: "Analyse du projet de loi et des risques pour nos droits fondamentaux.",
+        externalUrl: "https://newsletter.example.com/droit-greve"
+    }
+];
+
+// Options pour les filtres
+const months = [
+    { value: "", label: "Tous les mois" },
+    { value: "1", label: "Janvier" },
+    { value: "2", label: "Février" },
+    { value: "3", label: "Mars" },
+    { value: "4", label: "Avril" },
+    { value: "5", label: "Mai" },
+    { value: "6", label: "Juin" },
+    { value: "7", label: "Juillet" },
+    { value: "8", label: "Août" },
+    { value: "9", label: "Septembre" },
+    { value: "10", label: "Octobre" },
+    { value: "11", label: "Novembre" },
+    { value: "12", label: "Décembre" }
+];
+
+const years = [
+    { value: "", label: "Toutes les années" },
+    { value: "2025", label: "2025" },
+    { value: "2024", label: "2024" },
+    { value: "2023", label: "2023" },
+    { value: "2022", label: "2022" }
+];
+
+// Formater la date pour l'affichage
+const formatDate = (date: Date) => {
+    return date.toLocaleDateString('fr-FR', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric' 
+    });
+};
+---
+
+<BaseLayout title="Historique des Newsletters - Follen" description="Retrouvez toutes nos newsletters passées et restez informé de nos actions.">
+    
+    <!-- Bandeau de recherche & Filtres -->
+    <section class="bg-gray-100 py-16 border-b border-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Historique de nos newsletters</h1>
+            
+            <!-- Zone de contrôle : Recherche + Filtres -->
+            <div class="max-w-3xl mx-auto">
+                <form class="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+                    <!-- Barre de recherche -->
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Rechercher par sujet..." 
+                            class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-follen-red focus:border-transparent shadow-sm"
+                        />
+                    </div>
+                    
+                    <!-- Filtres par date -->
+                    <div class="flex gap-3">
+                        <select 
+                            class="px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-follen-red focus:border-transparent shadow-sm cursor-pointer"
+                        >
+                            {months.map((month) => (
+                                <option value={month.value}>{month.label}</option>
+                            ))}
+                        </select>
+                        
+                        <select 
+                            class="px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-follen-red focus:border-transparent shadow-sm cursor-pointer"
+                        >
+                            {years.map((year) => (
+                                <option value={year.value}>{year.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                    <!-- Bouton Filtrer -->
+                    <button 
+                        type="submit" 
+                        class="bg-follen-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-200 shadow-sm whitespace-nowrap"
+                    >
+                        Filtrer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Liste des Newsletters -->
+    <section class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-follen-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Toutes les newsletters
+                </h2>
+                <span class="text-gray-500 text-sm">{newsletters.length} résultats</span>
+            </div>
+            
+            <!-- Liste verticale -->
+            <div class="space-y-0">
+                {newsletters.map((newsletter, index) => (
+                    <article 
+                        class={`py-6 ${index !== newsletters.length - 1 ? 'border-b border-gray-100' : ''} group hover:bg-gray-50 -mx-4 px-4 rounded-lg transition-colors duration-200`}
+                    >
+                        <div class="flex flex-col md:flex-row md:items-start gap-4">
+                            
+                            <!-- Date (à gauche sur desktop, au-dessus sur mobile) -->
+                            <div class="md:w-28 flex-shrink-0">
+                                <time 
+                                    datetime={newsletter.date.toISOString()}
+                                    class="inline-block text-sm font-semibold text-follen-red bg-follen-red-50 px-3 py-1 rounded-md"
+                                >
+                                    {formatDate(newsletter.date)}
+                                </time>
+                            </div>
+                            
+                            <!-- Contenu principal -->
+                            <div class="flex-grow">
+                                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-follen-red transition-colors">
+                                    {newsletter.title}
+                                </h3>
+                                <p class="text-gray-600 text-sm mb-4 leading-relaxed">
+                                    {newsletter.excerpt}
+                                </p>
+                                
+                                <!-- Lien "Lire en ligne" avec icône External Link -->
+                                <a 
+                                    href={newsletter.externalUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-2 text-follen-red font-medium text-sm hover:underline"
+                                >
+                                    Lire en ligne
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+            
+            <!-- Pagination -->
+            <div class="mt-12 flex justify-center">
+                <nav class="flex gap-2">
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50 disabled:opacity-50">Précédent</button>
+                    <button class="px-4 py-2 bg-follen-red text-white rounded-md">1</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">2</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">3</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50">Suivant</button>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section incitation à s'abonner (inversé par rapport à la page principale) -->
+    <section class="py-16 bg-follen-red text-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-2xl mx-auto text-center">
+                <svg class="w-16 h-16 mx-auto mb-6 text-follen-red-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Vous avez manqué nos dernières éditions ?</h2>
+                <p class="text-follen-red-100 mb-8 text-lg">Abonnez-vous pour recevoir nos prochaines newsletters directement dans votre boîte mail.</p>
+                
+                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" id="newsletter-subscribe-form">
+                    <input 
+                        type="email" 
+                        placeholder="Votre adresse email"
+                        required
+                        class="flex-1 px-6 py-4 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-follen-red-100"
+                    />
+                    <button 
+                        type="submit"
+                        class="bg-white text-follen-red px-8 py-4 rounded-lg font-semibold hover:bg-follen-red-100 transition-colors whitespace-nowrap"
+                    >
+                        S'abonner
+                    </button>
+                </form>
+                
+                <p class="mt-6 text-follen-red-100 text-sm">
+                    En vous inscrivant, vous acceptez de recevoir nos communications. Vous pouvez vous désabonner à tout moment.
+                </p>
+            </div>
+        </div>
+    </section>
+
+</BaseLayout>
+
+<script>
+    document.getElementById('newsletter-subscribe-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('Newsletter subscription from archives page');
+    });
+</script>
+
