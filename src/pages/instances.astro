@@ -1,0 +1,287 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données factices pour les instances
+const instances = [
+    { id: "cap", label: "CAP", active: true },
+    { id: "cs", label: "CS", active: false },
+    { id: "bureau", label: "Bureau National", active: false },
+    { id: "ct", label: "Comité Technique", active: false },
+    { id: "formation", label: "Formation", active: false },
+    { id: "juridique", label: "Juridique", active: false },
+];
+
+// Données factices pour les articles
+const articles = [
+    {
+        id: 1,
+        title: "Compte-rendu de la CAP du 15 décembre 2025",
+        instance: "CAP",
+        date: new Date(2025, 11, 15),
+        excerpt: "Retour sur les principaux points abordés lors de cette commission administrative paritaire : avancements, mutations et recours examinés.",
+        image: "https://placehold.co/400x300/D1495B/ffffff?text=CAP"
+    },
+    {
+        id: 2,
+        title: "Déclaration liminaire au Comité Technique du 10 décembre",
+        instance: "Comité Technique",
+        date: new Date(2025, 11, 10),
+        excerpt: "La FSU a porté les revendications des personnels concernant les conditions de travail et les moyens alloués aux services.",
+        image: "https://placehold.co/400x300/2374AB/ffffff?text=CT"
+    },
+    {
+        id: 3,
+        title: "Réunion du Bureau National : orientations 2026",
+        instance: "Bureau National",
+        date: new Date(2025, 11, 5),
+        excerpt: "Le Bureau National s'est réuni pour définir les grandes orientations de l'année à venir et préparer le congrès fédéral.",
+        image: "https://placehold.co/400x300/43AA8B/ffffff?text=BN"
+    },
+    {
+        id: 4,
+        title: "Formation : Accompagner les agents en difficulté",
+        instance: "Formation",
+        date: new Date(2025, 10, 28),
+        excerpt: "Une nouvelle session de formation pour les élus et militants sur l'accompagnement des collègues en situation de souffrance au travail.",
+        image: "https://placehold.co/400x300/EDAE49/ffffff?text=Form"
+    },
+    {
+        id: 5,
+        title: "Note juridique : le droit de retrait",
+        instance: "Juridique",
+        date: new Date(2025, 10, 20),
+        excerpt: "Rappel des conditions d'exercice du droit de retrait et de la procédure à suivre en cas de danger grave et imminent.",
+        image: "https://placehold.co/400x300/D1495B/ffffff?text=Jur"
+    },
+    {
+        id: 6,
+        title: "Compte-rendu du Conseil Syndical du 15 novembre",
+        instance: "CS",
+        date: new Date(2025, 10, 15),
+        excerpt: "Les délégués ont débattu des mobilisations à venir et adopté une motion sur la défense des services publics.",
+        image: "https://placehold.co/400x300/2374AB/ffffff?text=CS"
+    },
+    {
+        id: 7,
+        title: "CAP Mutations : résultats et analyse",
+        instance: "CAP",
+        date: new Date(2025, 10, 8),
+        excerpt: "Bilan de la campagne de mutations 2025 : taux de satisfaction, postes vacants et recommandations pour les prochaines demandes.",
+        image: "https://placehold.co/400x300/D1495B/ffffff?text=CAP"
+    },
+    {
+        id: 8,
+        title: "Guide pratique : préparer sa défense en CAP",
+        instance: "Juridique",
+        date: new Date(2025, 9, 30),
+        excerpt: "Conseils et modèles pour constituer un dossier solide avant de passer devant la commission administrative paritaire.",
+        image: "https://placehold.co/400x300/43AA8B/ffffff?text=Jur"
+    }
+];
+
+// Années pour le filtre
+const years = [
+    { value: "", label: "Toutes les années" },
+    { value: "2025", label: "2025" },
+    { value: "2024", label: "2024" },
+    { value: "2023", label: "2023" },
+];
+
+// Formater la date
+const formatDate = (date: Date) => {
+    return date.toLocaleDateString('fr-FR', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+    });
+};
+
+// Couleur du badge par instance
+const getBadgeColor = (instance: string) => {
+    const colors: Record<string, string> = {
+        "CAP": "bg-follen-red-50 text-follen-red",
+        "CS": "bg-follen-blue-50 text-follen-blue",
+        "Bureau National": "bg-follen-green-50 text-follen-green",
+        "Comité Technique": "bg-follen-blue-50 text-follen-blue",
+        "Formation": "bg-follen-yellow-50 text-follen-yellow",
+        "Juridique": "bg-follen-green-50 text-follen-green",
+    };
+    return colors[instance] || "bg-gray-100 text-gray-700";
+};
+---
+
+<BaseLayout title="Archives par Instances - Follen" description="Retrouvez les comptes-rendus et publications par instance : CAP, CS, Bureau National et plus.">
+    
+    <!-- Bandeau de Recherche & Filtres -->
+    <section class="bg-gray-100 py-12 border-b border-gray-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Comptes-rendus et Publications</h1>
+                <p class="text-gray-600">Retrouvez tous les documents officiels par instance</p>
+            </div>
+            
+            <!-- Zone de contrôle -->
+            <div class="max-w-3xl mx-auto">
+                <form class="flex flex-col md:flex-row gap-4">
+                    <!-- Barre de recherche -->
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Mots-clés..." 
+                            class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-follen-red focus:border-transparent shadow-sm"
+                        />
+                    </div>
+                    
+                    <!-- Sélecteur d'année -->
+                    <select class="px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-follen-red focus:border-transparent shadow-sm cursor-pointer min-w-[180px]">
+                        {years.map((year) => (
+                            <option value={year.value}>{year.label}</option>
+                        ))}
+                    </select>
+                    
+                    <!-- Bouton rechercher -->
+                    <button 
+                        type="submit" 
+                        class="bg-follen-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-200 shadow-sm whitespace-nowrap"
+                    >
+                        Rechercher
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sélecteurs d'Instances -->
+    <section class="py-8 bg-white border-b border-gray-100">
+        <div class="container mx-auto px-6">
+            <p class="text-sm text-gray-500 text-center mb-4">Filtrer par instance :</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                {instances.map((instance) => (
+                    <button 
+                        class={`px-5 py-2.5 rounded-full border-2 font-medium transition-all duration-200 ${
+                            instance.active 
+                                ? 'bg-follen-red text-white border-follen-red shadow-md' 
+                                : 'bg-white text-gray-700 border-gray-200 hover:border-follen-red hover:text-follen-red'
+                        }`}
+                        data-instance={instance.id}
+                    >
+                        {instance.label}
+                    </button>
+                ))}
+            </div>
+        </div>
+    </section>
+    
+    <!-- Liste des Articles -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-6">
+            
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-gray-900">Publications récentes</h2>
+                <span class="text-gray-500 text-sm">{articles.length} résultats</span>
+            </div>
+            
+            <div class="flex flex-col space-y-6">
+                {articles.map((article) => (
+                    <article class="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-follen-red-100 transition-all duration-300 group">
+                        <div class="flex flex-col sm:flex-row">
+                            <!-- Image -->
+                            <div class="sm:w-48 md:w-56 flex-shrink-0">
+                                <img 
+                                    src={article.image} 
+                                    alt={article.title}
+                                    class="w-full h-48 sm:h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                            </div>
+                            
+                            <!-- Contenu -->
+                            <div class="flex-grow p-5 sm:p-6 flex flex-col justify-between">
+                                <div>
+                                    <!-- Badge instance + date -->
+                                    <div class="flex flex-wrap items-center gap-3 mb-3">
+                                        <span class={`text-xs font-bold uppercase px-3 py-1 rounded-full ${getBadgeColor(article.instance)}`}>
+                                            {article.instance}
+                                        </span>
+                                        <time class="text-sm text-gray-400">{formatDate(article.date)}</time>
+                                    </div>
+                                    
+                                    <!-- Titre -->
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-follen-red transition-colors line-clamp-2">
+                                        <a href={`/instances/${article.id}`}>
+                                            {article.title}
+                                        </a>
+                                    </h3>
+                                    
+                                    <!-- Extrait -->
+                                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-4">
+                                        {article.excerpt}
+                                    </p>
+                                </div>
+                                
+                                <!-- Lien -->
+                                <a 
+                                    href={`/instances/${article.id}`}
+                                    class="inline-flex items-center gap-2 text-follen-red font-medium text-sm hover:underline self-start"
+                                >
+                                    Lire la suite
+                                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+            
+            <!-- Pagination -->
+            <div class="mt-12 flex justify-center">
+                <nav class="flex gap-2">
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50 disabled:opacity-50">Précédent</button>
+                    <button class="px-4 py-2 bg-follen-red text-white rounded-md">1</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">2</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">3</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50">Suivant</button>
+                </nav>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter -->
+    <Newsletter 
+        title="Ne manquez aucune publication" 
+        description="Recevez les comptes-rendus et actualités de vos instances directement par email."
+    />
+
+</BaseLayout>
+
+<script>
+    // Gestion des filtres par instance (simulation)
+    document.addEventListener('DOMContentLoaded', () => {
+        const instanceButtons = document.querySelectorAll('[data-instance]');
+        
+        instanceButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Retirer l'état actif de tous les boutons
+                instanceButtons.forEach(btn => {
+                    btn.classList.remove('bg-follen-red', 'text-white', 'border-follen-red', 'shadow-md');
+                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                });
+                
+                // Ajouter l'état actif au bouton cliqué
+                button.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                button.classList.add('bg-follen-red', 'text-white', 'border-follen-red', 'shadow-md');
+                
+                // Ici on pourrait filtrer les articles (simulation)
+                console.log('Instance sélectionnée:', button.getAttribute('data-instance'));
+            });
+        });
+    });
+</script>
+
