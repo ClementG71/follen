@@ -12,6 +12,7 @@ const mainLinks = [
     { label: 'Intérieur', href: '/interieur' },
     { label: 'Écologie', href: '/ecologie' },
     { label: 'Archives', href: '/archives' },
+    { label: 'Adhésion', href: '/adhesion', highlight: true },
 ];
 ---
 
@@ -52,7 +53,7 @@ const mainLinks = [
                 </a>
 
                 <!-- Right Links (Desktop) -->
-                <div class="hidden md:flex items-center gap-8 ml-12">
+                <div class="hidden md:flex items-center gap-6 ml-12">
                     <a href="/ecologie" class="font-medium text-gray-700 hover:text-follen-blue transition-colors text-lg">
                         Écologie
                     </a>
@@ -61,6 +62,12 @@ const mainLinks = [
                     </a>
                     <a href="/archives" class="font-medium text-gray-700 hover:text-follen-red transition-colors text-lg">
                         Archives
+                    </a>
+                    <a href="/adhesion" class="ml-2 bg-follen-red text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors shadow-sm flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                        Adhésion
                     </a>
                 </div>
 
@@ -77,9 +84,15 @@ const mainLinks = [
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-lg">
             <div class="p-4 flex flex-col gap-4">
                 {mainLinks.map(link => (
-                    <a href={link.href} class="block py-3 text-lg text-gray-800 font-medium border-b border-gray-50 last:border-0 hover:text-follen-red transition-colors">
-                        {link.label}
-                    </a>
+                    link.highlight ? (
+                        <a href={link.href} class="block py-3 px-4 text-lg text-white font-semibold bg-follen-red rounded-lg text-center hover:bg-red-700 transition-colors">
+                            {link.label}
+                        </a>
+                    ) : (
+                        <a href={link.href} class="block py-3 text-lg text-gray-800 font-medium border-b border-gray-50 last:border-0 hover:text-follen-red transition-colors">
+                            {link.label}
+                        </a>
+                    )
                 ))}
                 <div class="mt-4 pt-4 border-t border-gray-100">
                     <p class="text-sm text-gray-500 mb-2 uppercase tracking-wide">Liens utiles</p>
