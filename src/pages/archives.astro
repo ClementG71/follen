@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données factices pour les Tags
+const tags = [
+    "Wagtail", "Astro", "Jamstack", "Python", "Performance", 
+    "SEO", "Tailwind CSS", "Accessibilité", "UX Design", "Développement Web",
+    "API REST", "GraphQL", "Docker", "Déploiement", "Sécurité",
+    "React", "TypeScript", "CMS", "Open Source", "Green IT"
+];
+
+// Données factices pour les Articles
+const articles = Array.from({ length: 12 }, (_, i) => ({
+    id: i + 1,
+    title: i % 2 === 0 ? "Comment optimiser votre site Astro pour le SEO" : "Les nouveautés de Wagtail 6.0 expliquées",
+    date: new Date(2025, 0, 15 - i).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+    category: i % 3 === 0 ? "Tutoriel" : (i % 3 === 1 ? "Actualité" : "Analyse"),
+    excerpt: "Découvrez les meilleures pratiques pour améliorer la visibilité de votre site web et garantir une performance optimale.",
+    image: `https://placehold.co/150x150/D1495B/ffffff?text=Art+${i + 1}`
+}));
+---
+
+<BaseLayout title="Archives Thématiques - Follen" description="Parcourez nos archives par thématique et retrouvez tous nos articles.">
+    
+    <!-- 2. Bandeau de recherche -->
+    <section class="bg-gray-100 py-16 border-b border-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Rechercher dans les archives</h1>
+            <div class="max-w-2xl mx-auto relative">
+                <form class="flex shadow-lg rounded-lg overflow-hidden">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Mots-clés, sujets, auteurs..." 
+                            class="w-full pl-12 pr-4 py-4 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-follen-red focus:ring-inset"
+                        />
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="bg-follen-red text-white px-8 py-4 font-semibold hover:bg-red-700 transition-colors duration-200"
+                    >
+                        Rechercher
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Nuage de Tags -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <svg class="w-5 h-5 text-follen-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Sujets populaires
+            </h2>
+            <div class="flex flex-wrap gap-3">
+                {tags.map((tag) => (
+                    <a 
+                        href={`/archives/tag/${tag.toLowerCase()}`} 
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-follen-red hover:text-white transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
+                    >
+                        #{tag}
+                    </a>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-gray-100" />
+
+    <!-- 4. Grille d'articles -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-end mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Dernières publications</h2>
+                <span class="text-gray-500 text-sm hidden md:inline-block">142 résultats</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {articles.map((article) => (
+                    <article class="flex flex-row md:flex-col bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-follen-red-light transition-all duration-300 group h-full">
+                        <!-- Micro image -->
+                        <div class="w-24 md:w-full h-24 md:h-40 flex-shrink-0 bg-gray-100 overflow-hidden">
+                            <img 
+                                src={article.image} 
+                                alt={article.title} 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                        </div>
+                        
+                        <!-- Contenu -->
+                        <div class="p-4 flex flex-col flex-grow justify-between">
+                            <div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-[10px] uppercase font-bold text-follen-red bg-follen-red-light px-2 py-0.5 rounded">
+                                        {article.category}
+                                    </span>
+                                    <span class="text-xs text-gray-400">•</span>
+                                    <time class="text-xs text-gray-500">{article.date}</time>
+                                </div>
+                                <h3 class="font-bold text-gray-900 leading-tight mb-2 group-hover:text-follen-red transition-colors line-clamp-2">
+                                    <a href={`/articles/${article.id}`}>
+                                        {article.title}
+                                    </a>
+                                </h3>
+                                <p class="text-sm text-gray-600 line-clamp-2 hidden md:block">
+                                    {article.excerpt}
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                ))}
+            </div>
+            
+            <!-- Pagination (Bonus) -->
+            <div class="mt-12 flex justify-center">
+                <nav class="flex gap-2">
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50 disabled:opacity-50">Précédent</button>
+                    <button class="px-4 py-2 bg-follen-red text-white rounded-md">1</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">2</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">3</button>
+                    <span class="px-4 py-2 text-gray-400">...</span>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-700 hover:bg-gray-50">12</button>
+                    <button class="px-4 py-2 border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50">Suivant</button>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Section Newsletter (Réutilisation avec customisation si nécessaire ou tel quel) -->
+    <!-- Le composant Newsletter existant a déjà le lien 'Historique' demandé -->
+    <Newsletter 
+        title="Ne manquez aucune publication" 
+        description="Recevez chaque semaine notre sélection d'articles, tutoriels et ressources pour rester à la pointe."
+    />
+
+</BaseLayout>
+
