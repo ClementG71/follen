@@ -1,0 +1,252 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from '../components/mockup/Newsletter.astro';
+
+// Données factices pour les thématiques (simulant ce que renverra Wagtail)
+const themes = [
+    {
+        id: "salaires",
+        title: "Salaires & Pouvoir d'achat",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        shortTitle: "Salaires",
+        content: [
+            "La FSU revendique une revalorisation significative des salaires de tous les agents de la fonction publique. Depuis plus de 20 ans, le point d'indice a été gelé ou sous-indexé par rapport à l'inflation, entraînant une perte de pouvoir d'achat estimée à plus de 25% pour les fonctionnaires.",
+            "Nous demandons un rattrapage immédiat de cette perte, ainsi qu'un mécanisme automatique d'indexation des salaires sur l'inflation. La reconnaissance des qualifications doit également se traduire par une revalorisation des grilles indiciaires, notamment en début de carrière.",
+            "Les primes et indemnités ne doivent pas se substituer au traitement indiciaire. Elles doivent être intégrées progressivement dans le salaire de base pour garantir une meilleure lisibilité et une retraite plus juste pour tous les agents."
+        ]
+    },
+    {
+        id: "conditions",
+        title: "Conditions de travail",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>`,
+        shortTitle: "Conditions",
+        content: [
+            "L'amélioration des conditions de travail est au cœur de nos préoccupations. La charge de travail a considérablement augmenté ces dernières années, sans que les effectifs ne suivent. Cette situation génère stress, burn-out et désengagement.",
+            "Nous revendiquons des recrutements massifs dans tous les secteurs, la réduction du temps de travail sans perte de salaire, et la mise en place de politiques de prévention des risques psychosociaux efficaces et contraignantes pour les employeurs.",
+            "Le droit à la déconnexion doit être garanti et respecté. Le télétravail, lorsqu'il est choisi, doit s'accompagner d'une prise en charge des frais par l'employeur et ne pas conduire à une intensification du travail."
+        ]
+    },
+    {
+        id: "retraite",
+        title: "Retraites & Protection sociale",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        shortTitle: "Retraite",
+        content: [
+            "La FSU s'oppose fermement à toute réforme visant à reculer l'âge de départ à la retraite ou à allonger la durée de cotisation. Nous défendons le droit à une retraite à taux plein à 60 ans, avec 37,5 annuités de cotisation.",
+            "Le calcul de la pension sur les 6 derniers mois pour les fonctionnaires doit être maintenu. L'intégration des primes dans le calcul doit se faire sans pénaliser le montant global de la pension.",
+            "Nous revendiquons également une revalorisation des pensions alignée sur l'évolution des salaires et non sur l'inflation, ainsi que la prise en compte des années d'études et de précarité dans le calcul des droits."
+        ]
+    },
+    {
+        id: "egalite",
+        title: "Égalité professionnelle",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+        shortTitle: "Égalité",
+        content: [
+            "L'égalité entre les femmes et les hommes dans la fonction publique reste un combat quotidien. Malgré des avancées législatives, les écarts de rémunération persistent et les femmes restent sous-représentées aux postes de direction.",
+            "Nous revendiquons la suppression effective des écarts de salaire, l'accès égal aux promotions et aux postes à responsabilité, ainsi que la revalorisation des métiers féminisés historiquement sous-payés.",
+            "La lutte contre les violences sexistes et sexuelles au travail doit être renforcée par des moyens humains et financiers dédiés, et par une formation obligatoire de l'ensemble des personnels d'encadrement."
+        ]
+    },
+    {
+        id: "emploi",
+        title: "Emploi & Recrutement",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+        shortTitle: "Emploi",
+        content: [
+            "La fonction publique a perdu des dizaines de milliers de postes ces dernières années. Cette politique de suppression d'emplois dégrade la qualité du service public et surcharge les agents restants.",
+            "Nous demandons un plan pluriannuel de recrutement pour combler les postes vacants et anticiper les départs en retraite. Les concours doivent être organisés régulièrement et les listes complémentaires activées.",
+            "La titularisation des agents contractuels en CDI ou en CDD récurrents doit être facilitée. La précarité dans la fonction publique est une aberration qui doit cesser."
+        ]
+    },
+    {
+        id: "formation",
+        title: "Formation & Carrière",
+        icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
+        shortTitle: "Formation",
+        content: [
+            "La formation continue est un droit fondamental qui permet aux agents de s'adapter aux évolutions de leur métier et de progresser dans leur carrière. Or, les budgets de formation sont en constante diminution.",
+            "Nous revendiquons un accès garanti à la formation pour tous les agents, avec un minimum de jours de formation par an. Les formations doivent se dérouler sur le temps de travail et être prises en charge intégralement par l'employeur.",
+            "Les parcours de carrière doivent être fluidifiés. La promotion interne et l'avancement doivent être facilités, et les concours internes valorisés pour permettre une véritable mobilité professionnelle."
+        ]
+    }
+];
+---
+
+<BaseLayout title="Principes & Revendications - Follen" description="Découvrez les revendications et principes défendus par le SNUITAM-FSU.">
+    
+    <!-- Conteneur Principal Centré -->
+    <div class="py-12 md:py-16">
+        <div class="max-w-5xl mx-auto px-6">
+            
+            <!-- En-tête de section (Bandeau slim) -->
+            <div class="bg-gray-100 px-8 py-6 rounded-t-2xl text-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 flex items-center justify-center gap-3">
+                    <svg class="w-7 h-7 text-follen-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Connaître les revendications du SNUITAM
+                </h1>
+                <p class="text-gray-600 mt-2">Nos combats pour défendre vos droits</p>
+            </div>
+            
+            <!-- Carte principale -->
+            <div class="bg-white shadow-md rounded-b-2xl border border-gray-100 border-t-0 overflow-hidden">
+                
+                <!-- Navigation Rapide (6 Cartes Boutons) -->
+                <div class="p-6 md:p-8 border-b border-gray-100 bg-slate-50">
+                    <p class="text-sm text-gray-500 text-center mb-4">Accès rapide aux thématiques</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+                        {themes.map((theme) => (
+                            <a 
+                                href={`#${theme.id}`}
+                                class="theme-nav-card group flex flex-col items-center justify-center p-4 bg-white rounded-xl border-2 border-gray-100 hover:border-follen-red hover:bg-follen-red-50 transition-all duration-200 text-center"
+                                data-target={theme.id}
+                            >
+                                <div class="text-gray-400 group-hover:text-follen-red transition-colors mb-2" set:html={theme.icon} />
+                                <span class="text-sm font-semibold text-gray-700 group-hover:text-follen-red transition-colors">
+                                    {theme.shortTitle}
+                                </span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+                
+                <!-- Contenu Accordéons -->
+                <div class="p-6 md:p-8">
+                    <div class="space-y-4">
+                        {themes.map((theme, index) => (
+                            <details 
+                                id={theme.id}
+                                class="group border border-gray-100 rounded-xl overflow-hidden hover:border-follen-red-100 transition-colors scroll-mt-32"
+                            >
+                                <summary class="flex items-center justify-between p-5 bg-white hover:bg-gray-50 cursor-pointer list-none transition-colors">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-follen-red-50 text-follen-red flex items-center justify-center flex-shrink-0" set:html={theme.icon.replace('w-8 h-8', 'w-5 h-5')} />
+                                        <h2 class="text-lg font-bold text-gray-900 group-hover:text-follen-red transition-colors">
+                                            {theme.title}
+                                        </h2>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wide hidden sm:block">
+                                            {index + 1}/{themes.length}
+                                        </span>
+                                        <svg 
+                                            class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform duration-300" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </summary>
+                                <div class="px-5 pb-5 pt-2 bg-gray-50 border-t border-gray-100">
+                                    <div class="prose prose-gray max-w-none">
+                                        {theme.content.map((paragraph) => (
+                                            <p class="text-gray-600 leading-relaxed mb-4 last:mb-0">
+                                                {paragraph}
+                                            </p>
+                                        ))}
+                                    </div>
+                                    <div class="mt-6 pt-4 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4">
+                                        <a 
+                                            href={`/documents/revendication-${theme.id}.pdf`}
+                                            class="inline-flex items-center gap-2 text-sm text-follen-red font-medium hover:underline"
+                                        >
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                            Télécharger la fiche complète (PDF)
+                                        </a>
+                                        <a 
+                                            href="/contact"
+                                            class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-follen-red transition-colors"
+                                        >
+                                            Une question ? Contactez-nous
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </details>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Adhésion -->
+            <div class="mt-8 bg-gradient-to-r from-follen-red to-red-600 rounded-xl p-8 text-white text-center shadow-lg">
+                <h3 class="text-2xl font-bold mb-3">Vous partagez nos valeurs ?</h3>
+                <p class="text-follen-red-100 mb-6 max-w-xl mx-auto">
+                    Rejoignez-nous pour défendre ensemble ces revendications et faire entendre notre voix collective.
+                </p>
+                <a 
+                    href="/adhesion"
+                    class="inline-flex items-center gap-2 bg-white text-follen-red px-8 py-3 rounded-lg font-bold hover:bg-follen-red-50 transition-colors shadow-md"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Adhérer maintenant
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Newsletter -->
+    <Newsletter 
+        title="Restez informé de nos actions" 
+        description="Recevez nos communiqués, analyses et invitations aux mobilisations."
+    />
+
+</BaseLayout>
+
+<script>
+    // Navigation fluide et ouverture automatique des accordéons
+    document.addEventListener('DOMContentLoaded', () => {
+        const navCards = document.querySelectorAll('.theme-nav-card');
+        
+        navCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                const targetId = card.getAttribute('data-target');
+                const targetAccordion = document.getElementById(targetId);
+                
+                if (targetAccordion) {
+                    // Ouvrir l'accordéon s'il est fermé
+                    if (!targetAccordion.hasAttribute('open')) {
+                        targetAccordion.setAttribute('open', '');
+                    }
+                    
+                    // Scroll fluide vers l'accordéon
+                    setTimeout(() => {
+                        targetAccordion.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 50);
+                }
+            });
+        });
+        
+        // Vérifier si on arrive sur la page avec un hash
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            const targetAccordion = document.getElementById(targetId);
+            
+            if (targetAccordion) {
+                targetAccordion.setAttribute('open', '');
+                setTimeout(() => {
+                    targetAccordion.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
+            }
+        }
+    });
+</script>
+
