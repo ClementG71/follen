@@ -1,126 +1,403 @@
 ---
+/**
+ * src/pages/ecologie.astro
+ * Page Secteur Écologie - FSU Syndicat
+ * Éco-design: HTML sémantique, zéro JS client-side, mobile-first
+ */
+
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SectorBanner from '../components/mockup/SectorBanner.astro';
-import MiniCarousel from '../components/mockup/MiniCarousel.astro';
-import ActionCardsSection from '../components/ActionCardsSection.astro';
-import ContactBanner from '../components/mockup/ContactBanner.astro';
-import Newsletter from '../components/mockup/Newsletter.astro';
 
-// Données du secteur Écologie
-const sectorTitle = "Écologie";
-const sectorSubtitle = "Agir ensemble pour la transition écologique";
+// ============================================================================
+// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
+// ============================================================================
 
-// Articles pour le Mini Carrousel (3 articles)
-const miniCarouselArticles = [
+interface NewsArticle {
+    id: number;
+    title: string;
+    date: string;
+    thumbnail: string;
+    href: string;
+    category?: string;
+}
+
+interface InstanceNews {
+    id: number;
+    title: string;
+    date: string;
+    type: 'CT' | 'CAP' | 'CHSCT' | 'CSA' | 'Autre';
+    href: string;
+}
+
+interface ActionCard {
+    title: string;
+    description: string;
+    iconName: 'book' | 'wrench' | 'users' | 'heart';
+    href: string;
+    linkText: string;
+}
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+// ============================================================================
+// DONNÉES MOCK - SECTEUR ÉCOLOGIE
+// ============================================================================
+
+const pageTitle = "Écologie - FSU";
+const sectorName = "FSU au ministère de la transition écologique";
+const sectorColor = "follen-blue";
+
+// Actualités Générales (grille gauche 2/3)
+const generalNews: NewsArticle[] = [
     {
         id: 1,
-        title: "Zéro déchet : par où commencer ?",
-        excerpt: "Guide pratique pour débuter votre transition vers un mode de vie zéro déchet, étape par étape.",
-        image: "https://placehold.co/1200x400/2374AB/ffffff?text=Z%C3%A9ro+D%C3%A9chet",
-        href: "/ecologie/zerodechet-guide",
-        category: "Zéro Déchet"
+        title: "Plan de sobriété énergétique : impacts sur les agents",
+        date: "2024-01-18",
+        thumbnail: "https://placehold.co/400x240/2374AB/ffffff?text=Sobri%C3%A9t%C3%A9",
+        href: "/articles/plan-sobriete-agents",
+        category: "Environnement"
     },
     {
         id: 2,
-        title: "Climat : les actions locales qui comptent",
-        excerpt: "Comment agir concrètement à son échelle pour lutter contre le changement climatique.",
-        image: "https://placehold.co/1200x400/1D6391/ffffff?text=Actions+Climat",
-        href: "/ecologie/actions-climat",
-        category: "Climat"
+        title: "Réorganisation des DREAL : la FSU vigilante",
+        date: "2024-01-14",
+        thumbnail: "https://placehold.co/400x240/1D6391/ffffff?text=DREAL",
+        href: "/articles/reorganisation-dreal",
+        category: "Organisation"
     },
     {
         id: 3,
-        title: "Biodiversité : protéger le vivant au quotidien",
-        excerpt: "Des gestes simples pour préserver la biodiversité dans votre jardin et votre quartier.",
-        image: "https://placehold.co/1200x400/2374AB/ffffff?text=Biodiversit%C3%A9",
-        href: "/ecologie/biodiversite",
-        category: "Biodiversité"
+        title: "Journée d'action du 1er février : tous mobilisés !",
+        date: "2024-01-10",
+        thumbnail: "https://placehold.co/400x240/165A7D/ffffff?text=Mobilisation",
+        href: "/articles/journee-action-fevrier",
+        category: "Mobilisation"
+    },
+    {
+        id: 4,
+        title: "Missions biodiversité : défendons les emplois",
+        date: "2024-01-06",
+        thumbnail: "https://placehold.co/400x240/2374AB/ffffff?text=Biodiversit%C3%A9",
+        href: "/articles/missions-biodiversite",
+        category: "Emploi"
     }
 ];
 
-// Cartes d'action spécifiques au secteur (4 cartes)
-const sectorActionCards = [
+// Actualités des Instances (colonne droite 1/3)
+const instanceNews: InstanceNews[] = [
+    {
+        id: 1,
+        title: "Compte-rendu CSA ministériel du 22 janvier",
+        date: "2024-01-22",
+        type: "CSA",
+        href: "/ecologie/instances/csa-janvier-2024"
+    },
+    {
+        id: 2,
+        title: "Déclaration FSU au CT central du 17 janvier",
+        date: "2024-01-17",
+        type: "CT",
+        href: "/ecologie/instances/ct-declaration-janvier"
+    },
+    {
+        id: 3,
+        title: "CAP des attachés : mutations et promotions",
+        date: "2024-01-12",
+        type: "CAP",
+        href: "/ecologie/instances/cap-attaches-2024"
+    },
+    {
+        id: 4,
+        title: "F-SST : conditions de travail en DREAL",
+        date: "2024-01-09",
+        type: "CHSCT",
+        href: "/ecologie/instances/chsct-dreal"
+    },
+    {
+        id: 5,
+        title: "Agenda social 2024 du ministère",
+        date: "2024-01-04",
+        type: "Autre",
+        href: "/ecologie/instances/agenda-social-2024"
+    }
+];
+
+// Cartes d'action (4 cartes)
+const actionCards: ActionCard[] = [
     {
         title: "Principes",
-        description: "Les fondamentaux de l'écologie : sobriété, circularité, respect du vivant et justice environnementale.",
+        description: "Nos valeurs pour un service public écologique fort et des agents reconnus.",
         iconName: "book",
-        link: "/ecologie/principes",
-        linkText: "Lire les principes"
+        href: "/ecologie/principes",
+        linkText: "Découvrir nos principes"
     },
     {
         title: "Boîte à outils",
-        description: "Calculateurs d'empreinte carbone, guides pratiques, alternatives durables et ressources pédagogiques.",
+        description: "Guides statutaires, fiches de paie, modèles de recours et FAQ.",
         iconName: "wrench",
-        link: "/ecologie/outils",
-        linkText: "Consulter les outils"
+        href: "/ecologie/outils",
+        linkText: "Accéder aux outils"
     },
     {
-        title: "Mobilisations",
-        description: "Calendrier des actions, manifestations et événements pour s'engager collectivement.",
-        iconName: "megaphone",
-        link: "/ecologie/mobilisations",
-        linkText: "Voir les événements"
+        title: "Instances",
+        description: "Tous les comptes-rendus des CSA, CT, CAP et formations spécialisées.",
+        iconName: "users",
+        href: "/ecologie/instances",
+        linkText: "Consulter les instances"
     },
     {
-        title: "Collectifs",
-        description: "Rejoignez les collectifs locaux et associations partenaires engagées pour l'environnement.",
-        iconName: "handshake",
-        link: "/ecologie/collectifs",
-        linkText: "Trouver un collectif"
+        title: "Élan commun",
+        description: "Intersyndicale et actions communes pour la transition écologique juste.",
+        iconName: "heart",
+        href: "/ecologie/elan-commun",
+        linkText: "Rejoindre le mouvement"
     }
 ];
 
-// Contacts/Représentants du secteur
-const sectorContacts = [
+// Représentants/Contacts
+const representatives: Representative[] = [
     {
         name: "Julie Climat",
-        role: "Responsable secteur Écologie",
-        photoUrl: "https://placehold.co/128/2374AB/ffffff?text=JC"
+        role: "Secrétaire de section",
+        photoUrl: "https://placehold.co/128x128/2374AB/ffffff?text=JC"
     },
     {
         name: "Thomas Vert",
-        role: "Chargé de mission Zéro Déchet",
-        photoUrl: "https://placehold.co/128/1D6391/ffffff?text=TV"
+        role: "Trésorier",
+        photoUrl: "https://placehold.co/128x128/1D6391/ffffff?text=TV"
     },
     {
         name: "Léa Nature",
-        role: "Experte Biodiversité",
-        photoUrl: "https://placehold.co/128/2374AB/ffffff?text=LN"
+        role: "Responsable communication",
+        photoUrl: "https://placehold.co/128x128/165A7D/ffffff?text=LN"
     }
 ];
+
+// Newsletter
+const newsletterTitle = "Newsletter Écologie";
+const newsletterDescription = "Recevez les actualités du ministère de la transition écologique directement dans votre boîte mail.";
+const historyLink = "/ecologie/newsletters";
+
+// ============================================================================
+// ICÔNES SVG (Inline pour éco-design)
+// ============================================================================
+
+const icons: Record<string, string> = {
+    book: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>`,
+    wrench: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+    users: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+    heart: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
+    arrow: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`
+};
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { 
+        day: 'numeric', month: 'long', year: 'numeric' 
+    });
+}
+
+const instanceColors: Record<string, string> = {
+    CT: 'bg-blue-100 text-blue-800',
+    CAP: 'bg-purple-100 text-purple-800',
+    CHSCT: 'bg-orange-100 text-orange-800',
+    CSA: 'bg-green-100 text-green-800',
+    Autre: 'bg-gray-100 text-gray-700'
+};
 ---
 
-<BaseLayout title="Écologie - Follen">
-    <!-- 1. Bandeau Secteur -->
-    <SectorBanner 
-        title={sectorTitle}
-        subtitle={sectorSubtitle}
-        bgColor="bg-follen-blue"
-    />
+<BaseLayout title={pageTitle}>
+    
+    <!-- 1. CONTEXT BANNER -->
+    <div class="bg-slate-800 text-white py-3">
+        <div class="container mx-auto px-4">
+            <p class="text-center text-sm md:text-base font-medium tracking-wide">
+                {sectorName}
+            </p>
+        </div>
+    </div>
 
-    <!-- 2. Mini Carrousel -->
-    <MiniCarousel articles={miniCarouselArticles} />
+    <!-- 2. NEWS GRID -->
+    <section class="py-12 md:py-16 bg-white" aria-labelledby="news-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 id="news-heading" class="sr-only">Actualités du secteur</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Actualités Générales (2/3) -->
+                <div class="lg:col-span-2">
+                    <header class="mb-6">
+                        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-3">
+                            <span class="w-1 h-8 bg-follen-blue rounded-full" aria-hidden="true"></span>
+                            Actualités Générales
+                        </h3>
+                    </header>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {generalNews.map((article) => (
+                            <article class="group bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <a href={article.href} class="block aspect-video overflow-hidden">
+                                    <img 
+                                        src={article.thumbnail} 
+                                        alt=""
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                </a>
+                                <div class="p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <time datetime={article.date} class="text-xs text-gray-500">
+                                            {formatDate(article.date)}
+                                        </time>
+                                        {article.category && (
+                                            <span class="text-xs bg-follen-blue-light text-follen-blue px-2 py-0.5 rounded-full font-medium">
+                                                {article.category}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h4 class="font-semibold text-slate-900 leading-snug group-hover:text-follen-blue transition-colors">
+                                        <a href={article.href} class="hover:underline">{article.title}</a>
+                                    </h4>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <a href="/ecologie/actualites" class="inline-flex items-center text-follen-blue font-semibold hover:underline">
+                            Voir toutes les actualités
+                            <Fragment set:html={icons.arrow} />
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Actualités des Instances (1/3) -->
+                <aside class="lg:col-span-1">
+                    <div class="bg-gray-50 rounded-xl p-6 h-full">
+                        <header class="mb-6">
+                            <h3 class="text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3">
+                                <span class="w-1 h-6 bg-slate-700 rounded-full" aria-hidden="true"></span>
+                                Actualités des Instances
+                            </h3>
+                        </header>
+                        
+                        <ul class="space-y-4" role="list">
+                            {instanceNews.map((item) => (
+                                <li class="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+                                    <a href={item.href} class="block group">
+                                        <div class="flex items-center gap-2 mb-1.5">
+                                            <span class:list={["text-xs font-bold px-2 py-0.5 rounded", instanceColors[item.type]]}>
+                                                {item.type}
+                                            </span>
+                                            <time datetime={item.date} class="text-xs text-gray-500">
+                                                {formatDate(item.date)}
+                                            </time>
+                                        </div>
+                                        <h4 class="text-sm font-medium text-slate-800 group-hover:text-follen-blue transition-colors leading-snug">
+                                            {item.title}
+                                        </h4>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div class="mt-6 pt-4 border-t border-gray-200">
+                            <a href="/ecologie/instances" class="inline-flex items-center text-slate-700 text-sm font-semibold hover:text-follen-blue transition-colors">
+                                Archives des instances
+                                <Fragment set:html={icons.arrow} />
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
 
-    <!-- 3. Action Cards x4 (Layout Carré) -->
-    <ActionCardsSection 
-        title="Ressources Écologie"
-        description="Tout pour agir en faveur de l'environnement"
-        cards={sectorActionCards}
-        layout="square"
-        cardColor="bg-follen-blue"
-        iconColor="text-follen-blue"
-    />
+    <!-- 3. ACTION CARDS ZONE -->
+    <section class="py-16 md:py-20 bg-gray-100" aria-labelledby="actions-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 id="actions-heading" class="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-12">
+                Ressources et outils
+            </h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {actionCards.map((card) => (
+                    <article class="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group">
+                        <div class="w-14 h-14 bg-follen-blue-light text-follen-blue rounded-xl flex items-center justify-center mb-4 group-hover:bg-follen-blue group-hover:text-white transition-colors">
+                            <Fragment set:html={icons[card.iconName]} />
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">{card.title}</h3>
+                        <p class="text-gray-600 text-sm mb-4 leading-relaxed">{card.description}</p>
+                        <a href={card.href} class="inline-flex items-center text-follen-blue text-sm font-semibold hover:underline">
+                            {card.linkText}
+                            <span class="ml-1.5 group-hover:translate-x-1 transition-transform" aria-hidden="true">
+                                <Fragment set:html={icons.arrow} />
+                            </span>
+                        </a>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </section>
 
-    <!-- 4. Bandeau Contact -->
-    <ContactBanner 
-        contacts={sectorContacts}
-        contactButtonText="Contacter l'équipe Écologie"
-        contactButtonLink="/ecologie/contact"
-    />
+    <!-- 4. CONTACT BANNER -->
+    <section class="py-16 bg-white" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">
+                    Vos représentants
+                </h2>
+                
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-blue-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                
+                <a href="/ecologie/contact" class="inline-flex items-center bg-follen-blue text-white px-8 py-4 rounded-lg font-semibold hover:bg-follen-blue/90 transition-colors shadow-md hover:shadow-lg">
+                    Contacter l'équipe
+                    <span class="ml-2" aria-hidden="true"><Fragment set:html={icons.arrow} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-    <!-- 5. Newsletter -->
-    <Newsletter 
-        title="Newsletter Écologie"
-        description="Recevez les actualités du secteur Écologie directement dans votre boîte mail."
-    />
+    <!-- 5. NEWSLETTER -->
+    <section class="py-16 bg-follen-blue text-white" aria-labelledby="newsletter-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 id="newsletter-heading" class="text-2xl md:text-3xl font-bold mb-4">{newsletterTitle}</h2>
+                <p class="text-white/80 mb-8 text-lg">{newsletterDescription}</p>
+                
+                <form method="POST" action="/api/newsletter" class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <label for="newsletter-email-eco" class="sr-only">Adresse email</label>
+                    <input 
+                        type="email" id="newsletter-email-eco" name="email"
+                        placeholder="Votre adresse email" required autocomplete="email"
+                        class="flex-1 px-5 py-4 rounded-lg text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    />
+                    <button type="submit" class="bg-white text-follen-blue px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        S'abonner
+                    </button>
+                </form>
+                
+                <a href={historyLink} class="inline-flex items-center text-white/70 hover:text-white text-sm transition-colors">
+                    Voir l'historique des newsletters
+                    <span class="ml-1" aria-hidden="true"><Fragment set:html={icons.arrow} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
 </BaseLayout>

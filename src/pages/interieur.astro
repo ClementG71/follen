@@ -1,126 +1,403 @@
 ---
+/**
+ * src/pages/interieur.astro
+ * Page Secteur Intérieur - FSU Syndicat
+ * Éco-design: HTML sémantique, zéro JS client-side, mobile-first
+ */
+
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SectorBanner from '../components/mockup/SectorBanner.astro';
-import MiniCarousel from '../components/mockup/MiniCarousel.astro';
-import ActionCardsSection from '../components/ActionCardsSection.astro';
-import ContactBanner from '../components/mockup/ContactBanner.astro';
-import Newsletter from '../components/mockup/Newsletter.astro';
 
-// Données du secteur Intérieur
-const sectorTitle = "Intérieur";
-const sectorSubtitle = "Créer des espaces de vie sains et durables";
+// ============================================================================
+// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
+// ============================================================================
 
-// Articles pour le Mini Carrousel (3 articles)
-const miniCarouselArticles = [
+interface NewsArticle {
+    id: number;
+    title: string;
+    date: string;
+    thumbnail: string;
+    href: string;
+    category?: string;
+}
+
+interface InstanceNews {
+    id: number;
+    title: string;
+    date: string;
+    type: 'CT' | 'CAP' | 'CHSCT' | 'CSA' | 'Autre';
+    href: string;
+}
+
+interface ActionCard {
+    title: string;
+    description: string;
+    iconName: 'book' | 'wrench' | 'users' | 'heart';
+    href: string;
+    linkText: string;
+}
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+// ============================================================================
+// DONNÉES MOCK - SECTEUR INTÉRIEUR
+// ============================================================================
+
+const pageTitle = "Intérieur - FSU";
+const sectorName = "FSU au ministère de l'intérieur";
+const sectorColor = "follen-yellow";
+
+// Actualités Générales (grille gauche 2/3)
+const generalNews: NewsArticle[] = [
     {
         id: 1,
-        title: "Décoration éco-responsable : tendances 2025",
-        excerpt: "Les dernières tendances en matière de décoration durable et respectueuse de l'environnement.",
-        image: "https://placehold.co/1200x400/EDAE49/ffffff?text=D%C3%A9co+%C3%89co",
-        href: "/interieur/tendances-2025",
-        category: "Tendances"
+        title: "Revalorisation indemnitaire : où en est-on ?",
+        date: "2024-01-19",
+        thumbnail: "https://placehold.co/400x240/EDAE49/ffffff?text=Revalorisation",
+        href: "/articles/revalorisation-indemnitaire",
+        category: "Rémunération"
     },
     {
         id: 2,
-        title: "Matériaux naturels : le guide complet",
-        excerpt: "Comment choisir et utiliser des matériaux naturels pour votre intérieur : bois, lin, chanvre, liège...",
-        image: "https://placehold.co/1200x400/D99E40/ffffff?text=Mat%C3%A9riaux+Naturels",
-        href: "/interieur/materiaux-naturels",
-        category: "Matériaux"
+        title: "Préfectures : plan de transformation et effectifs",
+        date: "2024-01-15",
+        thumbnail: "https://placehold.co/400x240/D99E40/ffffff?text=Pr%C3%A9fectures",
+        href: "/articles/prefectures-transformation",
+        category: "Organisation"
     },
     {
         id: 3,
-        title: "Purifier l'air intérieur naturellement",
-        excerpt: "Les meilleures plantes et techniques pour améliorer la qualité de l'air dans votre maison.",
-        image: "https://placehold.co/1200x400/EDAE49/ffffff?text=Qualit%C3%A9+Air",
-        href: "/interieur/purifier-air",
-        category: "Bien-être"
+        title: "Titularisation des contractuels : les avancées",
+        date: "2024-01-11",
+        thumbnail: "https://placehold.co/400x240/C48E38/ffffff?text=Titularisation",
+        href: "/articles/titularisation-contractuels",
+        category: "Statut"
+    },
+    {
+        id: 4,
+        title: "Conditions de travail en sous-préfecture",
+        date: "2024-01-07",
+        thumbnail: "https://placehold.co/400x240/EDAE49/ffffff?text=Conditions",
+        href: "/articles/conditions-sous-prefecture",
+        category: "Travail"
     }
 ];
 
-// Cartes d'action spécifiques au secteur (4 cartes)
-const sectorActionCards = [
+// Actualités des Instances (colonne droite 1/3)
+const instanceNews: InstanceNews[] = [
+    {
+        id: 1,
+        title: "CSA central du ministère : compte-rendu",
+        date: "2024-01-21",
+        type: "CSA",
+        href: "/interieur/instances/csa-janvier-2024"
+    },
+    {
+        id: 2,
+        title: "CT des DDI : déclaration FSU",
+        date: "2024-01-16",
+        type: "CT",
+        href: "/interieur/instances/ct-ddi-janvier"
+    },
+    {
+        id: 3,
+        title: "CAP des secrétaires administratifs",
+        date: "2024-01-13",
+        type: "CAP",
+        href: "/interieur/instances/cap-sa-2024"
+    },
+    {
+        id: 4,
+        title: "F-SST : risques liés à l'accueil du public",
+        date: "2024-01-09",
+        type: "CHSCT",
+        href: "/interieur/instances/chsct-accueil"
+    },
+    {
+        id: 5,
+        title: "Bilan social 2023 du ministère",
+        date: "2024-01-05",
+        type: "Autre",
+        href: "/interieur/instances/bilan-social-2023"
+    }
+];
+
+// Cartes d'action (4 cartes)
+const actionCards: ActionCard[] = [
     {
         title: "Principes",
-        description: "Découvrez les principes d'un habitat sain : ventilation, matériaux, éclairage naturel et économies d'énergie.",
+        description: "Notre engagement pour un service public de l'intérieur de qualité et des agents respectés.",
         iconName: "book",
-        link: "/interieur/principes",
-        linkText: "Lire les principes"
+        href: "/interieur/principes",
+        linkText: "Découvrir nos principes"
     },
     {
         title: "Boîte à outils",
-        description: "Guides pratiques, tutoriels DIY et conseils pour transformer votre intérieur de manière écologique.",
+        description: "Grilles indiciaires, simulateurs, modèles de courriers et guides pratiques.",
         iconName: "wrench",
-        link: "/interieur/outils",
-        linkText: "Consulter les outils"
+        href: "/interieur/outils",
+        linkText: "Accéder aux outils"
     },
     {
-        title: "Inspirations",
-        description: "Galerie de projets réalisés, avant/après et idées créatives pour tous les budgets.",
-        iconName: "megaphone",
-        link: "/interieur/inspirations",
-        linkText: "Voir les inspirations"
+        title: "Instances",
+        description: "Suivez les travaux des instances : CSA, CT, CAP et formations spécialisées.",
+        iconName: "users",
+        href: "/interieur/instances",
+        linkText: "Consulter les instances"
     },
     {
-        title: "Artisans",
-        description: "Notre réseau d'artisans et professionnels engagés dans la rénovation et décoration durables.",
-        iconName: "handshake",
-        link: "/interieur/artisans",
-        linkText: "Trouver un artisan"
+        title: "Élan commun",
+        description: "Actions unitaires et intersyndicales pour défendre le service public.",
+        iconName: "heart",
+        href: "/interieur/elan-commun",
+        linkText: "Rejoindre le mouvement"
     }
 ];
 
-// Contacts/Représentants du secteur
-const sectorContacts = [
+// Représentants/Contacts
+const representatives: Representative[] = [
     {
         name: "Émilie Maison",
-        role: "Responsable secteur Intérieur",
-        photoUrl: "https://placehold.co/128/EDAE49/ffffff?text=EM"
+        role: "Secrétaire de section",
+        photoUrl: "https://placehold.co/128x128/EDAE49/ffffff?text=EM"
     },
     {
-        name: "Lucas Bois",
-        role: "Expert Matériaux durables",
-        photoUrl: "https://placehold.co/128/D99E40/ffffff?text=LB"
+        name: "Lucas Préfet",
+        role: "Trésorier",
+        photoUrl: "https://placehold.co/128x128/D99E40/ffffff?text=LP"
     },
     {
-        name: "Marine Déco",
-        role: "Architecte d'intérieur",
-        photoUrl: "https://placehold.co/128/EDAE49/ffffff?text=MD"
+        name: "Marine Duval",
+        role: "Responsable formation",
+        photoUrl: "https://placehold.co/128x128/C48E38/ffffff?text=MD"
     }
 ];
+
+// Newsletter
+const newsletterTitle = "Newsletter Intérieur";
+const newsletterDescription = "Recevez les actualités du ministère de l'intérieur directement dans votre boîte mail.";
+const historyLink = "/interieur/newsletters";
+
+// ============================================================================
+// ICÔNES SVG (Inline pour éco-design)
+// ============================================================================
+
+const icons: Record<string, string> = {
+    book: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>`,
+    wrench: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+    users: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+    heart: `<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
+    arrow: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`
+};
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { 
+        day: 'numeric', month: 'long', year: 'numeric' 
+    });
+}
+
+const instanceColors: Record<string, string> = {
+    CT: 'bg-blue-100 text-blue-800',
+    CAP: 'bg-purple-100 text-purple-800',
+    CHSCT: 'bg-orange-100 text-orange-800',
+    CSA: 'bg-green-100 text-green-800',
+    Autre: 'bg-gray-100 text-gray-700'
+};
 ---
 
-<BaseLayout title="Intérieur - Follen">
-    <!-- 1. Bandeau Secteur -->
-    <SectorBanner 
-        title={sectorTitle}
-        subtitle={sectorSubtitle}
-        bgColor="bg-follen-yellow"
-    />
+<BaseLayout title={pageTitle}>
+    
+    <!-- 1. CONTEXT BANNER -->
+    <div class="bg-slate-800 text-white py-3">
+        <div class="container mx-auto px-4">
+            <p class="text-center text-sm md:text-base font-medium tracking-wide">
+                {sectorName}
+            </p>
+        </div>
+    </div>
 
-    <!-- 2. Mini Carrousel -->
-    <MiniCarousel articles={miniCarouselArticles} />
+    <!-- 2. NEWS GRID -->
+    <section class="py-12 md:py-16 bg-white" aria-labelledby="news-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 id="news-heading" class="sr-only">Actualités du secteur</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Actualités Générales (2/3) -->
+                <div class="lg:col-span-2">
+                    <header class="mb-6">
+                        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-3">
+                            <span class="w-1 h-8 bg-follen-yellow rounded-full" aria-hidden="true"></span>
+                            Actualités Générales
+                        </h3>
+                    </header>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {generalNews.map((article) => (
+                            <article class="group bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                                <a href={article.href} class="block aspect-video overflow-hidden">
+                                    <img 
+                                        src={article.thumbnail} 
+                                        alt=""
+                                        loading="lazy"
+                                        decoding="async"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                </a>
+                                <div class="p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <time datetime={article.date} class="text-xs text-gray-500">
+                                            {formatDate(article.date)}
+                                        </time>
+                                        {article.category && (
+                                            <span class="text-xs bg-follen-yellow-light text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                                                {article.category}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h4 class="font-semibold text-slate-900 leading-snug group-hover:text-amber-600 transition-colors">
+                                        <a href={article.href} class="hover:underline">{article.title}</a>
+                                    </h4>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <a href="/interieur/actualites" class="inline-flex items-center text-amber-600 font-semibold hover:underline">
+                            Voir toutes les actualités
+                            <Fragment set:html={icons.arrow} />
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Actualités des Instances (1/3) -->
+                <aside class="lg:col-span-1">
+                    <div class="bg-gray-50 rounded-xl p-6 h-full">
+                        <header class="mb-6">
+                            <h3 class="text-xl md:text-2xl font-bold text-slate-900 flex items-center gap-3">
+                                <span class="w-1 h-6 bg-slate-700 rounded-full" aria-hidden="true"></span>
+                                Actualités des Instances
+                            </h3>
+                        </header>
+                        
+                        <ul class="space-y-4" role="list">
+                            {instanceNews.map((item) => (
+                                <li class="border-b border-gray-200 pb-4 last:border-0 last:pb-0">
+                                    <a href={item.href} class="block group">
+                                        <div class="flex items-center gap-2 mb-1.5">
+                                            <span class:list={["text-xs font-bold px-2 py-0.5 rounded", instanceColors[item.type]]}>
+                                                {item.type}
+                                            </span>
+                                            <time datetime={item.date} class="text-xs text-gray-500">
+                                                {formatDate(item.date)}
+                                            </time>
+                                        </div>
+                                        <h4 class="text-sm font-medium text-slate-800 group-hover:text-amber-600 transition-colors leading-snug">
+                                            {item.title}
+                                        </h4>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div class="mt-6 pt-4 border-t border-gray-200">
+                            <a href="/interieur/instances" class="inline-flex items-center text-slate-700 text-sm font-semibold hover:text-amber-600 transition-colors">
+                                Archives des instances
+                                <Fragment set:html={icons.arrow} />
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
 
-    <!-- 3. Action Cards x4 (Layout Carré) -->
-    <ActionCardsSection 
-        title="Ressources Intérieur"
-        description="Tout pour créer un intérieur sain et durable"
-        cards={sectorActionCards}
-        layout="square"
-        cardColor="bg-follen-yellow"
-        iconColor="text-follen-yellow"
-    />
+    <!-- 3. ACTION CARDS ZONE -->
+    <section class="py-16 md:py-20 bg-gray-100" aria-labelledby="actions-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 id="actions-heading" class="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-12">
+                Ressources et outils
+            </h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {actionCards.map((card) => (
+                    <article class="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group">
+                        <div class="w-14 h-14 bg-follen-yellow-light text-amber-600 rounded-xl flex items-center justify-center mb-4 group-hover:bg-follen-yellow group-hover:text-white transition-colors">
+                            <Fragment set:html={icons[card.iconName]} />
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">{card.title}</h3>
+                        <p class="text-gray-600 text-sm mb-4 leading-relaxed">{card.description}</p>
+                        <a href={card.href} class="inline-flex items-center text-amber-600 text-sm font-semibold hover:underline">
+                            {card.linkText}
+                            <span class="ml-1.5 group-hover:translate-x-1 transition-transform" aria-hidden="true">
+                                <Fragment set:html={icons.arrow} />
+                            </span>
+                        </a>
+                    </article>
+                ))}
+            </div>
+        </div>
+    </section>
 
-    <!-- 4. Bandeau Contact -->
-    <ContactBanner 
-        contacts={sectorContacts}
-        contactButtonText="Contacter l'équipe Intérieur"
-        contactButtonLink="/interieur/contact"
-    />
+    <!-- 4. CONTACT BANNER -->
+    <section class="py-16 bg-white" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">
+                    Vos représentants
+                </h2>
+                
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-yellow-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                
+                <a href="/interieur/contact" class="inline-flex items-center bg-follen-yellow text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-500 transition-colors shadow-md hover:shadow-lg">
+                    Contacter l'équipe
+                    <span class="ml-2" aria-hidden="true"><Fragment set:html={icons.arrow} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-    <!-- 5. Newsletter -->
-    <Newsletter 
-        title="Newsletter Intérieur"
-        description="Recevez les actualités du secteur Intérieur directement dans votre boîte mail."
-    />
+    <!-- 5. NEWSLETTER -->
+    <section class="py-16 bg-follen-yellow text-white" aria-labelledby="newsletter-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 id="newsletter-heading" class="text-2xl md:text-3xl font-bold mb-4">{newsletterTitle}</h2>
+                <p class="text-white/80 mb-8 text-lg">{newsletterDescription}</p>
+                
+                <form method="POST" action="/api/newsletter" class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <label for="newsletter-email-int" class="sr-only">Adresse email</label>
+                    <input 
+                        type="email" id="newsletter-email-int" name="email"
+                        placeholder="Votre adresse email" required autocomplete="email"
+                        class="flex-1 px-5 py-4 rounded-lg text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    />
+                    <button type="submit" class="bg-white text-amber-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors whitespace-nowrap">
+                        S'abonner
+                    </button>
+                </form>
+                
+                <a href={historyLink} class="inline-flex items-center text-white/70 hover:text-white text-sm transition-colors">
+                    Voir l'historique des newsletters
+                    <span class="ml-1" aria-hidden="true"><Fragment set:html={icons.arrow} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
 </BaseLayout>
