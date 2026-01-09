@@ -81,50 +81,56 @@ const { placeholder = "Rechercher..." } = Astro.props;
     }
 </style>
 
-<script>
+<script is:inline>
     // Chargement lazy de Pagefind UI uniquement quand le composant est monté
-    document.addEventListener('DOMContentLoaded', () => {
-        const searchContainer = document.getElementById('search');
+    // Note: is:inline évite que Vite essaie de bundler ce script
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchContainer = document.getElementById('search');
         if (!searchContainer) return;
 
-        // Charger les assets Pagefind de manière asynchrone
-        const loadPagefind = async () => {
-            try {
-                // Charger le CSS
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = '/_pagefind/pagefind-ui.css';
-                document.head.appendChild(link);
+        // Charger les assets Pagefind de manière asynchrone via script tag
+        function loadPagefind() {
+            // Charger le CSS
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/_pagefind/pagefind-ui.css';
+            document.head.appendChild(link);
 
-                // Charger et initialiser PagefindUI via import dynamique
-                const { PagefindUI } = await import('/_pagefind/pagefind-ui.js');
-                
-                new PagefindUI({
-                    element: '#search',
-                    baseUrl: '/',
-                    translations: {
-                        placeholder: 'Mots-clés, sujets, auteurs...',
-                        clear_search: 'Effacer',
-                        load_more: 'Charger plus de résultats',
-                        search_label: 'Recherche',
-                        filters_label: 'Filtres',
-                        zero_results: 'Aucun résultat trouvé',
-                        many_results: '{{count}} résultats trouvés',
-                        one_result: '1 résultat trouvé',
-                        alt_search: 'Rechercher "{{suggestion}}" à la place',
-                        search_suggestion: 'Rechercher "{{suggestion}}" à la place',
-                        searching: 'Recherche en cours...',
-                    },
-                    showSubResults: true,
-                    showImages: false,
-                    resetStyles: false,
-                });
-            } catch (error) {
-                console.error('Erreur lors du chargement de Pagefind:', error);
-            }
-        };
+            // Charger le JS via script tag (évite les problèmes de bundling Vite)
+            var script = document.createElement('script');
+            script.src = '/_pagefind/pagefind-ui.js';
+            script.onload = function() {
+                // PagefindUI est disponible globalement après chargement du script
+                if (typeof window.PagefindUI !== 'undefined') {
+                    new window.PagefindUI({
+                        element: '#search',
+                        baseUrl: '/',
+                        translations: {
+                            placeholder: 'Mots-clés, sujets, auteurs...',
+                            clear_search: 'Effacer',
+                            load_more: 'Charger plus de résultats',
+                            search_label: 'Recherche',
+                            filters_label: 'Filtres',
+                            zero_results: 'Aucun résultat trouvé',
+                            many_results: '{{count}} résultats trouvés',
+                            one_result: '1 résultat trouvé',
+                            alt_search: 'Rechercher "{{suggestion}}" à la place',
+                            search_suggestion: 'Rechercher "{{suggestion}}" à la place',
+                            searching: 'Recherche en cours...'
+                        },
+                        showSubResults: true,
+                        showImages: false,
+                        resetStyles: false
+                    });
+                }
+            };
+            script.onerror = function() {
+                console.error('Erreur lors du chargement de Pagefind');
+            };
+            document.head.appendChild(script);
+        }
 
-        // Charger Pagefind immédiatement (lazy loading pourrait être ajouté plus tard)
+        // Charger Pagefind immédiatement
         loadPagefind();
     });
 </script>
