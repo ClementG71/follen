@@ -5,18 +5,24 @@
 # Étape 1 : Build
 FROM node:20-alpine AS builder
 
+# Dépendances pour Pagefind (libc compatible)
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 # Copier les fichiers de dépendances
 COPY package*.json ./
 
-# Installer les dépendances (incluant devDependencies pour le build)
-RUN npm ci
+# Configuration npm pour réseau instable + installation avec retries
+RUN npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm ci --prefer-offline --no-audit
 
 # Copier le code source
 COPY . .
 
-# Builder l'application Astro
+# Builder l'application Astro (inclut postbuild pour Pagefind)
 RUN npm run build
 
 # ===========================================
