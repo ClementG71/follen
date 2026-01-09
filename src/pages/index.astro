@@ -6,47 +6,47 @@ import NewsFeed from '../components/mockup/NewsFeed.astro';
 import ActionCardsSection from '../components/ActionCardsSection.astro';
 import Newsletter from '../components/mockup/Newsletter.astro';
 
-// Données mock pour le carrousel Hero (5 articles)
+// Données mock pour le carrousel Hero (5 articles - vrais articles mockup)
 const carouselArticles = [
     {
         id: 1,
-        title: "Mobilisation du 5 décembre : Tous ensemble pour la défense de nos droits",
-        excerpt: "La mobilisation historique du 5 décembre a rassemblé des milliers de membres dans les rues. Revivez les moments forts de cette journée importante.",
-        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Mobilisation+5+d%C3%A9cembre",
-        href: "/articles/mobilisation-5-decembre",
-        category: "Actualité"
+        title: "Réforme des retraites : les agents du ministère mobilisés pour défendre leurs droits",
+        excerpt: "Face aux annonces gouvernementales sur la réforme des retraites, la FSU appelle l'ensemble des agents à se mobiliser. Retour sur les enjeux et les actions prévues.",
+        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Mobilisation+FSU",
+        href: "/articles/modele-article",
+        category: "Mobilisation"
     },
     {
         id: 2,
-        title: "Nouveaux accords salariaux : Des avancées significatives",
-        excerpt: "Les négociations ont abouti à des améliorations importantes pour nos conditions de travail. Découvrez les détails des nouveaux accords.",
-        image: "https://placehold.co/1920x700/B83E4D/ffffff?text=Accords+Salariaux",
-        href: "/articles/accords-salariaux",
-        category: "Négociations"
-    },
-    {
-        id: 3,
-        title: "Assemblée générale annuelle : Retour sur l'année écoulée",
-        excerpt: "L'assemblée générale a permis de faire un bilan complet de nos actions et de définir nos orientations pour l'année à venir.",
-        image: "https://placehold.co/1920x700/9E3542/ffffff?text=Assembl%C3%A9e+G%C3%A9n%C3%A9rale",
-        href: "/articles/assemblee-generale",
+        title: "Élections professionnelles 2024 : la FSU confirme sa place de première organisation",
+        excerpt: "Les résultats des élections professionnelles dans la fonction publique sont tombés. La FSU conforte sa position de leader syndical dans plusieurs ministères.",
+        image: "https://placehold.co/1920x700/B83A4B/ffffff?text=%C3%89lections+FSU",
+        href: "/articles/elections-professionnelles-2024",
         category: "Vie syndicale"
     },
     {
+        id: 3,
+        title: "Télétravail : de nouveaux accords pour les agents du ministère de l'agriculture",
+        excerpt: "Après plusieurs mois de négociations, un accord-cadre sur le télétravail a été signé. Retour sur les avancées obtenues et les points de vigilance.",
+        image: "https://placehold.co/1920x700/43AA8B/ffffff?text=T%C3%A9l%C3%A9travail+Agriculture",
+        href: "/articles/teletravail-nouveaux-accords",
+        category: "Conditions de travail"
+    },
+    {
         id: 4,
-        title: "Formation continue : Nouvelles sessions disponibles",
-        excerpt: "Inscrivez-vous dès maintenant aux prochaines sessions de formation pour développer vos compétences professionnelles.",
-        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Formation+Continue",
-        href: "/articles/formation-continue",
-        category: "Formation"
+        title: "Plan de sobriété énergétique : quel impact pour les agents du ministère ?",
+        excerpt: "Le plan de sobriété énergétique s'applique aux administrations publiques. Décryptage des mesures et de leurs conséquences sur les conditions de travail.",
+        image: "https://placehold.co/1920x700/2374AB/ffffff?text=Sobri%C3%A9t%C3%A9+%C3%89nerg%C3%A9tique",
+        href: "/articles/plan-sobriete-energetique",
+        category: "Environnement"
     },
     {
         id: 5,
-        title: "Plateforme Élan Commun : Outils et ressources à votre disposition",
-        excerpt: "Découvrez la nouvelle plateforme qui met à votre disposition tous les outils nécessaires pour faciliter votre engagement syndical.",
-        image: "https://placehold.co/1920x700/B83E4D/ffffff?text=%C3%89lan+Commun",
-        href: "/articles/elan-commun",
-        category: "Ressources"
+        title: "Revalorisation indemnitaire au ministère de l'intérieur : où en est-on ?",
+        excerpt: "Le ministère de l'intérieur a annoncé des mesures de revalorisation indemnitaire. Analyse des annonces et des revendications qui restent à satisfaire.",
+        image: "https://placehold.co/1920x700/EDAE49/ffffff?text=Revalorisation+Int%C3%A9rieur",
+        href: "/articles/revalorisation-indemnitaire",
+        category: "Rémunération"
     }
 ];
 
@@ -72,94 +72,97 @@ const institutionalLinks = [
     }
 ];
 
-// Articles pour le News Feed (12 articles)
+// Articles pour le News Feed (12 articles - incluant les mockups)
 const newsFeedArticles = [
     {
         id: 1,
-        title: "Réunion sectorielle du 15 janvier",
-        date: "2025-01-10",
-        category: "Réunions",
-        href: "/articles/reunion-sectorielle",
-        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=RS"
+        title: "Revalorisation indemnitaire au ministère de l'intérieur",
+        date: "2024-01-19",
+        category: "Rémunération",
+        href: "/articles/revalorisation-indemnitaire",
+        thumbnail: "https://placehold.co/48/EDAE49/ffffff?text=RI"
     },
     {
         id: 2,
-        title: "Nouveaux outils numériques disponibles",
-        date: "2025-01-08",
-        category: "Ressources",
-        href: "/articles/outils-numeriques"
+        title: "Plan de sobriété énergétique : impacts sur les agents",
+        date: "2024-01-18",
+        category: "Environnement",
+        href: "/articles/plan-sobriete-energetique",
+        thumbnail: "https://placehold.co/48/2374AB/ffffff?text=SE"
     },
     {
         id: 3,
-        title: "Appel à candidatures pour la commission",
-        date: "2025-01-05",
-        category: "Appels",
-        href: "/articles/candidatures-commission"
+        title: "Réforme des retraites : les agents mobilisés",
+        date: "2024-01-15",
+        category: "Mobilisation",
+        href: "/articles/modele-article",
+        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=RR"
     },
     {
         id: 4,
-        title: "Bilan de l'année 2024",
-        date: "2025-01-02",
-        category: "Bilan",
-        href: "/articles/bilan-2024",
-        thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2024"
+        title: "Télétravail : nouveaux accords au ministère agriculture",
+        date: "2024-01-12",
+        category: "Conditions de travail",
+        href: "/articles/teletravail-nouveaux-accords",
+        thumbnail: "https://placehold.co/48/43AA8B/ffffff?text=TT"
     },
     {
         id: 5,
-        title: "Point sur les négociations en cours",
-        date: "2024-12-28",
-        category: "Négociations",
-        href: "/articles/negociations-en-cours"
+        title: "Élections professionnelles : la FSU en tête",
+        date: "2024-01-08",
+        category: "Vie syndicale",
+        href: "/articles/elections-professionnelles-2024",
+        thumbnail: "https://placehold.co/48/B83A4B/ffffff?text=EP"
     },
     {
         id: 6,
         title: "Formation : Maîtriser les outils collaboratifs",
-        date: "2024-12-25",
+        date: "2024-01-05",
         category: "Formation",
         href: "/articles/formation-collaboratif"
     },
     {
         id: 7,
-        title: "Journée de solidarité : Retour en images",
-        date: "2024-12-20",
-        category: "Événements",
-        href: "/articles/journee-solidarite",
-        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=JS"
+        title: "CSA ministériel : compte-rendu de janvier",
+        date: "2024-01-04",
+        category: "Instances",
+        href: "/agriculture/instances/csa-janvier-2024"
     },
     {
         id: 8,
         title: "Nouvelle circulaire : Ce qu'il faut savoir",
-        date: "2024-12-18",
+        date: "2024-01-03",
         category: "Actualité",
         href: "/articles/nouvelle-circulaire"
     },
     {
         id: 9,
-        title: "Rencontre avec les partenaires sociaux",
-        date: "2024-12-15",
-        category: "Rencontres",
-        href: "/articles/rencontre-partenaires"
-    },
-    {
-        id: 10,
         title: "Guide pratique : Vos droits au travail",
-        date: "2024-12-12",
+        date: "2024-01-02",
         category: "Guides",
         href: "/articles/guide-droits-travail"
     },
     {
+        id: 10,
+        title: "Bilan de l'année 2023",
+        date: "2024-01-01",
+        category: "Bilan",
+        href: "/articles/bilan-2023",
+        thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2023"
+    },
+    {
         id: 11,
-        title: "Assemblée locale : Compte-rendu",
-        date: "2024-12-10",
-        category: "Assemblées",
-        href: "/articles/assemblee-locale"
+        title: "Campagne d'adhésion 2024",
+        date: "2023-12-20",
+        category: "Campagne",
+        href: "/articles/campagne-adhesion-2024"
     },
     {
         id: 12,
-        title: "Campagne d'adhésion 2025",
-        date: "2024-12-08",
-        category: "Campagne",
-        href: "/articles/campagne-adhesion-2025"
+        title: "Assemblée générale : Retour sur l'événement",
+        date: "2023-12-15",
+        category: "Assemblées",
+        href: "/articles/assemblee-generale"
     }
 ];
 
