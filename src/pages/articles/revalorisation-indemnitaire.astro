@@ -1,0 +1,150 @@
+---
+/**
+ * Article Mockup - Revalorisation Indemnitaire
+ * Secteur: Intérieur
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+const article = {
+    title: "Revalorisation indemnitaire au ministère de l'intérieur : où en est-on ?",
+    introduction: "Après des mois de discussions, le ministère de l'intérieur a annoncé des mesures de revalorisation indemnitaire. Analyse des annonces et des revendications qui restent à satisfaire.",
+    date: "2024-01-19",
+    author: "Section FSU Intérieur",
+    category: "Rémunération",
+    sector: "interieur",
+    heroImage: "https://placehold.co/1600x700/EDAE49/ffffff?text=Revalorisation+Int%C3%A9rieur",
+    body: `
+        <p>Le ministère de l'intérieur a enfin dévoilé son plan de revalorisation indemnitaire pour les agents administratifs et techniques. Si certaines avancées sont à noter, la FSU considère que ces mesures restent insuffisantes face à l'inflation et à la perte de pouvoir d'achat accumulée.</p>
+        
+        <h3>Les mesures annoncées</h3>
+        
+        <p>Le plan présenté par l'administration comprend plusieurs volets :</p>
+        
+        <ul>
+            <li>Augmentation de l'IFSE de 5% en moyenne pour les catégories C</li>
+            <li>Revalorisation du CIA (Complément Indemnitaire Annuel) pour les catégories B</li>
+            <li>Création d'une prime de fidélisation pour les services en tension</li>
+            <li>Alignement progressif des régimes indemnitaires entre services déconcentrés</li>
+        </ul>
+        
+        <h3>Notre analyse</h3>
+        
+        <p>Ces mesures, bien qu'elles aillent dans le bon sens, ne compensent pas les années de gel du point d'indice et l'inflation galopante. Les agents du ministère de l'intérieur ont perdu en moyenne 15% de pouvoir d'achat depuis 2010.</p>
+        
+        <blockquote>
+            <p>"Une revalorisation de 5% quand l'inflation atteint 6% par an, ce n'est pas une augmentation, c'est à peine un rattrapage partiel. Nous demandons un véritable plan de rattrapage salarial."</p>
+        </blockquote>
+        
+        <h3>Nos revendications</h3>
+        
+        <p>La FSU continue de porter des revendications ambitieuses pour les agents :</p>
+        
+        <ul>
+            <li>Augmentation du point d'indice de 10% immédiatement</li>
+            <li>Rattrapage des pertes de pouvoir d'achat depuis 2010</li>
+            <li>Harmonisation par le haut des régimes indemnitaires</li>
+            <li>Intégration d'une partie des primes dans le traitement indiciaire</li>
+            <li>Revalorisation des grilles indiciaires des catégories C</li>
+        </ul>
+        
+        <h3>Calendrier et prochaines étapes</h3>
+        
+        <p>Les nouvelles mesures indemnitaires s'appliqueront à compter du 1er juillet 2024. D'ici là, de nouvelles réunions de négociation sont prévues pour discuter des modalités d'application.</p>
+        
+        <p>La FSU sera présente à toutes les instances pour défendre les intérêts des agents et obtenir des avancées supplémentaires. Nous vous tiendrons informés de l'évolution des négociations.</p>
+        
+        <h3>Vérifiez votre situation</h3>
+        
+        <p>Un simulateur sera bientôt disponible sur notre site pour vous permettre de calculer l'impact de ces mesures sur votre rémunération. En attendant, n'hésitez pas à contacter vos représentants pour toute question.</p>
+    `
+};
+
+const representatives: Representative[] = [
+    { name: "Émilie Maison", role: "Secrétaire de section", photoUrl: "https://placehold.co/128x128/EDAE49/ffffff?text=EM" },
+    { name: "Lucas Préfet", role: "Référent rémunération", photoUrl: "https://placehold.co/128x128/D99E40/ffffff?text=LP" },
+    { name: "Marine Duval", role: "Experte carrières", photoUrl: "https://placehold.co/128x128/C48E38/ffffff?text=MD" }
+];
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+---
+
+<BaseLayout title={`${article.title} - FSU`}>
+    <article>
+        <!-- Hero Image -->
+        <div class="w-full px-4 md:px-0 md:w-[90%] lg:w-[85%] mx-auto pt-8">
+            <figure class="relative">
+                <img src={article.heroImage} alt="" loading="eager" decoding="async" class="w-full aspect-[21/9] object-cover rounded-2xl shadow-lg" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </figure>
+        </div>
+
+        <!-- Floating Title Card -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto -mt-12 md:-mt-16 lg:-mt-24 relative z-10">
+            <header class="bg-white rounded-2xl shadow-xl p-6 md:p-10 lg:p-12">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-follen-yellow-light text-amber-700">{article.category}</span>
+                    <time datetime={article.date} class="text-sm text-gray-500">{formatDate(article.date)}</time>
+                    <span class="text-sm text-gray-400">•</span>
+                    <span class="text-sm text-gray-500">{article.author}</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">{article.title}</h1>
+            </header>
+        </div>
+
+        <!-- Introduction -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-8 md:mt-12">
+            <h2 class="text-lg md:text-xl font-semibold text-slate-700 leading-relaxed border-l-4 border-follen-yellow pl-6">{article.introduction}</h2>
+        </div>
+
+        <!-- Main Content -->
+        <main class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-10 md:mt-14">
+            <div class="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4 prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-li:text-slate-700 prose-blockquote:border-l-4 prose-blockquote:border-follen-yellow prose-blockquote:bg-follen-yellow-light prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:font-medium" set:html={article.body} />
+        </main>
+
+        <!-- Retour -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-12 pt-8 border-t border-gray-200">
+            <a href="/articles" class="inline-flex items-center text-slate-600 hover:text-amber-600 transition-colors font-medium">
+                <svg class="w-5 h-5 mr-2 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Retour aux articles
+            </a>
+        </div>
+    </article>
+
+    <!-- Contact Banner -->
+    <section class="py-16 md:py-20 bg-gray-50 mt-16" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">Une question ? Contactez-nous</h2>
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-yellow-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                <a href="/interieur/contact" class="inline-flex items-center bg-follen-yellow text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-500 transition-colors shadow-md hover:shadow-lg">
+                    Nous contacter
+                    <span class="ml-2" aria-hidden="true"><Fragment set:html={arrowIcon} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+

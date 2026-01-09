@@ -1,0 +1,138 @@
+---
+/**
+ * Article Mockup - Télétravail
+ * Secteur: Agriculture
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Types
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+// Données de l'article
+const article = {
+    title: "Télétravail : de nouveaux accords pour les agents du ministère de l'agriculture",
+    introduction: "Après plusieurs mois de négociations, un accord-cadre sur le télétravail a été signé au ministère de l'agriculture. Retour sur les avancées obtenues et les points de vigilance.",
+    date: "2024-01-12",
+    author: "Section FSU Agriculture",
+    category: "Conditions de travail",
+    sector: "agriculture",
+    heroImage: "https://placehold.co/1600x700/43AA8B/ffffff?text=T%C3%A9l%C3%A9travail+Agriculture",
+    body: `
+        <p>Le nouvel accord-cadre sur le télétravail, fruit de plusieurs mois de négociations avec l'administration, apporte des améliorations significatives pour les agents du ministère de l'agriculture et de la souveraineté alimentaire.</p>
+        
+        <h3>Les principales avancées</h3>
+        
+        <p>L'accord prévoit désormais la possibilité de télétravailler jusqu'à 3 jours par semaine pour les agents dont les missions le permettent, contre 2 jours auparavant. Cette évolution répond à une demande forte des personnels.</p>
+        
+        <p>Parmi les autres avancées notables :</p>
+        
+        <ul>
+            <li>Prise en charge forfaitaire des frais de connexion et d'équipement</li>
+            <li>Souplesse accrue dans le choix des jours télétravaillés</li>
+            <li>Reconnaissance du droit à la déconnexion inscrit dans l'accord</li>
+            <li>Formation des encadrants au management à distance</li>
+        </ul>
+        
+        <h3>Points de vigilance</h3>
+        
+        <p>La FSU reste vigilante sur plusieurs aspects de la mise en œuvre de cet accord. Le risque d'isolement des agents en télétravail, les inégalités d'accès selon les territoires et la charge de travail sont autant de sujets que nous continuerons à suivre.</p>
+        
+        <blockquote>
+            <p>"Cet accord est une première étape. Nous veillerons à ce que le télétravail ne devienne pas un outil de désengagement de l'administration dans les territoires ruraux."</p>
+        </blockquote>
+        
+        <h3>Comment en bénéficier ?</h3>
+        
+        <p>Les agents souhaitant bénéficier du télétravail doivent en faire la demande auprès de leur supérieur hiérarchique direct. Un formulaire type est disponible sur l'intranet du ministère.</p>
+        
+        <p>Pour toute question sur vos droits ou en cas de difficulté dans votre demande, n'hésitez pas à contacter vos représentants FSU.</p>
+    `
+};
+
+const representatives: Representative[] = [
+    { name: "Pierre Levert", role: "Secrétaire de section", photoUrl: "https://placehold.co/128x128/43AA8B/ffffff?text=PL" },
+    { name: "Claire Moisson", role: "Référente télétravail", photoUrl: "https://placehold.co/128x128/3B9679/ffffff?text=CM" },
+    { name: "Antoine Racine", role: "Expert RH", photoUrl: "https://placehold.co/128x128/2D7D5F/ffffff?text=AR" }
+];
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+---
+
+<BaseLayout title={`${article.title} - FSU`}>
+    <article>
+        <!-- Hero Image -->
+        <div class="w-full px-4 md:px-0 md:w-[90%] lg:w-[85%] mx-auto pt-8">
+            <figure class="relative">
+                <img src={article.heroImage} alt="" loading="eager" decoding="async" class="w-full aspect-[21/9] object-cover rounded-2xl shadow-lg" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </figure>
+        </div>
+
+        <!-- Floating Title Card -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto -mt-12 md:-mt-16 lg:-mt-24 relative z-10">
+            <header class="bg-white rounded-2xl shadow-xl p-6 md:p-10 lg:p-12">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-follen-green-light text-follen-green">{article.category}</span>
+                    <time datetime={article.date} class="text-sm text-gray-500">{formatDate(article.date)}</time>
+                    <span class="text-sm text-gray-400">•</span>
+                    <span class="text-sm text-gray-500">{article.author}</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">{article.title}</h1>
+            </header>
+        </div>
+
+        <!-- Introduction -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-8 md:mt-12">
+            <h2 class="text-lg md:text-xl font-semibold text-slate-700 leading-relaxed border-l-4 border-follen-green pl-6">{article.introduction}</h2>
+        </div>
+
+        <!-- Main Content -->
+        <main class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-10 md:mt-14">
+            <div class="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4 prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-follen-green prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-li:text-slate-700 prose-blockquote:border-l-4 prose-blockquote:border-follen-green prose-blockquote:bg-follen-green-light prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:font-medium" set:html={article.body} />
+        </main>
+
+        <!-- Retour -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-12 pt-8 border-t border-gray-200">
+            <a href="/articles" class="inline-flex items-center text-slate-600 hover:text-follen-green transition-colors font-medium">
+                <svg class="w-5 h-5 mr-2 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Retour aux articles
+            </a>
+        </div>
+    </article>
+
+    <!-- Contact Banner -->
+    <section class="py-16 md:py-20 bg-gray-50 mt-16" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">Une question ? Contactez-nous</h2>
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-green-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                <a href="/agriculture/contact" class="inline-flex items-center bg-follen-green text-white px-8 py-4 rounded-lg font-semibold hover:bg-follen-green/90 transition-colors shadow-md hover:shadow-lg">
+                    Nous contacter
+                    <span class="ml-2" aria-hidden="true"><Fragment set:html={arrowIcon} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+

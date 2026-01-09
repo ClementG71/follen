@@ -1,0 +1,146 @@
+---
+/**
+ * Article Mockup - Plan Sobriété Énergétique
+ * Secteur: Écologie
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+const article = {
+    title: "Plan de sobriété énergétique : quel impact pour les agents du ministère ?",
+    introduction: "Le plan de sobriété énergétique lancé par le gouvernement s'applique également aux administrations publiques. Décryptage des mesures et de leurs conséquences sur les conditions de travail des agents.",
+    date: "2024-01-18",
+    author: "Section FSU Écologie",
+    category: "Environnement",
+    sector: "ecologie",
+    heroImage: "https://placehold.co/1600x700/2374AB/ffffff?text=Sobri%C3%A9t%C3%A9+%C3%89nerg%C3%A9tique",
+    body: `
+        <p>Le plan de sobriété énergétique, présenté comme une réponse à la crise énergétique, impose de nouvelles contraintes aux services de l'État. Au ministère de la transition écologique, ces mesures prennent une dimension particulière.</p>
+        
+        <h3>Les mesures appliquées dans les services</h3>
+        
+        <p>Depuis le début de l'hiver, plusieurs mesures sont entrées en vigueur dans les bâtiments du ministère :</p>
+        
+        <ul>
+            <li>Limitation du chauffage à 19°C dans les bureaux</li>
+            <li>Extinction des éclairages extérieurs après 22h</li>
+            <li>Réduction de la climatisation en été (26°C minimum)</li>
+            <li>Encouragement au covoiturage et aux transports en commun</li>
+            <li>Promotion du télétravail pour réduire les déplacements</li>
+        </ul>
+        
+        <h3>Les préoccupations des agents</h3>
+        
+        <p>Si la FSU partage les objectifs de réduction de la consommation énergétique, nous alertons sur certaines dérives potentielles. Le confort thermique des agents ne doit pas être sacrifié, notamment pour les personnels souffrant de pathologies particulières.</p>
+        
+        <blockquote>
+            <p>"La sobriété énergétique ne doit pas rimer avec dégradation des conditions de travail. Des températures trop basses augmentent les risques de TMS et réduisent la productivité."</p>
+        </blockquote>
+        
+        <h3>Nos propositions</h3>
+        
+        <p>La FSU propose une approche équilibrée de la sobriété énergétique qui préserve la santé des agents :</p>
+        
+        <ul>
+            <li>Rénovation thermique accélérée des bâtiments anciens</li>
+            <li>Mise à disposition de vêtements chauds pour les agents qui le souhaitent</li>
+            <li>Flexibilité horaire pour permettre le télétravail les jours les plus froids</li>
+            <li>Consultation des représentants du personnel avant toute nouvelle mesure</li>
+        </ul>
+        
+        <h3>Un dialogue social nécessaire</h3>
+        
+        <p>Nous demandons que ces mesures fassent l'objet d'un véritable dialogue social et d'une évaluation régulière de leur impact sur les agents. La transition écologique doit être juste et accompagnée.</p>
+        
+        <p>Si vous constatez des dysfonctionnements ou des situations problématiques dans vos services, n'hésitez pas à alerter vos représentants FSU.</p>
+    `
+};
+
+const representatives: Representative[] = [
+    { name: "Julie Climat", role: "Secrétaire de section", photoUrl: "https://placehold.co/128x128/2374AB/ffffff?text=JC" },
+    { name: "Thomas Vert", role: "Référent conditions de travail", photoUrl: "https://placehold.co/128x128/1D6391/ffffff?text=TV" },
+    { name: "Léa Nature", role: "Experte environnement", photoUrl: "https://placehold.co/128x128/165A7D/ffffff?text=LN" }
+];
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+---
+
+<BaseLayout title={`${article.title} - FSU`}>
+    <article>
+        <!-- Hero Image -->
+        <div class="w-full px-4 md:px-0 md:w-[90%] lg:w-[85%] mx-auto pt-8">
+            <figure class="relative">
+                <img src={article.heroImage} alt="" loading="eager" decoding="async" class="w-full aspect-[21/9] object-cover rounded-2xl shadow-lg" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </figure>
+        </div>
+
+        <!-- Floating Title Card -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto -mt-12 md:-mt-16 lg:-mt-24 relative z-10">
+            <header class="bg-white rounded-2xl shadow-xl p-6 md:p-10 lg:p-12">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="text-xs font-bold px-3 py-1 rounded-full bg-follen-blue-light text-follen-blue">{article.category}</span>
+                    <time datetime={article.date} class="text-sm text-gray-500">{formatDate(article.date)}</time>
+                    <span class="text-sm text-gray-400">•</span>
+                    <span class="text-sm text-gray-500">{article.author}</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">{article.title}</h1>
+            </header>
+        </div>
+
+        <!-- Introduction -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-8 md:mt-12">
+            <h2 class="text-lg md:text-xl font-semibold text-slate-700 leading-relaxed border-l-4 border-follen-blue pl-6">{article.introduction}</h2>
+        </div>
+
+        <!-- Main Content -->
+        <main class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-10 md:mt-14">
+            <div class="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4 prose-p:text-slate-700 prose-p:leading-relaxed prose-a:text-follen-blue prose-a:no-underline hover:prose-a:underline prose-ul:my-6 prose-li:text-slate-700 prose-blockquote:border-l-4 prose-blockquote:border-follen-blue prose-blockquote:bg-follen-blue-light prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-slate-800 prose-blockquote:font-medium" set:html={article.body} />
+        </main>
+
+        <!-- Retour -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-12 pt-8 border-t border-gray-200">
+            <a href="/articles" class="inline-flex items-center text-slate-600 hover:text-follen-blue transition-colors font-medium">
+                <svg class="w-5 h-5 mr-2 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Retour aux articles
+            </a>
+        </div>
+    </article>
+
+    <!-- Contact Banner -->
+    <section class="py-16 md:py-20 bg-gray-50 mt-16" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">Une question ? Contactez-nous</h2>
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-blue-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                <a href="/ecologie/contact" class="inline-flex items-center bg-follen-blue text-white px-8 py-4 rounded-lg font-semibold hover:bg-follen-blue/90 transition-colors shadow-md hover:shadow-lg">
+                    Nous contacter
+                    <span class="ml-2" aria-hidden="true"><Fragment set:html={arrowIcon} /></span>
+                </a>
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+

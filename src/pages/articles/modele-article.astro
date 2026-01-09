@@ -1,0 +1,254 @@
+---
+/**
+ * src/pages/articles/modele-article.astro
+ * Modèle de page Article - FSU Syndicat
+ * Design: Hero Image avec Floating Title Card (overlap effect)
+ * Éco-design: HTML sémantique, zéro JS client-side
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// ============================================================================
+// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
+// ============================================================================
+
+interface ArticleData {
+    title: string;
+    introduction: string;
+    date: string;
+    author: string;
+    category: string;
+    sector: 'agriculture' | 'ecologie' | 'interieur' | 'general';
+    heroImage: string;
+    body: string; // HTML riche (RichText Wagtail)
+}
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+// ============================================================================
+// DONNÉES MOCK - ARTICLE MODÈLE
+// ============================================================================
+
+const article: ArticleData = {
+    title: "Réforme des retraites : les agents du ministère mobilisés pour défendre leurs droits",
+    introduction: "Face aux annonces gouvernementales sur la réforme des retraites, la FSU appelle l'ensemble des agents à se mobiliser. Retour sur les enjeux et les actions prévues pour les semaines à venir.",
+    date: "2024-01-15",
+    author: "Bureau national FSU",
+    category: "Mobilisation",
+    sector: "general",
+    heroImage: "https://placehold.co/1600x700/D1495B/ffffff?text=Mobilisation+FSU",
+    body: `
+        <p>La réforme des retraites annoncée par le gouvernement suscite une vive inquiétude parmi les agents de la fonction publique. Les organisations syndicales, dont la FSU, dénoncent un projet qui porterait atteinte aux droits acquis des fonctionnaires.</p>
+        
+        <h3>Les points de vigilance</h3>
+        
+        <p>Plusieurs aspects du projet de réforme cristallisent les tensions. L'allongement de la durée de cotisation, le recul de l'âge légal de départ et la remise en cause des régimes spéciaux sont au cœur des préoccupations.</p>
+        
+        <p>Pour les agents du ministère, ces mesures auraient des conséquences directes sur leur fin de carrière et le montant de leur pension. La FSU a réalisé des simulations qui montrent une perte significative du pouvoir d'achat pour les retraités.</p>
+        
+        <h3>Un calendrier de mobilisation</h3>
+        
+        <p>Face à cette situation, la FSU et l'intersyndicale ont décidé d'un calendrier de mobilisation ambitieux :</p>
+        
+        <ul>
+            <li><strong>19 janvier</strong> : Journée nationale de grève et manifestations</li>
+            <li><strong>26 janvier</strong> : Assemblées générales dans tous les services</li>
+            <li><strong>1er février</strong> : Nouvelle journée d'action interprofessionnelle</li>
+            <li><strong>7 février</strong> : Actions ciblées devant les préfectures</li>
+        </ul>
+        
+        <h3>Comment participer ?</h3>
+        
+        <p>Tous les agents sont invités à se mobiliser selon leurs possibilités. La participation aux manifestations, aux assemblées générales ou simplement le port d'un badge de soutien sont autant de façons de montrer son opposition au projet.</p>
+        
+        <blockquote>
+            <p>"Cette réforme est injuste et pénalise particulièrement ceux qui ont commencé à travailler jeunes. Nous ne laisserons pas passer ce texte sans réagir."</p>
+        </blockquote>
+        
+        <p>La FSU met à disposition des adhérents et sympathisants des tracts, affiches et éléments de communication à télécharger sur l'espace adhérent. N'hésitez pas à les diffuser largement dans vos services.</p>
+        
+        <h3>Les outils à votre disposition</h3>
+        
+        <p>Pour vous accompagner dans cette mobilisation, plusieurs ressources sont disponibles :</p>
+        
+        <ul>
+            <li>Simulateur de pension : calculez l'impact de la réforme sur votre situation</li>
+            <li>FAQ juridique : vos droits en cas de grève</li>
+            <li>Kit de communication : tracts, affiches, visuels pour les réseaux sociaux</li>
+            <li>Modèles de motion : pour les assemblées générales de service</li>
+        </ul>
+        
+        <p>La mobilisation de chacune et chacun est essentielle pour faire entendre notre voix. Ensemble, défendons un système de retraite juste et solidaire !</p>
+    `
+};
+
+// Représentants pour le contact banner
+const representatives: Representative[] = [
+    {
+        name: "Marie Dupont",
+        role: "Secrétaire nationale",
+        photoUrl: "https://placehold.co/128x128/D1495B/ffffff?text=MD"
+    },
+    {
+        name: "Jean Martin",
+        role: "Responsable communication",
+        photoUrl: "https://placehold.co/128x128/B83A4B/ffffff?text=JM"
+    },
+    {
+        name: "Sophie Bernard",
+        role: "Chargée de mobilisation",
+        photoUrl: "https://placehold.co/128x128/D1495B/ffffff?text=SB"
+    }
+];
+
+// Couleurs par secteur
+const sectorColors: Record<string, { primary: string; light: string; text: string }> = {
+    agriculture: { primary: 'bg-follen-green', light: 'bg-follen-green-light', text: 'text-follen-green' },
+    ecologie: { primary: 'bg-follen-blue', light: 'bg-follen-blue-light', text: 'text-follen-blue' },
+    interieur: { primary: 'bg-follen-yellow', light: 'bg-follen-yellow-light', text: 'text-amber-600' },
+    general: { primary: 'bg-follen-red', light: 'bg-follen-red-light', text: 'text-follen-red' }
+};
+
+const colors = sectorColors[article.sector];
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('fr-FR', { 
+        day: 'numeric', month: 'long', year: 'numeric' 
+    });
+}
+
+// Icône flèche
+const arrowIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+---
+
+<BaseLayout title={`${article.title} - FSU`}>
+    
+    <article>
+        <!-- ============================================================== -->
+        <!-- 1. HERO IMAGE WRAPPER                                          -->
+        <!-- ============================================================== -->
+        <div class="w-full px-4 md:px-0 md:w-[90%] lg:w-[85%] mx-auto pt-8">
+            <figure class="relative">
+                <img 
+                    src={article.heroImage}
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    class="w-full aspect-[21/9] object-cover rounded-2xl shadow-lg"
+                />
+                <!-- Overlay gradient subtil -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </figure>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- 2. FLOATING TITLE CARD (Overlap Effect)                        -->
+        <!-- ============================================================== -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto -mt-12 md:-mt-16 lg:-mt-24 relative z-10">
+            <header class="bg-white rounded-2xl shadow-xl p-6 md:p-10 lg:p-12">
+                <!-- Catégorie + Date -->
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class:list={["text-xs font-bold px-3 py-1 rounded-full", colors.light, colors.text]}>
+                        {article.category}
+                    </span>
+                    <time datetime={article.date} class="text-sm text-gray-500">
+                        {formatDate(article.date)}
+                    </time>
+                    <span class="text-sm text-gray-400">•</span>
+                    <span class="text-sm text-gray-500">{article.author}</span>
+                </div>
+                
+                <!-- Titre Principal -->
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight">
+                    {article.title}
+                </h1>
+            </header>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- 3. INTRODUCTION (Chapeau)                                      -->
+        <!-- ============================================================== -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-8 md:mt-12">
+            <h2 class="text-lg md:text-xl font-semibold text-slate-700 leading-relaxed border-l-4 border-follen-red pl-6">
+                {article.introduction}
+            </h2>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- 4. MAIN CONTENT (Rich Text avec Typography)                    -->
+        <!-- ============================================================== -->
+        <main class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-10 md:mt-14">
+            <div 
+                class="prose prose-slate prose-lg max-w-none
+                       prose-headings:font-bold prose-headings:text-slate-900
+                       prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4
+                       prose-p:text-slate-700 prose-p:leading-relaxed
+                       prose-a:text-follen-red prose-a:no-underline hover:prose-a:underline
+                       prose-ul:my-6 prose-li:text-slate-700
+                       prose-blockquote:border-l-4 prose-blockquote:border-follen-red 
+                       prose-blockquote:bg-follen-red-light prose-blockquote:py-4 prose-blockquote:px-6 
+                       prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+                       prose-blockquote:text-slate-800 prose-blockquote:font-medium"
+                set:html={article.body}
+            />
+        </main>
+
+        <!-- ============================================================== -->
+        <!-- 5. RETOUR AUX ARTICLES                                         -->
+        <!-- ============================================================== -->
+        <div class="w-[92%] md:w-[80%] lg:w-[65%] mx-auto mt-12 pt-8 border-t border-gray-200">
+            <a 
+                href="/articles" 
+                class="inline-flex items-center text-slate-600 hover:text-follen-red transition-colors font-medium"
+            >
+                <svg class="w-5 h-5 mr-2 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+                Retour aux articles
+            </a>
+        </div>
+    </article>
+
+    <!-- ==================================================================== -->
+    <!-- 6. CONTACT BANNER                                                    -->
+    <!-- ==================================================================== -->
+    <section class="py-16 md:py-20 bg-gray-50 mt-16" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 id="contact-heading" class="text-2xl md:text-3xl font-bold text-slate-900 mb-10">
+                    Une question ? Contactez-nous
+                </h2>
+                
+                <div class="flex flex-wrap justify-center gap-8 mb-10">
+                    {representatives.map((rep) => (
+                        <figure class="text-center">
+                            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-follen-red-light shadow-md mx-auto mb-3">
+                                <img src={rep.photoUrl} alt={rep.name} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+                            </div>
+                            <figcaption>
+                                <p class="font-semibold text-slate-900 text-sm md:text-base">{rep.name}</p>
+                                <p class="text-gray-500 text-xs md:text-sm">{rep.role}</p>
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+                
+                <a 
+                    href="/contact" 
+                    class="inline-flex items-center bg-follen-red text-white px-8 py-4 rounded-lg font-semibold hover:bg-follen-red/90 transition-colors shadow-md hover:shadow-lg"
+                >
+                    Nous contacter
+                    <span class="ml-2" aria-hidden="true">
+                        <Fragment set:html={arrowIcon} />
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</BaseLayout>
+
