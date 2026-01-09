@@ -40,27 +40,41 @@ RUN echo 'server { \
     root /usr/share/nginx/html; \
     index index.html; \
     \
-    # Compression gzip \
+    # Optimisations performances \
+    sendfile on; \
+    tcp_nopush on; \
+    tcp_nodelay on; \
+    keepalive_timeout 65; \
+    types_hash_max_size 2048; \
+    \
+    # Compression gzip agressive \
     gzip on; \
     gzip_vary on; \
-    gzip_min_length 1024; \
-    gzip_types text/plain text/css text/xml text/javascript application/javascript application/json application/xml image/svg+xml; \
+    gzip_proxied any; \
+    gzip_comp_level 6; \
+    gzip_buffers 16 8k; \
+    gzip_http_version 1.1; \
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml; \
     \
-    # Cache des assets statiques \
+    # Cache agressif pour les assets hashés (immutable) \
     location /_astro/ { \
-        expires 1y; \
+        expires max; \
         add_header Cache-Control "public, immutable"; \
     } \
     \
+    # Cache pour Pagefind \
     location /_pagefind/ { \
         expires 1d; \
         add_header Cache-Control "public"; \
     } \
     \
-    # Fallback pour les routes Astro \
+    # Gestion propre des URL sans extension (.html) \
     location / { \
-        try_files $uri $uri/ $uri.html /index.html; \
+        try_files $uri $uri/index.html $uri.html /index.html; \
     } \
+    \
+    # Gestion des erreurs 404 \
+    error_page 404 /404.html; \
 }' > /etc/nginx/conf.d/default.conf
 
 # Exposer le port 4321
