@@ -32,10 +32,10 @@ FROM nginx:alpine AS runner
 # Copier les fichiers statiques buildés
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Configuration nginx pour SPA/routes Astro (port 3000 pour Dokploy)
+# Configuration nginx pour SPA/routes Astro
 RUN echo 'server { \
-    listen 3000; \
-    listen [::]:3000; \
+    listen 4321; \
+    listen [::]:4321; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -63,8 +63,8 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
-# Exposer le port 3000 (standard Dokploy)
-EXPOSE 3000
+# Exposer le port 4321
+EXPOSE 4321
 
 # Démarrer nginx
 CMD ["nginx", "-g", "daemon off;"]
