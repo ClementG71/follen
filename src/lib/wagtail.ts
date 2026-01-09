@@ -119,3 +119,13 @@ export async function getStaticPageBySlug(slug: string) {
     return data?.items?.[0] || null;
 }
 
+// ✅ SSG: Récupérer toutes les pages statiques pour getStaticPaths
+export async function getStaticPages(limit = 100) {
+    const data = await fetchWagtail<WagtailResponse<any>>('/pages/', {
+        type: 'blog.StaticPage',
+        fields: 'content,header_image',
+        limit: limit.toString()
+    });
+    return data?.items || [];
+}
+

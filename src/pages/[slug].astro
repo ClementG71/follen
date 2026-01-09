@@ -1,35 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getStaticPageBySlug } from '../lib/wagtail';
+import { getStaticPages } from '../lib/wagtail';
 
-// Récupérer la page statique spécifique
-const { slug } = Astro.params;
-const page = await getStaticPageBySlug(slug);
+// ✅ SSG: Lister tous les slugs à générer au build
+export async function getStaticPaths() {
+    const pages = await getStaticPages(100);
+    
+    return pages.map((page) => ({
+        params: { slug: page.meta.slug },
+        props: { page }
+    }));
+}
 
-// Si la page n'est pas trouvée, on pourrait rediriger vers 404
-// if (!page) return Astro.redirect('/404');
+// Props passées par getStaticPaths
+interface Props {
+    page: any;
+}
+
+const { page } = Astro.props;
 ---
 
-<BaseLayout title={page?.title || 'Page Follen non trouvée'}>
-    <section>
+<BaseLayout title={page?.title || 'Page non trouvée'}>
+    <article class="max-w-4xl mx-auto px-4 py-12">
         {page ? (
-            <div class="max-w-4xl mx-auto">
-                {page.header_image && page.header_image.meta && (
-                    <img src={page.header_image.meta.download_url} alt={page.title} class="w-full h-64 object-cover rounded-lg mb-6">
+            <>
+                {/* Hero Image */}
+                {page.header_image?.meta?.download_url && (
+                    <div class="relative w-full rounded-2xl overflow-hidden shadow-xl aspect-video mb-8">
+                        <img 
+                            src={page.header_image.meta.download_url} 
+                            alt={page.title} 
+                            class="w-full h-full object-cover"
+                            loading="eager"
+                            decoding="async"
+                        />
+                    </div>
                 )}
                 
-                <h1 class="text-4xl font-bold mb-6">{page.title}</h1>
+                {/* Title */}
+                <header class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900">
+                        {page.title}
+                    </h1>
+                </header>
                 
-                <div class="prose max-w-none">
-                    <set:html>{page.content}</set:html>
+                {/* Main Content */}
+                <div class="prose prose-slate prose-lg max-w-none">
+                    <Fragment set:html={page.content} />
                 </div>
-            </div>
+                
+                {/* Back Link */}
+                <footer class="mt-12 pt-8 border-t border-slate-200">
+                    <a 
+                        href="/" 
+                        class="inline-flex items-center gap-2 text-follen-red hover:text-follen-red/80 font-medium transition-colors"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Retour à l'accueil
+                    </a>
+                </footer>
+            </>
         ) : (
-            <div class="text-center py-12">
-                <h1 class="text-3xl font-bold mb-4">Page Follen non trouvée</h1>
-                <p class="text-gray-600">La page Follen que vous recherchez n'existe pas.</p>
-                <a href="/" class="text-blue-600 hover:underline mt-4 inline-block">← Retour à l'accueil Follen</a>
+            <div class="text-center py-16">
+                <h1 class="text-3xl font-bold text-slate-900 mb-4">Page non trouvée</h1>
+                <p class="text-slate-600 mb-8">La page que vous recherchez n'existe pas.</p>
+                <a 
+                    href="/" 
+                    class="inline-flex items-center gap-2 bg-follen-red text-white px-6 py-3 rounded-lg hover:bg-follen-red/90 transition-colors"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Retour à l'accueil
+                </a>
             </div>
         )}
-    </section>
+    </article>
 </BaseLayout>
+

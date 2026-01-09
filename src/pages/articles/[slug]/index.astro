@@ -1,55 +1,123 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getBlogPostBySlug } from '../../../lib/wagtail';
+import { getBlogPosts, getBlogPostBySlug } from '../../../lib/wagtail';
 
-// Récupérer le slug depuis les params
-const { slug } = Astro.params;
+// ✅ SSG: Lister tous les slugs à générer au build
+export async function getStaticPaths() {
+    const posts = await getBlogPosts(100);
+    
+    return posts.map((post) => ({
+        params: { slug: post.meta.slug },
+        props: { post }
+    }));
+}
 
-// Récupérer l'article spécifique depuis l'API
-const post = await getBlogPostBySlug(slug);
+// Props passées par getStaticPaths
+interface Props {
+    post: any;
+}
 
-// Si l'article n'existe pas, redirection ou affichage d'erreur géré plus bas
+const { post } = Astro.props;
 ---
 
-<BaseLayout title={post?.title || 'Article Follen non trouvé'}>
-    <section>
+<BaseLayout title={post?.title || 'Article non trouvé'}>
+    <article class="max-w-4xl mx-auto px-4 py-12">
         {post ? (
-            <article class="max-w-4xl mx-auto">
+            <>
+                {/* Hero Image */}
                 {post.header_image_large && (
-                    <img src={post.header_image_large} alt={post.title} class="w-full h-64 object-cover rounded-lg mb-6">
+                    <div class="relative w-full rounded-2xl overflow-hidden shadow-xl aspect-video mb-8">
+                        <img 
+                            src={post.header_image_large} 
+                            alt={post.title} 
+                            class="w-full h-full object-cover"
+                            loading="eager"
+                            decoding="async"
+                        />
+                    </div>
                 )}
                 
-                <h1 class="text-4xl font-bold mb-4">{post.title}</h1>
+                {/* Title Card */}
+                <header class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                        {post.title}
+                    </h1>
+                    
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+                        {post.author && (
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                {post.author}
+                            </span>
+                        )}
+                        {post.date && (
+                            <span class="flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                {new Date(post.date).toLocaleDateString('fr-FR', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric'
+                                })}
+                            </span>
+                        )}
+                    </div>
+                    
+                    {/* Categories */}
+                    {post.categories?.length > 0 && (
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            {post.categories.map((category: any) => (
+                                <span class="bg-follen-red/10 text-follen-red px-3 py-1 rounded-full text-sm font-medium">
+                                    {typeof category === 'string' ? category : category.name}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </header>
                 
-                <div class="flex flex-wrap gap-4 text-gray-600 text-sm mb-6">
-                    <span>Par {post.author}</span>
-                    <span>•</span>
-                    <span>{new Date(post.date).toLocaleDateString('fr-FR')}</span>
+                {/* Introduction */}
+                {post.introduction && (
+                    <p class="text-xl text-slate-700 border-l-4 border-follen-red pl-4 mb-8 leading-relaxed">
+                        {post.introduction}
+                    </p>
+                )}
+                
+                {/* Main Content */}
+                <div class="prose prose-slate prose-lg max-w-none">
+                    <Fragment set:html={post.body} />
                 </div>
                 
-                <div class="flex flex-wrap gap-2 mb-6">
-                    {post.categories.map((category, index) => (
-                        <span key={index} class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                            {typeof category === 'string' ? category : category.name}
-                        </span>
-                    ))}
-                </div>
-                
-                <div class="prose max-w-none mb-8">
-                    {/* Le body est du HTML riche venant de Wagtail */}
-                    <set:html>{post.body}</set:html>
-                </div>
-                
-                <div class="mt-8 p-4 bg-gray-50 rounded-lg">
-                    <a href="/articles" class="text-blue-600 hover:underline">← Retour aux articles Follen</a>
-                </div>
-            </article>
+                {/* Back Link */}
+                <footer class="mt-12 pt-8 border-t border-slate-200">
+                    <a 
+                        href="/archives" 
+                        class="inline-flex items-center gap-2 text-follen-red hover:text-follen-red/80 font-medium transition-colors"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Retour aux archives
+                    </a>
+                </footer>
+            </>
         ) : (
-            <div class="text-center py-12">
-                <h1 class="text-3xl font-bold mb-4">Article Follen non trouvé</h1>
-                <p class="text-gray-600">L'article Follen que vous recherchez n'existe pas.</p>
-                <a href="/articles" class="text-blue-600 hover:underline mt-4 inline-block">← Retour aux articles Follen</a>
+            <div class="text-center py-16">
+                <h1 class="text-3xl font-bold text-slate-900 mb-4">Article non trouvé</h1>
+                <p class="text-slate-600 mb-8">L'article que vous recherchez n'existe pas ou a été supprimé.</p>
+                <a 
+                    href="/archives" 
+                    class="inline-flex items-center gap-2 bg-follen-red text-white px-6 py-3 rounded-lg hover:bg-follen-red/90 transition-colors"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Retour aux archives
+                </a>
             </div>
         )}
-    </section>
+    </article>
 </BaseLayout>
+
