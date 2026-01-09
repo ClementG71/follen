@@ -1,5 +1,5 @@
 # ===========================================
-# Dockerfile pour Follen - Optimisé pour Dokploy
+# Dockerfile pour Follen - SSG avec Nginx
 # ===========================================
 
 # Étape 1 : Build
@@ -26,30 +26,45 @@ COPY . .
 RUN npm run build
 
 # ===========================================
-# Étape 2 : Production
-FROM node:20-alpine AS runner
+# Étape 2 : Production avec Nginx
+FROM nginx:alpine AS runner
 
-WORKDIR /app
+# Copier les fichiers statiques buildés
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Créer un utilisateur non-root pour la sécurité
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 astro
+# Configuration nginx pour SPA/routes Astro
+RUN echo 'server { \
+    listen 80; \
+    listen [::]:80; \
+    server_name _; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    \
+    # Compression gzip \
+    gzip on; \
+    gzip_vary on; \
+    gzip_min_length 1024; \
+    gzip_types text/plain text/css text/xml text/javascript application/javascript application/json application/xml image/svg+xml; \
+    \
+    # Cache des assets statiques \
+    location /_astro/ { \
+        expires 1y; \
+        add_header Cache-Control "public, immutable"; \
+    } \
+    \
+    location /_pagefind/ { \
+        expires 1d; \
+        add_header Cache-Control "public"; \
+    } \
+    \
+    # Fallback pour les routes Astro \
+    location / { \
+        try_files $uri $uri/ $uri.html /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
-# Copier les fichiers buildés
-COPY --from=builder --chown=astro:nodejs /app/dist ./dist
-COPY --from=builder --chown=astro:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=astro:nodejs /app/package.json ./
+# Exposer le port 80
+EXPOSE 80
 
-# Variables d'environnement
-ENV NODE_ENV=production
-ENV HOST=0.0.0.0
-ENV PORT=4321
-
-# Changer vers l'utilisateur non-root
-USER astro
-
-# Exposer le port
-EXPOSE 4321
-
-# Démarrer l'application
-CMD ["node", "./dist/server/entry.mjs"]
+# Démarrer nginx
+CMD ["nginx", "-g", "daemon off;"]
