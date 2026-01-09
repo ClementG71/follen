@@ -1,0 +1,19 @@
+# Configuration Pagefind pour l'indexation
+# Ce fichier est optionnel et permet d'affiner l'indexation
+
+site: dist/client
+glob: "**/*.html"
+
+# Exclure certains éléments de l'indexation
+exclude_selectors:
+  - "nav"
+  - "header"
+  - "footer"
+  - ".newsletter"
+  - "script"
+  - "style"
+
+# Inclure uniquement le contenu principal
+force_exclude_selectors:
+  - ".mobile-menu"
+

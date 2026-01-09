@@ -1,0 +1,131 @@
+---
+/**
+ * src/components/SearchPagefind.astro
+ * Composant de recherche Pagefind avec UI stylée au thème FSU
+ * Éco-design: Chargement lazy des assets uniquement quand nécessaire
+ */
+
+interface Props {
+    placeholder?: string;
+}
+
+const { placeholder = "Rechercher..." } = Astro.props;
+---
+
+<div class="search-pagefind-container">
+    <div id="search"></div>
+</div>
+
+<style>
+    /* Variables CSS Pagefind personnalisées pour le thème FSU */
+    :root {
+        --pagefind-ui-scale: 1;
+        --pagefind-ui-primary: #D1495B; /* follen-red */
+        --pagefind-ui-text: #1f2937; /* slate-800 */
+        --pagefind-ui-background: #ffffff;
+        --pagefind-ui-border: #e5e7eb; /* gray-200 */
+        --pagefind-ui-border-radius: 8px;
+        --pagefind-ui-border-width: 1px;
+        --pagefind-ui-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --pagefind-ui-font: system-ui, -apple-system, sans-serif;
+    }
+
+    .search-pagefind-container {
+        width: 100%;
+        min-height: 200px;
+    }
+
+    /* Personnalisation des éléments Pagefind */
+    :global(.pagefind-ui) {
+        font-family: var(--pagefind-ui-font);
+    }
+
+    :global(.pagefind-ui__search-input) {
+        border-radius: var(--pagefind-ui-border-radius);
+        border: var(--pagefind-ui-border-width) solid var(--pagefind-ui-border);
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    :global(.pagefind-ui__search-input:focus) {
+        outline: none;
+        border-color: var(--pagefind-ui-primary);
+        box-shadow: 0 0 0 3px rgba(209, 73, 91, 0.1);
+    }
+
+    :global(.pagefind-ui__result) {
+        border-radius: var(--pagefind-ui-border-radius);
+        border: var(--pagefind-ui-border-width) solid var(--pagefind-ui-border);
+    }
+
+    :global(.pagefind-ui__result:hover) {
+        border-color: var(--pagefind-ui-primary);
+    }
+
+    :global(.pagefind-ui__result-link) {
+        color: var(--pagefind-ui-text);
+        text-decoration: none;
+    }
+
+    :global(.pagefind-ui__result-link:hover) {
+        color: var(--pagefind-ui-primary);
+    }
+
+    :global(.pagefind-ui__result-title) {
+        color: var(--pagefind-ui-text);
+        font-weight: 600;
+    }
+
+    :global(.pagefind-ui__result-excerpt) {
+        color: #6b7280; /* gray-500 */
+    }
+</style>
+
+<script>
+    // Chargement lazy de Pagefind UI uniquement quand le composant est monté
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchContainer = document.getElementById('search');
+        if (!searchContainer) return;
+
+        // Charger les assets Pagefind de manière asynchrone
+        const loadPagefind = async () => {
+            try {
+                // Charger le CSS
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = '/_pagefind/pagefind-ui.css';
+                document.head.appendChild(link);
+
+                // Charger et initialiser PagefindUI via import dynamique
+                const { PagefindUI } = await import('/_pagefind/pagefind-ui.js');
+                
+                new PagefindUI({
+                    element: '#search',
+                    baseUrl: '/',
+                    translations: {
+                        placeholder: 'Mots-clés, sujets, auteurs...',
+                        clear_search: 'Effacer',
+                        load_more: 'Charger plus de résultats',
+                        search_label: 'Recherche',
+                        filters_label: 'Filtres',
+                        zero_results: 'Aucun résultat trouvé',
+                        many_results: '{{count}} résultats trouvés',
+                        one_result: '1 résultat trouvé',
+                        alt_search: 'Rechercher "{{suggestion}}" à la place',
+                        search_suggestion: 'Rechercher "{{suggestion}}" à la place',
+                        searching: 'Recherche en cours...',
+                    },
+                    showSubResults: true,
+                    showImages: false,
+                    resetStyles: false,
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement de Pagefind:', error);
+            }
+        };
+
+        // Charger Pagefind immédiatement (lazy loading pourrait être ajouté plus tard)
+        loadPagefind();
+    });
+</script>
+
