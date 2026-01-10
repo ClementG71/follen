@@ -27,9 +27,9 @@ function renderBlock(block: StreamFieldBlock): string {
         case 'paragraph':
             return `<div class="prose-p prose-slate mb-4 leading-relaxed">${sanitizeHtml(block.value)}</div>`;
         
-        case 'heading':
+        case 'heading': {
             const level = block.value?.size || 3;
-            const tag = `h${level}`;
+            const headingTag = `h${level}`;
             const headingClasses = {
                 1: 'prose-h1 text-3xl md:text-4xl font-bold text-slate-900 mb-6 mt-8',
                 2: 'prose-h2 text-2xl md:text-3xl font-bold text-slate-900 mb-4 mt-8',
@@ -37,7 +37,8 @@ function renderBlock(block: StreamFieldBlock): string {
                 4: 'prose-h4 text-lg md:text-xl font-semibold text-slate-800 mb-2 mt-4',
             };
             const headingClass = headingClasses[level as keyof typeof headingClasses] || headingClasses[3];
-            return `<${tag} class="${headingClass}">${sanitizeHtml(block.value?.text || block.value)}</${tag}>`;
+            return `<${headingTag} class="${headingClass}">${sanitizeHtml(block.value?.text || block.value)}</${headingTag}>`;
+        }
         
         case 'rich_text':
         case 'rich_text_block':
@@ -96,10 +97,10 @@ function renderBlock(block: StreamFieldBlock): string {
         
         case 'list':
         case 'bullet_list':
-        case 'ordered_list':
+        case 'ordered_list': {
             const items = Array.isArray(block.value?.items) ? block.value.items : (Array.isArray(block.value) ? block.value : []);
             const isOrdered = block.type === 'ordered_list' || block.value?.type === 'ordered';
-            const tag = isOrdered ? 'ol' : 'ul';
+            const listTag = isOrdered ? 'ol' : 'ul';
             const listClass = isOrdered 
                 ? 'list-decimal list-inside space-y-2 my-4 ml-4' 
                 : 'list-disc list-inside space-y-2 my-4 ml-4';
@@ -108,7 +109,8 @@ function renderBlock(block: StreamFieldBlock): string {
                 .map((item: string) => `<li class="text-slate-700">${sanitizeHtml(String(item))}</li>`)
                 .join('');
             
-            return `<${tag} class="${listClass}">${listItems}</${tag}>`;
+            return `<${listTag} class="${listClass}">${listItems}</${listTag}>`;
+        }
         
         case 'embed':
         case 'video':
