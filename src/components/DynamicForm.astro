@@ -1,0 +1,413 @@
+---
+/**
+ * src/components/DynamicForm.astro
+ * Composant pour rendre et soumettre les formulaires Wagtail dynamiquement
+ * Utilise Vanilla JS (zero-framework) pour rester léger et Eco-friendly
+ */
+
+import type { FormPage } from '../lib/api';
+
+interface Props {
+    formPage: FormPage;
+}
+
+const { formPage } = Astro.props;
+const formId = `form-${formPage.id}`;
+const formPageId = formPage.id;
+
+// Récupérer l'URL de l'API depuis l'environnement
+const API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL 
+             || import.meta.env.PUBLIC_API_URL
+             || import.meta.env.API_BASE_URL
+             || 'https://maen.kwzz.eu';
+
+// Fonction utilitaire pour générer un clean_name à partir d'un label
+function toCleanName(label: string): string {
+    return label
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Supprimer les accents
+        .replace(/[^a-z0-9]+/g, '_') // Remplacer les caractères non alphanumériques par _
+        .replace(/^_+|_+$/g, ''); // Supprimer les _ en début/fin
+}
+
+// Fonction pour générer le HTML d'un champ
+function renderField(field: FormPage['form_fields_data'][0], index: number): string {
+    const fieldId = `field-${formPageId}-${index}`;
+    const fieldName = field.id || toCleanName(field.label);
+    const isRequired = field.required ? 'required' : '';
+    const ariaRequired = field.required ? 'aria-required="true"' : '';
+    const ariaLabel = `aria-label="${field.label}${field.required ? ' (requis)' : ''}"`;
+    const helpTextId = `help-${fieldId}`;
+    const hasHelpText = field.help_text ? `aria-describedby="${helpTextId}"` : '';
+    
+    let fieldHtml = `
+        <div class="mb-6">
+            <label for="${fieldId}" class="block text-sm font-semibold text-slate-700 mb-2">
+                ${field.label}
+                ${field.required ? '<span class="text-follen-red ml-1">*</span>' : ''}
+            </label>
+    `;
+
+    switch (field.field_type) {
+        case 'singleline':
+        case 'text':
+            fieldHtml += `
+                <input
+                    type="text"
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    ${field.default_value ? `value="${field.default_value}"` : ''}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors"
+                    placeholder="${field.label}"
+                />
+            `;
+            break;
+        
+        case 'multiline':
+        case 'textarea':
+            fieldHtml += `
+                <textarea
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    rows="4"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors resize-y"
+                    placeholder="${field.label}"
+                >${field.default_value || ''}</textarea>
+            `;
+            break;
+        
+        case 'email':
+            fieldHtml += `
+                <input
+                    type="email"
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    ${field.default_value ? `value="${field.default_value}"` : ''}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors"
+                    placeholder="exemple@email.com"
+                />
+            `;
+            break;
+        
+        case 'number':
+        case 'integer':
+            fieldHtml += `
+                <input
+                    type="number"
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    ${field.default_value ? `value="${field.default_value}"` : ''}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors"
+                />
+            `;
+            break;
+        
+        case 'date':
+            fieldHtml += `
+                <input
+                    type="date"
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    ${field.default_value ? `value="${field.default_value}"` : ''}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors"
+                />
+            `;
+            break;
+        
+        case 'dropdown':
+        case 'select':
+            const choices = field.choices ? field.choices.split(',').map(c => c.trim()) : [];
+            fieldHtml += `
+                <select
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors bg-white"
+                >
+                    <option value="">-- Sélectionner --</option>
+                    ${choices.map(choice => `
+                        <option value="${choice}" ${choice === field.default_value ? 'selected' : ''}>${choice}</option>
+                    `).join('')}
+                </select>
+            `;
+            break;
+        
+        case 'radio':
+            const radioChoices = field.choices ? field.choices.split(',').map(c => c.trim()) : [];
+            fieldHtml += '<div class="space-y-2">';
+            radioChoices.forEach((choice, idx) => {
+                const radioId = `${fieldId}-${idx}`;
+                fieldHtml += `
+                    <label for="${radioId}" class="flex items-center cursor-pointer">
+                        <input
+                            type="radio"
+                            id="${radioId}"
+                            name="${fieldName}"
+                            value="${choice}"
+                            data-field-type="${field.field_type}"
+                            ${isRequired}
+                            ${ariaRequired}
+                            ${choice === field.default_value ? 'checked' : ''}
+                            class="mr-2 w-4 h-4 text-follen-red focus:ring-follen-red border-slate-300"
+                        />
+                        <span class="text-slate-700">${choice}</span>
+                    </label>
+                `;
+            });
+            fieldHtml += '</div>';
+            break;
+        
+        case 'checkbox':
+            fieldHtml += `
+                <label for="${fieldId}" class="flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        id="${fieldId}"
+                        name="${fieldName}"
+                        value="1"
+                        data-field-type="${field.field_type}"
+                        ${field.default_value === '1' ? 'checked' : ''}
+                        class="mr-2 w-4 h-4 text-follen-red focus:ring-follen-red border-slate-300 rounded"
+                    />
+                    <span class="text-slate-700">${field.label}</span>
+                </label>
+            `;
+            break;
+        
+        default:
+            // Fallback : input texte
+            fieldHtml += `
+                <input
+                    type="text"
+                    id="${fieldId}"
+                    name="${fieldName}"
+                    data-field-type="${field.field_type}"
+                    ${isRequired}
+                    ${ariaRequired}
+                    ${ariaLabel}
+                    ${hasHelpText}
+                    class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-follen-red focus:border-follen-red outline-none transition-colors"
+                />
+            `;
+    }
+
+    if (field.help_text) {
+        fieldHtml += `
+            <p id="${helpTextId}" class="mt-1 text-sm text-slate-500">${field.help_text}</p>
+        `;
+    }
+
+    fieldHtml += `</div>`;
+    return fieldHtml;
+}
+
+const fieldsHtml = formPage.form_fields_data.map((field, index) => renderField(field, index)).join('');
+---
+
+<section class="max-w-3xl mx-auto px-4 py-12" aria-labelledby="form-heading-{formPageId}">
+    {formPage.intro && (
+        <div class="mb-8">
+            <div class="prose prose-slate max-w-none" set:html={formPage.intro} />
+        </div>
+    )}
+
+    <form 
+        id={formId}
+        data-page-id={formPageId}
+        class="bg-white rounded-xl shadow-md p-6 md:p-10"
+        novalidate
+    >
+        <div id={`${formId}-fields`} set:html={fieldsHtml} />
+
+        <!-- Message d'erreur global -->
+        <div 
+            id={`${formId}-error`}
+            class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800"
+            role="alert"
+            aria-live="assertive"
+        >
+            <p class="font-semibold mb-2">Erreur lors de la soumission</p>
+            <ul id={`${formId}-error-list`} class="list-disc list-inside text-sm space-y-1"></ul>
+        </div>
+
+        <!-- Message de succès -->
+        <div 
+            id={`${formId}-success`}
+            class="hidden mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800"
+            role="alert"
+            aria-live="polite"
+        >
+            <p class="font-semibold">{formPage.thank_you_text || 'Formulaire soumis avec succès !'}</p>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <button
+            type="submit"
+            id={`${formId}-submit`}
+            class="w-full md:w-auto px-8 py-4 bg-follen-red text-white font-semibold rounded-lg hover:bg-follen-red/90 focus:ring-2 focus:ring-follen-red focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            <span id={`${formId}-submit-text`}>Envoyer</span>
+            <span id={`${formId}-submit-loading`} class="hidden">Envoi en cours...</span>
+        </button>
+    </form>
+</section>
+
+<script is:inline define:vars={{ formId, formPageId, apiUrl: API_URL }}>
+    (function() {
+        const form = document.getElementById(formId);
+        if (!form) return;
+
+        const submitButton = document.getElementById(`${formId}-submit`);
+        const submitText = document.getElementById(`${formId}-submit-text`);
+        const submitLoading = document.getElementById(`${formId}-submit-loading`);
+        const errorDiv = document.getElementById(`${formId}-error`);
+        const errorList = document.getElementById(`${formId}-error-list`);
+        const successDiv = document.getElementById(`${formId}-success`);
+
+        // Fonction pour masquer les messages
+        function hideMessages() {
+            if (errorDiv) errorDiv.classList.add('hidden');
+            if (successDiv) successDiv.classList.add('hidden');
+            if (errorList) errorList.innerHTML = '';
+        }
+
+        // Fonction pour afficher les erreurs
+        function showErrors(errors) {
+            if (!errorDiv || !errorList) return;
+            
+            hideMessages();
+            errorDiv.classList.remove('hidden');
+            
+            if (typeof errors === 'string') {
+                errorList.innerHTML = `<li>${errors}</li>`;
+            } else if (typeof errors === 'object') {
+                const errorsHtml = Object.entries(errors)
+                    .flatMap(([field, messages]) => {
+                        const fieldArray = Array.isArray(messages) ? messages : [messages];
+                        return fieldArray.map(msg => `<li>${field}: ${msg}</li>`);
+                    })
+                    .join('');
+                errorList.innerHTML = errorsHtml || '<li>Une erreur est survenue</li>';
+            }
+        }
+
+        // Fonction pour afficher le succès
+        function showSuccess() {
+            if (!successDiv) return;
+            hideMessages();
+            successDiv.classList.remove('hidden');
+            form.reset();
+            
+            // Scroll vers le message de succès
+            successDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Fonction pour gérer l'état du bouton
+        function setLoading(loading) {
+            if (!submitButton || !submitText || !submitLoading) return;
+            
+            if (loading) {
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                submitLoading.classList.remove('hidden');
+            } else {
+                submitButton.disabled = false;
+                submitText.classList.remove('hidden');
+                submitLoading.classList.add('hidden');
+            }
+        }
+
+        // Gestionnaire de soumission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            // Validation côté client basique
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Collecter les données du formulaire
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Parcourir les champs du formulaire
+            form.querySelectorAll('[name]').forEach((field) => {
+                const name = field.getAttribute('name');
+                if (!name) return;
+                
+                const fieldType = field.getAttribute('data-field-type');
+                
+                if (fieldType === 'checkbox') {
+                    data[name] = field.checked ? '1' : '';
+                } else if (field.type === 'radio') {
+                    if (field.checked) {
+                        data[name] = field.value;
+                    }
+                } else {
+                    const value = formData.get(name);
+                    if (value !== null && value !== '') {
+                        data[name] = value;
+                    }
+                }
+            });
+
+            setLoading(true);
+
+            try {
+                const response = await fetch(`${apiUrl}/api/v2/forms/submit/${formPageId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showErrors(result.errors || result.message || `Erreur ${response.status}`);
+                } else {
+                    showSuccess();
+                }
+            } catch (error) {
+                console.error('[Form] Submission error:', error);
+                showErrors('Erreur réseau lors de la soumission. Veuillez réessayer.');
+            } finally {
+                setLoading(false);
+            }
+        });
+    })();
+</script>
+

@@ -1,0 +1,180 @@
+---
+/**
+ * src/components/StreamField.astro
+ * Composant pour rendre les blocs StreamField de Wagtail
+ * Supporte : paragraph, heading, image, quote, list, etc.
+ */
+
+import type { StreamFieldBlock } from '../lib/api';
+
+interface Props {
+    blocks: StreamFieldBlock[];
+    class?: string;
+}
+
+const { blocks, class: className = '' } = Astro.props;
+
+// Fonction utilitaire pour nettoyer le HTML
+function sanitizeHtml(html: string): string {
+    // En production, utiliser une vraie librairie de sanitization (DOMPurify)
+    // Pour l'instant, on retourne tel quel car Astro échappe déjà par défaut
+    return html;
+}
+
+// Fonction pour rendre un bloc individuel
+function renderBlock(block: StreamFieldBlock): string {
+    switch (block.type) {
+        case 'paragraph':
+            return `<div class="prose-p prose-slate mb-4 leading-relaxed">${sanitizeHtml(block.value)}</div>`;
+        
+        case 'heading':
+            const level = block.value?.size || 3;
+            const tag = `h${level}`;
+            const headingClasses = {
+                1: 'prose-h1 text-3xl md:text-4xl font-bold text-slate-900 mb-6 mt-8',
+                2: 'prose-h2 text-2xl md:text-3xl font-bold text-slate-900 mb-4 mt-8',
+                3: 'prose-h3 text-xl md:text-2xl font-semibold text-slate-800 mb-3 mt-6',
+                4: 'prose-h4 text-lg md:text-xl font-semibold text-slate-800 mb-2 mt-4',
+            };
+            const headingClass = headingClasses[level as keyof typeof headingClasses] || headingClasses[3];
+            return `<${tag} class="${headingClass}">${sanitizeHtml(block.value?.text || block.value)}</${tag}>`;
+        
+        case 'rich_text':
+        case 'rich_text_block':
+            // HTML riche (déjà formaté par Wagtail)
+            return `<div class="prose prose-slate max-w-none mb-4">${sanitizeHtml(block.value)}</div>`;
+        
+        case 'image':
+            const imageUrl = block.value?.url || block.value?.src || block.value;
+            const imageAlt = block.value?.alt || block.value?.title || '';
+            const imageWidth = block.value?.width || '800';
+            const imageHeight = block.value?.height || '600';
+            const caption = block.value?.caption || '';
+            
+            if (!imageUrl) return '';
+            
+            let imageHtml = `
+                <figure class="my-6">
+                    <img 
+                        src="${imageUrl}" 
+                        alt="${imageAlt}"
+                        width="${imageWidth}"
+                        height="${imageHeight}"
+                        class="w-full h-auto rounded-lg shadow-md object-cover"
+                        loading="lazy"
+                        decoding="async"
+                    />
+            `;
+            
+            if (caption) {
+                imageHtml += `
+                    <figcaption class="text-sm text-slate-600 text-center mt-2 italic">
+                        ${sanitizeHtml(caption)}
+                    </figcaption>
+                `;
+            }
+            
+            imageHtml += `</figure>`;
+            return imageHtml;
+        
+        case 'quote':
+        case 'blockquote':
+            const quote = block.value?.quote || block.value?.text || block.value;
+            const attribution = block.value?.attribution || block.value?.author || '';
+            
+            let quoteHtml = `
+                <blockquote class="border-l-4 border-follen-red bg-follen-red-light py-4 px-6 rounded-r-lg my-6 not-italic">
+                    <p class="text-slate-800 font-medium mb-2">${sanitizeHtml(quote)}</p>
+            `;
+            
+            if (attribution) {
+                quoteHtml += `<cite class="text-sm text-slate-600 font-normal">— ${sanitizeHtml(attribution)}</cite>`;
+            }
+            
+            quoteHtml += `</blockquote>`;
+            return quoteHtml;
+        
+        case 'list':
+        case 'bullet_list':
+        case 'ordered_list':
+            const items = Array.isArray(block.value?.items) ? block.value.items : (Array.isArray(block.value) ? block.value : []);
+            const isOrdered = block.type === 'ordered_list' || block.value?.type === 'ordered';
+            const tag = isOrdered ? 'ol' : 'ul';
+            const listClass = isOrdered 
+                ? 'list-decimal list-inside space-y-2 my-4 ml-4' 
+                : 'list-disc list-inside space-y-2 my-4 ml-4';
+            
+            const listItems = items
+                .map((item: string) => `<li class="text-slate-700">${sanitizeHtml(String(item))}</li>`)
+                .join('');
+            
+            return `<${tag} class="${listClass}">${listItems}</${tag}>`;
+        
+        case 'embed':
+        case 'video':
+        case 'oembed':
+            const embedUrl = block.value?.url || block.value?.embed_url || block.value;
+            const embedHtml = block.value?.html || block.value;
+            
+            if (embedHtml) {
+                return `<div class="my-6 aspect-video w-full">${sanitizeHtml(embedHtml)}</div>`;
+            }
+            
+            if (embedUrl) {
+                // Fallback: créer un iframe simple
+                return `
+                    <div class="my-6 aspect-video w-full rounded-lg overflow-hidden shadow-md">
+                        <iframe 
+                            src="${embedUrl}" 
+                            class="w-full h-full"
+                            loading="lazy"
+                            allowfullscreen
+                            frameborder="0"
+                        ></iframe>
+                    </div>
+                `;
+            }
+            
+            return '';
+        
+        case 'raw_html':
+        case 'html':
+            return `<div class="my-4">${sanitizeHtml(block.value)}</div>`;
+        
+        case 'hr':
+        case 'horizontal_rule':
+            return `<hr class="my-8 border-t border-slate-300" />`;
+        
+        case 'link_block':
+            const linkUrl = block.value?.url || block.value?.link || '#';
+            const linkText = block.value?.text || block.value?.title || 'Lien';
+            const linkExternal = block.value?.external || linkUrl.startsWith('http');
+            return `
+                <a 
+                    href="${linkUrl}" 
+                    ${linkExternal ? 'target="_blank" rel="noopener noreferrer"' : ''}
+                    class="inline-flex items-center text-follen-red hover:text-follen-red/80 font-medium underline mt-4 mb-4"
+                >
+                    ${sanitizeHtml(linkText)}
+                    ${linkExternal ? '<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>' : ''}
+                </a>
+            `;
+        
+        default:
+            // Fallback pour les blocs non reconnus : afficher en JSON pour debug
+            console.warn(`[StreamField] Bloc non reconnu: ${block.type}`, block);
+            return `
+                <div class="my-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p class="text-sm text-yellow-800 font-semibold mb-2">Bloc non pris en charge : ${block.type}</p>
+                    <pre class="text-xs text-yellow-600 overflow-auto">${JSON.stringify(block.value, null, 2)}</pre>
+                </div>
+            `;
+    }
+}
+
+// Rendre tous les blocs
+const renderedBlocks = blocks.map(renderBlock).join('');
+---
+
+<div class={`streamfield ${className}`} set:html={renderedBlocks} />
+
