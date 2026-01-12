@@ -1,13 +1,65 @@
+// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
+// ============================================================================
+
+interface NewsArticle {
+    id: number;
+    title: string;
+    date: string;
+    thumbnail: string;
+    href: string;
+    category?: string;
+}
+
+interface InstanceNews {
+    id: number;
+    title: string;
+    date: string;
+    type: 'CT' | 'CAP' | 'CHSCT' | 'CSA' | 'Autre';
+    href: string;
+}
+
+interface ActionCard {
+    title: string;
+    description: string;
+    iconName: 'book' | 'wrench' | 'users' | 'heart';
+    href: string;
+    linkText: string;
+}
+
+interface Representative {
+    name: string;
+    role: string;
+    photoUrl: string;
+}
+
+// ============================================================================
+// DONNÉES MOCK - SECTEUR ÉCOLOGIE
+// ============================================================================
+
+const pageTitle = "Écologie - FSU";
+const sectorName = "FSU au ministère de la transition écologique";
+=======
 ---
 /**
  * src/pages/ecologie.astro
  * Page Secteur Écologie - FSU Syndicat
  * Éco-design: HTML sémantique, zéro JS client-side, mobile-first
+ * Utilise l'API Wagtail pour les données réelles
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSectorPageBySlugV2, type SectorPage } from '../lib/api';
 
 // ============================================================================
+// RÉCUPÉRATION DES DONNÉES WAGTAIL (SSG)
+// ============================================================================
+
+// Récupérer la page secteur depuis Wagtail
+const sectorPage = await getSectorPageBySlugV2('ecologie');
+
+// Si la page n'existe pas ou qu'il y a une erreur, utiliser des données de fallback
+const pageTitle = sectorPage?.title || "Écologie - FSU";
+const sectorName = sectorPage?.context_banner_text || "FSU au ministère de la transition écologique";============================================================================
 // TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
 // ============================================================================
 

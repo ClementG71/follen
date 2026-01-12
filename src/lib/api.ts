@@ -58,6 +58,7 @@ export interface SectorPage extends WagtailPage {
         role: string;
         photo_url: string;
         email: string;
+        phone?: string;
     }[];
     actions: StreamFieldBlock[]; // StreamField
 }
@@ -85,6 +86,17 @@ export interface FormPage extends WagtailPage {
 export interface StaticPage extends WagtailPage {
     content: StreamFieldBlock[];
     header_image_url: string | null;
+}
+
+/**
+ * HomePage
+ */
+export interface HomePage extends WagtailPage {
+    hero_articles_list: Article[];
+    institutional_links: any[];
+    action_cards: any[];
+    news_feed_title: string;
+    latest_articles_list: Article[];
 }
 
 /**
@@ -279,6 +291,24 @@ export async function getSectorPageBySlug(slug: string): Promise<SectorPage | nu
 }
 
 /**
+ * Récupère une SectorPage par slug (via endpoint dédié)
+ */
+export async function getSectorPageBySlugV2(slug: string): Promise<SectorPage | null> {
+    try {
+        const url = `${API_BASE_URL}/api/sectors/${slug}/`;
+        const res = await fetch(url);
+        if (!res.ok) {
+            console.error(`[API] Sector page error ${res.status}: ${res.statusText}`);
+            return null;
+        }
+        return await res.json();
+    } catch (error) {
+        console.error(`[API] Sector page network error:`, error);
+        return null;
+    }
+}
+
+/**
  * Récupère toutes les FormPages
  */
 export async function getAllFormPages(limit: number = 100): Promise<FormPage[]> {
@@ -383,4 +413,5 @@ export async function submitForm(
         };
     }
 }
+
 

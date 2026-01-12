@@ -5,9 +5,14 @@ import InstitutionalLinks from '../components/mockup/InstitutionalLinks.astro';
 import NewsFeed from '../components/mockup/NewsFeed.astro';
 import ActionCardsSection from '../components/ActionCardsSection.astro';
 import Newsletter from '../components/mockup/Newsletter.astro';
+import { getPageBySlug, type HomePage } from '../lib/api';
+
+// Récupérer la page d'accueil depuis Wagtail
+const homePage = await getPageBySlug<HomePage>('accueil', 'blog.HomePage');
 
 // Données mock pour le carrousel Hero (5 articles - vrais articles mockup)
-const carouselArticles = [
+// Si Wagtail retourne des données, les utiliser, sinon utiliser les mocks
+const carouselArticles = homePage?.hero_articles_list?.slice(0, 5) || [
     {
         id: 1,
         title: "Réforme des retraites : les agents du ministère mobilisés pour défendre leurs droits",
@@ -51,7 +56,7 @@ const carouselArticles = [
 ];
 
 // Liens institutionnels
-const institutionalLinks = [
+const institutionalLinks = homePage?.institutional_links || [
     {
         label: "Site FSU",
         href: "https://www.fsu.fr",
@@ -73,7 +78,7 @@ const institutionalLinks = [
 ];
 
 // Articles pour le News Feed (12 articles - incluant les mockups)
-const newsFeedArticles = [
+const newsFeedArticles = homePage?.latest_articles_list?.slice(0, 12) || [
     {
         id: 1,
         title: "Revalorisation indemnitaire au ministère de l'intérieur",
@@ -167,7 +172,7 @@ const newsFeedArticles = [
 ];
 
 // Cartes d'action
-const actionCards = [
+const actionCards = homePage?.action_cards || [
     {
         title: "Rejoindre la FSU",
         description: "Adhérez à notre organisation et participez à la défense de vos droits et à la construction d'une école publique de qualité.",
