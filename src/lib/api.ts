@@ -71,8 +71,9 @@ export interface FormPage extends WagtailPage {
     thank_you_text: string;
     form_fields_data: {
         id: string;
+        clean_name: string; // clé utilisée pour name + POST (backend attend clean_name)
         label: string;
-        field_type: 'singleline' | 'multiline' | 'email' | 'dropdown' | 'radio' | 'checkbox' | 'date' | 'number';
+        field_type: 'singleline' | 'multiline' | 'email' | 'dropdown' | 'radio' | 'checkbox' | 'date' | 'number' | 'text' | 'textarea' | 'integer' | 'select';
         required: boolean;
         choices?: string; // CSV string pour dropdown/radio
         help_text?: string;
@@ -84,7 +85,8 @@ export interface FormPage extends WagtailPage {
  * StaticPage
  */
 export interface StaticPage extends WagtailPage {
-    content: StreamFieldBlock[];
+    content: string | StreamFieldBlock[]; // RichTextField HTML ou blocs
+    body_blocks?: StreamFieldBlock[]; // liste formatée pour StreamField
     header_image_url: string | null;
 }
 
@@ -94,16 +96,23 @@ export interface StaticPage extends WagtailPage {
 export interface HomePage extends WagtailPage {
     hero_articles_list: Article[];
     institutional_links: any[];
+    institutional_links_list?: { label: string; href: string; icon?: string; color?: string }[];
     action_cards: any[];
+    action_cards_list?: { title: string; description: string; iconName: string; link: string; linkText: string }[];
     news_feed_title: string;
     latest_articles_list: Article[];
 }
 
 /**
- * Navigation
+ * Navigation (GET /api/navigation/)
  */
 export interface Navigation {
     topbar: Array<{
+        title: string;
+        url: string;
+        slug: string;
+    }>;
+    main_nav?: Array<{
         title: string;
         url: string;
         slug: string;
@@ -121,13 +130,24 @@ export interface Navigation {
 }
 
 /**
- * Settings globaux
+ * Settings globaux (GET /api/settings/)
  */
 export interface Settings {
     site_name: string;
-    site_tagline: string | null;
+    site_tagline?: string | null;
     contact_email: string | null;
     contact_phone: string | null;
+    footer?: {
+        about_title?: string;
+        about_text?: string;
+        links_title?: string;
+        contact_title?: string;
+        address_line1?: string;
+        address_line2?: string;
+        opening_hours?: string;
+        copyright?: string;
+    };
+    social?: Record<string, string>;
 }
 
 // ============================================================================
@@ -239,13 +259,13 @@ export async function getAllPagesByType<T extends WagtailPage>(
 }
 
 /**
- * Récupère une page par slug
+ * Récupère une page par slug (avec fields=* pour inclure les propriétés calculées _list)
  */
 export async function getPageBySlug<T extends WagtailPage>(
     slug: string,
     type?: string
 ): Promise<T | null> {
-    const params: Record<string, string> = { slug };
+    const params: Record<string, string> = { slug, fields: '*' };
     if (type) params.type = type;
     
     const response = await apiFetch<WagtailResponse<T>>('/pages/', params);

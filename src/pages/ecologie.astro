@@ -1,67 +1,17 @@
-// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
-// ============================================================================
-
-interface NewsArticle {
-    id: number;
-    title: string;
-    date: string;
-    thumbnail: string;
-    href: string;
-    category?: string;
-}
-
-interface InstanceNews {
-    id: number;
-    title: string;
-    date: string;
-    type: 'CT' | 'CAP' | 'CHSCT' | 'CSA' | 'Autre';
-    href: string;
-}
-
-interface ActionCard {
-    title: string;
-    description: string;
-    iconName: 'book' | 'wrench' | 'users' | 'heart';
-    href: string;
-    linkText: string;
-}
-
-interface Representative {
-    name: string;
-    role: string;
-    photoUrl: string;
-}
-
-// ============================================================================
-// DONNÉES MOCK - SECTEUR ÉCOLOGIE
-// ============================================================================
-
-const pageTitle = "Écologie - FSU";
-const sectorName = "FSU au ministère de la transition écologique";
-=======
 ---
 /**
  * src/pages/ecologie.astro
  * Page Secteur Écologie - FSU Syndicat
- * Éco-design: HTML sémantique, zéro JS client-side, mobile-first
  * Utilise l'API Wagtail pour les données réelles
  */
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getSectorPageBySlugV2, type SectorPage } from '../lib/api';
 
-// ============================================================================
-// RÉCUPÉRATION DES DONNÉES WAGTAIL (SSG)
-// ============================================================================
-
-// Récupérer la page secteur depuis Wagtail
 const sectorPage = await getSectorPageBySlugV2('ecologie');
-
-// Si la page n'existe pas ou qu'il y a une erreur, utiliser des données de fallback
 const pageTitle = sectorPage?.title || "Écologie - FSU";
-const sectorName = sectorPage?.context_banner_text || "FSU au ministère de la transition écologique";============================================================================
-// TYPES TYPESCRIPT (Simulant les réponses API Wagtail)
-// ============================================================================
+const sectorName = sectorPage?.context_banner_text || "FSU au ministère de la transition écologique";
+const sectorColor = "follen-blue";
 
 interface NewsArticle {
     id: number;
@@ -94,139 +44,36 @@ interface Representative {
     photoUrl: string;
 }
 
-// ============================================================================
-// DONNÉES MOCK - SECTEUR ÉCOLOGIE
-// ============================================================================
-
-const pageTitle = "Écologie - FSU";
-const sectorName = "FSU au ministère de la transition écologique";
-const sectorColor = "follen-blue";
-
-// Actualités Générales (grille gauche 2/3)
-const generalNews: NewsArticle[] = [
-    {
-        id: 1,
-        title: "Plan de sobriété énergétique : impacts sur les agents",
-        date: "2024-01-18",
-        thumbnail: "https://placehold.co/400x240/2374AB/ffffff?text=Sobri%C3%A9t%C3%A9",
-        href: "/articles/plan-sobriete-agents",
-        category: "Environnement"
-    },
-    {
-        id: 2,
-        title: "Réorganisation des DREAL : la FSU vigilante",
-        date: "2024-01-14",
-        thumbnail: "https://placehold.co/400x240/1D6391/ffffff?text=DREAL",
-        href: "/articles/reorganisation-dreal",
-        category: "Organisation"
-    },
-    {
-        id: 3,
-        title: "Journée d'action du 1er février : tous mobilisés !",
-        date: "2024-01-10",
-        thumbnail: "https://placehold.co/400x240/165A7D/ffffff?text=Mobilisation",
-        href: "/articles/journee-action-fevrier",
-        category: "Mobilisation"
-    },
-    {
-        id: 4,
-        title: "Missions biodiversité : défendons les emplois",
-        date: "2024-01-06",
-        thumbnail: "https://placehold.co/400x240/2374AB/ffffff?text=Biodiversit%C3%A9",
-        href: "/articles/missions-biodiversite",
-        category: "Emploi"
-    }
-];
-
-// Actualités des Instances (colonne droite 1/3)
-const instanceNews: InstanceNews[] = [
-    {
-        id: 1,
-        title: "Compte-rendu CSA ministériel du 22 janvier",
-        date: "2024-01-22",
-        type: "CSA",
-        href: "/ecologie/instances/csa-janvier-2024"
-    },
-    {
-        id: 2,
-        title: "Déclaration FSU au CT central du 17 janvier",
-        date: "2024-01-17",
-        type: "CT",
-        href: "/ecologie/instances/ct-declaration-janvier"
-    },
-    {
-        id: 3,
-        title: "CAP des attachés : mutations et promotions",
-        date: "2024-01-12",
-        type: "CAP",
-        href: "/ecologie/instances/cap-attaches-2024"
-    },
-    {
-        id: 4,
-        title: "F-SST : conditions de travail en DREAL",
-        date: "2024-01-09",
-        type: "CHSCT",
-        href: "/ecologie/instances/chsct-dreal"
-    },
-    {
-        id: 5,
-        title: "Agenda social 2024 du ministère",
-        date: "2024-01-04",
-        type: "Autre",
-        href: "/ecologie/instances/agenda-social-2024"
-    }
-];
-
-// Cartes d'action (4 cartes)
-const actionCards: ActionCard[] = [
-    {
-        title: "Principes",
-        description: "Nos valeurs pour un service public écologique fort et des agents reconnus.",
-        iconName: "book",
-        href: "/ecologie/principes",
-        linkText: "Découvrir nos principes"
-    },
-    {
-        title: "Boîte à outils",
-        description: "Guides statutaires, fiches de paie, modèles de recours et FAQ.",
-        iconName: "wrench",
-        href: "/ecologie/outils",
-        linkText: "Accéder aux outils"
-    },
-    {
-        title: "Instances",
-        description: "Tous les comptes-rendus des CSA, CT, CAP et formations spécialisées.",
-        iconName: "users",
-        href: "/ecologie/instances",
-        linkText: "Consulter les instances"
-    },
-    {
-        title: "Élan commun",
-        description: "Intersyndicale et actions communes pour la transition écologique juste.",
-        iconName: "heart",
-        href: "/ecologie/elan-commun",
-        linkText: "Rejoindre le mouvement"
-    }
-];
-
-// Représentants/Contacts
-const representatives: Representative[] = [
-    {
-        name: "Julie Climat",
-        role: "Secrétaire de section",
-        photoUrl: "https://placehold.co/128x128/2374AB/ffffff?text=JC"
-    },
-    {
-        name: "Thomas Vert",
-        role: "Trésorier",
-        photoUrl: "https://placehold.co/128x128/1D6391/ffffff?text=TV"
-    },
-    {
-        name: "Léa Nature",
-        role: "Responsable communication",
-        photoUrl: "https://placehold.co/128x128/165A7D/ffffff?text=LN"
-    }
-];
+const generalNews: NewsArticle[] = (sectorPage?.news_general_list ?? []).map((a: any) => ({
+    id: a.id,
+    title: a.title,
+    date: a.date || '',
+    thumbnail: a.header_image_thumbnail || a.header_image_url || '',
+    href: a.href || a.url || '#',
+    category: typeof a.category === 'string' ? a.category : a.category?.name,
+}));
+const instanceNews: InstanceNews[] = (sectorPage?.news_instance_list ?? []).map((a: any) => ({
+    id: a.id,
+    title: a.title,
+    date: a.date || '',
+    type: 'Autre',
+    href: a.href || a.url || '#',
+}));
+const actionCards: ActionCard[] = (sectorPage?.actions ?? []).map((b: any) => {
+    const v = b.value ?? b;
+    return {
+        title: v.title || '',
+        description: v.description || '',
+        iconName: (v.iconName || v.icon_name || 'book') as ActionCard['iconName'],
+        href: v.href || v.link || '#',
+        linkText: v.link_text || v.linkText || 'En savoir plus',
+    };
+}).filter((c: ActionCard) => c.title);
+const representatives: Representative[] = (sectorPage?.representatives_list ?? []).map((r: any) => ({
+    name: r.name,
+    role: r.role,
+    photoUrl: r.photo_url || '',
+}));
 
 // Newsletter
 const newsletterTitle = "Newsletter Écologie";

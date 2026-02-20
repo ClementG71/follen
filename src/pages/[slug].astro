@@ -282,8 +282,16 @@ if (!page) {
                     </h1>
                 </header>
                 
-                {/* Main Content (StreamField) */}
-                {staticPage.content && staticPage.content.length > 0 && (
+                {/* Main Content: body_blocks (StreamField) ou content (HTML) */}
+                {staticPage.body_blocks && staticPage.body_blocks.length > 0 && (
+                    <div class="prose prose-slate prose-lg max-w-none">
+                        <StreamField blocks={staticPage.body_blocks} />
+                    </div>
+                )}
+                {!staticPage.body_blocks?.length && staticPage.content && typeof staticPage.content === 'string' && (
+                    <div class="prose prose-slate prose-lg max-w-none" set:html={staticPage.content} />
+                )}
+                {!staticPage.body_blocks?.length && staticPage.content && Array.isArray(staticPage.content) && staticPage.content.length > 0 && (
                     <div class="prose prose-slate prose-lg max-w-none">
                         <StreamField blocks={staticPage.content} />
                     </div>

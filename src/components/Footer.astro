@@ -1,14 +1,18 @@
 ---
+import { getSettings } from '../lib/api';
+
 const currentYear = new Date().getFullYear();
 
-// Données Mock (simulant une réponse API Settings)
+const settings = await getSettings();
+const footer = settings?.footer;
+
 const footerData = {
     col1: {
-        title: "À propos",
-        content: "Follen est votre guide vers un mode de vie plus durable et respectueux de l'environnement."
+        title: footer?.about_title ?? "À propos",
+        content: footer?.about_text ?? "Follen est votre guide vers un mode de vie plus durable et respectueux de l'environnement."
     },
     col2: {
-        title: "Liens rapides",
+        title: footer?.links_title ?? "Liens rapides",
         links: [
             { label: "Mentions légales", href: "/mentions-legales" },
             { label: "Confidentialité", href: "/confidentialite" },
@@ -16,9 +20,9 @@ const footerData = {
         ]
     },
     col3: {
-        title: "Contact",
-        email: "contact@follen.com",
-        address: "Paris, France"
+        title: footer?.contact_title ?? "Contact",
+        email: settings?.contact_email ?? "contact@follen.com",
+        address: [footer?.address_line1, footer?.address_line2].filter(Boolean).join(', ') || "Paris, France"
     }
 };
 ---

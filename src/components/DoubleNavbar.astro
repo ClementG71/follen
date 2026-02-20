@@ -1,23 +1,31 @@
 ---
-// Liens Top Bar
-const topLinks = [
-    { label: 'Nos revendications', href: '/revendications' },
-    { label: 'Instances', href: '/instances' },
-    { label: 'Devenir partenaire', href: '/partenaires' },
-    { label: 'Contact', href: '/contact' },
-];
+import { getNavigation } from '../lib/api';
 
-// Liens Main Nav
-const mainLinks = [
-    { label: 'Accueil', href: '/' },
-    { label: 'Agriculture', href: '/agriculture' },
-    { label: 'Intérieur', href: '/interieur' },
-    { label: 'Écologie', href: '/ecologie' },
-    { label: 'Archives', href: '/archives' },
-    { label: 'Instances', href: '/instances' },
-    { label: 'Revendications', href: '/revendications' },
-    { label: 'Adhésion', href: '/adhesion', highlight: true },
+const navigation = await getNavigation();
+
+const topLinks = (navigation?.topbar?.length ? navigation.topbar.map((item: { title: string; url: string }) => ({ label: item.title, href: item.url })) : null)
+    ?? [
+        { label: 'Nos revendications', href: '/revendications' },
+        { label: 'Instances', href: '/instances' },
+        { label: 'Devenir partenaire', href: '/partenaires' },
+        { label: 'Contact', href: '/contact' },
+    ];
+
+const mainLinksRaw = navigation?.main_nav ?? [
+    { title: 'Accueil', url: '/' },
+    { title: 'Agriculture', url: '/agriculture' },
+    { title: 'Intérieur', url: '/interieur' },
+    { title: 'Écologie', url: '/ecologie' },
+    { title: 'Archives', url: '/archives' },
+    { title: 'Instances', url: '/instances' },
+    { title: 'Revendications', url: '/revendications' },
+    { title: 'Adhésion', url: '/adhesion' },
 ];
+const mainLinks = mainLinksRaw.map((item: { title: string; url: string }) => ({
+    label: item.title,
+    href: item.url,
+    highlight: item.url === '/adhesion' || item.title === 'Adhésion',
+}));
 ---
 
 <header class="w-full z-50">

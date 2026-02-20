@@ -10,9 +10,22 @@ import { getPageBySlug, type HomePage } from '../lib/api';
 // Récupérer la page d'accueil depuis Wagtail
 const homePage = await getPageBySlug<HomePage>('accueil', 'blog.HomePage');
 
-// Données mock pour le carrousel Hero (5 articles - vrais articles mockup)
-// Si Wagtail retourne des données, les utiliser, sinon utiliser les mocks
-const carouselArticles = homePage?.hero_articles_list?.slice(0, 5) || [
+// Carrousel Hero : mapper l'API vers la forme Slide[] (image, href, category)
+type SlideItem = { id: number; title: string; excerpt: string; image: string; href: string; category: string };
+const carouselRaw = homePage?.hero_articles_list?.slice(0, 5) ?? [];
+const carouselArticles: SlideItem[] = carouselRaw.length > 0
+  ? (carouselRaw as unknown[]).map((a: unknown) => {
+      const x = a as Record<string, unknown>;
+      return {
+      id: Number(x.id),
+      title: String(x.title),
+      excerpt: String(x.excerpt ?? ''),
+      image: String(x.image ?? x.header_image_thumbnail ?? ''),
+      href: String(x.href ?? x.url ?? '#'),
+      category: typeof x.category === 'string' ? x.category : (x.category_info as { name?: string })?.name ?? '',
+    };
+    })
+  : [
     {
         id: 1,
         title: "Réforme des retraites : les agents du ministère mobilisés pour défendre leurs droits",
@@ -53,10 +66,10 @@ const carouselArticles = homePage?.hero_articles_list?.slice(0, 5) || [
         href: "/articles/revalorisation-indemnitaire",
         category: "Rémunération"
     }
-];
+  ];
 
-// Liens institutionnels
-const institutionalLinks = homePage?.institutional_links || [
+// Liens institutionnels (préférer la liste formatée API)
+const institutionalLinks = homePage?.institutional_links_list ?? homePage?.institutional_links ?? [
     {
         label: "Site FSU",
         href: "https://www.fsu.fr",
@@ -77,8 +90,22 @@ const institutionalLinks = homePage?.institutional_links || [
     }
 ];
 
-// Articles pour le News Feed (12 articles - incluant les mockups)
-const newsFeedArticles = homePage?.latest_articles_list?.slice(0, 12) || [
+// News Feed : mapper l'API vers la forme attendue (href, thumbnail, category)
+type NewsFeedItem = { id: number; title: string; date: string; category: string; href: string; thumbnail?: string };
+const newsFeedRaw = homePage?.latest_articles_list?.slice(0, 12) ?? [];
+const newsFeedArticles: NewsFeedItem[] = newsFeedRaw.length > 0
+  ? (newsFeedRaw as unknown[]).map((a: unknown) => {
+      const x = a as Record<string, unknown>;
+      return {
+      id: Number(x.id),
+      title: String(x.title),
+      date: String(x.date ?? ''),
+      category: typeof x.category === 'string' ? x.category : (x.category_info as { name?: string })?.name ?? '',
+      href: String(x.href ?? x.url ?? '#'),
+      thumbnail: x.thumbnail ? String(x.thumbnail) : (x.header_image_thumbnail ? String(x.header_image_thumbnail) : undefined),
+    };
+    })
+  : [
     {
         id: 1,
         title: "Revalorisation indemnitaire au ministère de l'intérieur",
@@ -119,60 +146,17 @@ const newsFeedArticles = homePage?.latest_articles_list?.slice(0, 12) || [
         href: "/articles/elections-professionnelles-2024",
         thumbnail: "https://placehold.co/48/B83A4B/ffffff?text=EP"
     },
-    {
-        id: 6,
-        title: "Formation : Maîtriser les outils collaboratifs",
-        date: "2024-01-05",
-        category: "Formation",
-        href: "/articles/formation-collaboratif"
-    },
-    {
-        id: 7,
-        title: "CSA ministériel : compte-rendu de janvier",
-        date: "2024-01-04",
-        category: "Instances",
-        href: "/agriculture/instances/csa-janvier-2024"
-    },
-    {
-        id: 8,
-        title: "Nouvelle circulaire : Ce qu'il faut savoir",
-        date: "2024-01-03",
-        category: "Actualité",
-        href: "/articles/nouvelle-circulaire"
-    },
-    {
-        id: 9,
-        title: "Guide pratique : Vos droits au travail",
-        date: "2024-01-02",
-        category: "Guides",
-        href: "/articles/guide-droits-travail"
-    },
-    {
-        id: 10,
-        title: "Bilan de l'année 2023",
-        date: "2024-01-01",
-        category: "Bilan",
-        href: "/articles/bilan-2023",
-        thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2023"
-    },
-    {
-        id: 11,
-        title: "Campagne d'adhésion 2024",
-        date: "2023-12-20",
-        category: "Campagne",
-        href: "/articles/campagne-adhesion-2024"
-    },
-    {
-        id: 12,
-        title: "Assemblée générale : Retour sur l'événement",
-        date: "2023-12-15",
-        category: "Assemblées",
-        href: "/articles/assemblee-generale"
-    }
-];
+    { id: 6, title: "Formation : Maîtriser les outils collaboratifs", date: "2024-01-05", category: "Formation", href: "/articles/formation-collaboratif" },
+    { id: 7, title: "CSA ministériel : compte-rendu de janvier", date: "2024-01-04", category: "Instances", href: "/agriculture/instances/csa-janvier-2024" },
+    { id: 8, title: "Nouvelle circulaire : Ce qu'il faut savoir", date: "2024-01-03", category: "Actualité", href: "/articles/nouvelle-circulaire" },
+    { id: 9, title: "Guide pratique : Vos droits au travail", date: "2024-01-02", category: "Guides", href: "/articles/guide-droits-travail" },
+    { id: 10, title: "Bilan de l'année 2023", date: "2024-01-01", category: "Bilan", href: "/articles/bilan-2023", thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2023" },
+    { id: 11, title: "Campagne d'adhésion 2024", date: "2023-12-20", category: "Campagne", href: "/articles/campagne-adhesion-2024" },
+    { id: 12, title: "Assemblée générale : Retour sur l'événement", date: "2023-12-15", category: "Assemblées", href: "/articles/assemblee-generale" }
+  ];
 
-// Cartes d'action
-const actionCards = homePage?.action_cards || [
+// Cartes d'action (préférer la liste formatée API)
+const actionCards = homePage?.action_cards_list ?? homePage?.action_cards ?? [
     {
         title: "Rejoindre la FSU",
         description: "Adhérez à notre organisation et participez à la défense de vos droits et à la construction d'une école publique de qualité.",

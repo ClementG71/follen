@@ -31,10 +31,10 @@ function toCleanName(label: string): string {
         .replace(/^_+|_+$/g, ''); // Supprimer les _ en début/fin
 }
 
-// Fonction pour générer le HTML d'un champ
+// Fonction pour générer le HTML d'un champ (name = clean_name pour que le backend reçoive les bonnes clés)
 function renderField(field: FormPage['form_fields_data'][0], index: number): string {
     const fieldId = `field-${formPageId}-${index}`;
-    const fieldName = field.id || toCleanName(field.label);
+    const fieldName = field.clean_name ?? field.id ?? toCleanName(field.label);
     const isRequired = field.required ? 'required' : '';
     const ariaRequired = field.required ? 'aria-required="true"' : '';
     const ariaLabel = `aria-label="${field.label}${field.required ? ' (requis)' : ''}"`;
@@ -283,6 +283,7 @@ const fieldsHtml = formPage.form_fields_data.map((field, index) => renderField(f
 </section>
 
 <script is:inline define:vars={{ formId, formPageId, apiUrl: API_URL }}>
+    /* global formId, formPageId, apiUrl */
     (function() {
         const form = document.getElementById(formId);
         if (!form) return;
