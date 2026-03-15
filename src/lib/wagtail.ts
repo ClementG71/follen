@@ -1,16 +1,9 @@
 // src/lib/wagtail.ts
+// Module de compatibilité - privilégier l'utilisation de api.ts
+import { API_CONFIG } from './config';
 import type { HomePage, BlogPage, WagtailResponse } from '../types/wagtail';
 
-// Récupération sécurisée de l'URL API
-const RAW_API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL 
-                 || import.meta.env.API_BASE_URL 
-                 || process.env.PUBLIC_WAGTAIL_API_URL
-                 || process.env.API_BASE_URL
-                 || 'https://maen.kwzz.eu/api/v2';
-
-const API_URL = RAW_API_URL.replace(/\/+$/, '');
-
-console.log(`[Wagtail Config] API URL: ${API_URL}`);
+const API_URL = API_CONFIG.apiUrl;
 
 async function fetchWagtail<T>(endpoint: string, params: Record<string, string> = {}): Promise<T | null> {
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;

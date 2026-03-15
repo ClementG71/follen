@@ -1,6 +1,7 @@
 // src/lib/api.ts
 // Data Layer pour consommation API Wagtail v2 en mode SSG
 
+import { API_CONFIG } from './config';
 import type { WagtailMeta, WagtailResponse } from '../types/wagtail';
 
 // ============================================================================
@@ -154,19 +155,7 @@ export interface Settings {
 // CONFIGURATION API
 // ============================================================================
 
-const RAW_API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL 
-                 || import.meta.env.PUBLIC_API_URL
-                 || import.meta.env.API_BASE_URL
-                 || process.env.PUBLIC_WAGTAIL_API_URL
-                 || process.env.PUBLIC_API_URL
-                 || process.env.API_BASE_URL
-                 || 'https://maen.kwzz.eu';
-
-const API_BASE_URL = RAW_API_URL.replace(/\/+$/, '');
-const API_V2_URL = `${API_BASE_URL}/api/v2`;
-
-console.log(`[API Config] Base URL: ${API_BASE_URL}`);
-console.log(`[API Config] API v2 URL: ${API_V2_URL}`);
+const API_V2_URL = API_CONFIG.apiUrl;
 
 // ============================================================================
 // FONCTIONS UTILITAIRES
@@ -315,7 +304,7 @@ export async function getSectorPageBySlug(slug: string): Promise<SectorPage | nu
  */
 export async function getSectorPageBySlugV2(slug: string): Promise<SectorPage | null> {
     try {
-        const url = `${API_BASE_URL}/api/sectors/${slug}/`;
+        const url = `${API_CONFIG.baseUrl}/api/sectors/${slug}/`;
         const res = await fetch(url);
         if (!res.ok) {
             console.error(`[API] Sector page error ${res.status}: ${res.statusText}`);
@@ -361,7 +350,7 @@ export async function getStaticPageBySlug(slug: string): Promise<StaticPage | nu
  */
 export async function getNavigation(): Promise<Navigation | null> {
     try {
-        const url = `${API_BASE_URL}/api/navigation/`;
+        const url = `${API_CONFIG.baseUrl}/api/navigation/`;
         const res = await fetch(url);
         if (!res.ok) {
             console.error(`[API] Navigation error ${res.status}: ${res.statusText}`);
@@ -379,7 +368,7 @@ export async function getNavigation(): Promise<Navigation | null> {
  */
 export async function getSettings(): Promise<Settings | null> {
     try {
-        const url = `${API_BASE_URL}/api/settings/`;
+        const url = `${API_CONFIG.baseUrl}/api/settings/`;
         const res = await fetch(url);
         if (!res.ok) {
             console.error(`[API] Settings error ${res.status}: ${res.statusText}`);

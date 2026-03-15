@@ -25,70 +25,10 @@ const carouselArticles: SlideItem[] = carouselRaw.length > 0
       category: typeof x.category === 'string' ? x.category : (x.category_info as { name?: string })?.name ?? '',
     };
     })
-  : [
-    {
-        id: 1,
-        title: "Réforme des retraites : les agents du ministère mobilisés pour défendre leurs droits",
-        excerpt: "Face aux annonces gouvernementales sur la réforme des retraites, la FSU appelle l'ensemble des agents à se mobiliser. Retour sur les enjeux et les actions prévues.",
-        image: "https://placehold.co/1920x700/D1495B/ffffff?text=Mobilisation+FSU",
-        href: "/articles/modele-article",
-        category: "Mobilisation"
-    },
-    {
-        id: 2,
-        title: "Élections professionnelles 2024 : la FSU confirme sa place de première organisation",
-        excerpt: "Les résultats des élections professionnelles dans la fonction publique sont tombés. La FSU conforte sa position de leader syndical dans plusieurs ministères.",
-        image: "https://placehold.co/1920x700/B83A4B/ffffff?text=%C3%89lections+FSU",
-        href: "/articles/elections-professionnelles-2024",
-        category: "Vie syndicale"
-    },
-    {
-        id: 3,
-        title: "Télétravail : de nouveaux accords pour les agents du ministère de l'agriculture",
-        excerpt: "Après plusieurs mois de négociations, un accord-cadre sur le télétravail a été signé. Retour sur les avancées obtenues et les points de vigilance.",
-        image: "https://placehold.co/1920x700/43AA8B/ffffff?text=T%C3%A9l%C3%A9travail+Agriculture",
-        href: "/articles/teletravail-nouveaux-accords",
-        category: "Conditions de travail"
-    },
-    {
-        id: 4,
-        title: "Plan de sobriété énergétique : quel impact pour les agents du ministère ?",
-        excerpt: "Le plan de sobriété énergétique s'applique aux administrations publiques. Décryptage des mesures et de leurs conséquences sur les conditions de travail.",
-        image: "https://placehold.co/1920x700/2374AB/ffffff?text=Sobri%C3%A9t%C3%A9+%C3%89nerg%C3%A9tique",
-        href: "/articles/plan-sobriete-energetique",
-        category: "Environnement"
-    },
-    {
-        id: 5,
-        title: "Revalorisation indemnitaire au ministère de l'intérieur : où en est-on ?",
-        excerpt: "Le ministère de l'intérieur a annoncé des mesures de revalorisation indemnitaire. Analyse des annonces et des revendications qui restent à satisfaire.",
-        image: "https://placehold.co/1920x700/EDAE49/ffffff?text=Revalorisation+Int%C3%A9rieur",
-        href: "/articles/revalorisation-indemnitaire",
-        category: "Rémunération"
-    }
-  ];
+  : [];
 
 // Liens institutionnels (préférer la liste formatée API)
-const institutionalLinks = homePage?.institutional_links_list ?? homePage?.institutional_links ?? [
-    {
-        label: "Site FSU",
-        href: "https://www.fsu.fr",
-        icon: "external",
-        color: "blue" as const // Mappé sur follen-red dans le composant
-    },
-    {
-        label: "Actus Élan Commun",
-        href: "https://elan-commun.fr/actus",
-        icon: "external",
-        color: "blue" as const
-    },
-    {
-        label: "Autre",
-        href: "/autre",
-        icon: "external",
-        color: "slate" as const
-    }
-];
+const institutionalLinks = homePage?.institutional_links_list ?? [];
 
 // News Feed : mapper l'API vers la forme attendue (href, thumbnail, category)
 type NewsFeedItem = { id: number; title: string; date: string; category: string; href: string; thumbnail?: string };
@@ -105,80 +45,10 @@ const newsFeedArticles: NewsFeedItem[] = newsFeedRaw.length > 0
       thumbnail: x.thumbnail ? String(x.thumbnail) : (x.header_image_thumbnail ? String(x.header_image_thumbnail) : undefined),
     };
     })
-  : [
-    {
-        id: 1,
-        title: "Revalorisation indemnitaire au ministère de l'intérieur",
-        date: "2024-01-19",
-        category: "Rémunération",
-        href: "/articles/revalorisation-indemnitaire",
-        thumbnail: "https://placehold.co/48/EDAE49/ffffff?text=RI"
-    },
-    {
-        id: 2,
-        title: "Plan de sobriété énergétique : impacts sur les agents",
-        date: "2024-01-18",
-        category: "Environnement",
-        href: "/articles/plan-sobriete-energetique",
-        thumbnail: "https://placehold.co/48/2374AB/ffffff?text=SE"
-    },
-    {
-        id: 3,
-        title: "Réforme des retraites : les agents mobilisés",
-        date: "2024-01-15",
-        category: "Mobilisation",
-        href: "/articles/modele-article",
-        thumbnail: "https://placehold.co/48/D1495B/ffffff?text=RR"
-    },
-    {
-        id: 4,
-        title: "Télétravail : nouveaux accords au ministère agriculture",
-        date: "2024-01-12",
-        category: "Conditions de travail",
-        href: "/articles/teletravail-nouveaux-accords",
-        thumbnail: "https://placehold.co/48/43AA8B/ffffff?text=TT"
-    },
-    {
-        id: 5,
-        title: "Élections professionnelles : la FSU en tête",
-        date: "2024-01-08",
-        category: "Vie syndicale",
-        href: "/articles/elections-professionnelles-2024",
-        thumbnail: "https://placehold.co/48/B83A4B/ffffff?text=EP"
-    },
-    { id: 6, title: "Formation : Maîtriser les outils collaboratifs", date: "2024-01-05", category: "Formation", href: "/articles/formation-collaboratif" },
-    { id: 7, title: "CSA ministériel : compte-rendu de janvier", date: "2024-01-04", category: "Instances", href: "/agriculture/instances/csa-janvier-2024" },
-    { id: 8, title: "Nouvelle circulaire : Ce qu'il faut savoir", date: "2024-01-03", category: "Actualité", href: "/articles/nouvelle-circulaire" },
-    { id: 9, title: "Guide pratique : Vos droits au travail", date: "2024-01-02", category: "Guides", href: "/articles/guide-droits-travail" },
-    { id: 10, title: "Bilan de l'année 2023", date: "2024-01-01", category: "Bilan", href: "/articles/bilan-2023", thumbnail: "https://placehold.co/48/9E3542/ffffff?text=2023" },
-    { id: 11, title: "Campagne d'adhésion 2024", date: "2023-12-20", category: "Campagne", href: "/articles/campagne-adhesion-2024" },
-    { id: 12, title: "Assemblée générale : Retour sur l'événement", date: "2023-12-15", category: "Assemblées", href: "/articles/assemblee-generale" }
-  ];
+  : [];
 
-// Cartes d'action (préférer la liste formatée API)
-const actionCards = homePage?.action_cards_list ?? homePage?.action_cards ?? [
-    {
-        title: "Rejoindre la FSU",
-        description: "Adhérez à notre organisation et participez à la défense de vos droits et à la construction d'une école publique de qualité.",
-        iconName: "handshake",
-        link: "/adherer",
-        linkText: "Adhérer maintenant"
-    },
-    {
-        title: "Consulter les ressources",
-        description: "Accédez à notre bibliothèque de documents, guides pratiques et outils pour faciliter votre engagement syndical.",
-        iconName: "book",
-        link: "/ressources",
-        linkText: "Voir les ressources"
-    },
-    {
-        title: "Nous contacter",
-        description: "Une question ? Un besoin d'information ? Notre équipe est à votre écoute pour vous accompagner dans vos démarches.",
-        iconName: "mail",
-        link: "/contact",
-        linkText: "Envoyer un message"
-    }
-];
+// Cartes d'action
+const actionCards = homePage?.action_cards_list ?? [];
 ---
 
 <BaseLayout title="Accueil - Follen">

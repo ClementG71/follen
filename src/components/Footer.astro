@@ -9,20 +9,16 @@ const footer = settings?.footer;
 const footerData = {
     col1: {
         title: footer?.about_title ?? "À propos",
-        content: footer?.about_text ?? "Follen est votre guide vers un mode de vie plus durable et respectueux de l'environnement."
+        content: footer?.about_text ?? ""
     },
     col2: {
         title: footer?.links_title ?? "Liens rapides",
-        links: [
-            { label: "Mentions légales", href: "/mentions-legales" },
-            { label: "Confidentialité", href: "/confidentialite" },
-            { label: "Plan du site", href: "/plan" }
-        ]
+        links: [] as { label: string; href: string }[]
     },
     col3: {
         title: footer?.contact_title ?? "Contact",
-        email: settings?.contact_email ?? "contact@follen.com",
-        address: [footer?.address_line1, footer?.address_line2].filter(Boolean).join(', ') || "Paris, France"
+        email: settings?.contact_email ?? "",
+        address: [footer?.address_line1, footer?.address_line2].filter(Boolean).join(', ')
     }
 };
 ---
