@@ -6,6 +6,7 @@
  */
 
 import type { FormPage } from '../lib/api';
+import { API_CONFIG } from '../lib/config';
 
 interface Props {
     formPage: FormPage;
@@ -15,11 +16,8 @@ const { formPage } = Astro.props;
 const formId = `form-${formPage.id}`;
 const formPageId = formPage.id;
 
-// Récupérer l'URL de l'API depuis l'environnement
-const API_URL = import.meta.env.PUBLIC_WAGTAIL_API_URL 
-             || import.meta.env.PUBLIC_API_URL
-             || import.meta.env.API_BASE_URL
-             || 'https://maen.kwzz.eu';
+// URL API centralisée via config.ts
+const API_URL = API_CONFIG.baseUrl;
 
 // Fonction utilitaire pour générer un clean_name à partir d'un label
 function toCleanName(label: string): string {
@@ -309,13 +307,19 @@ const fieldsHtml = formPage.form_fields_data.map((field, index) => renderField(f
             hideMessages();
             errorDiv.classList.remove('hidden');
             
+            // Sanitize error messages to prevent XSS from API responses
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
             if (typeof errors === 'string') {
-                errorList.innerHTML = `<li>${errors}</li>`;
+                errorList.innerHTML = `<li>${escapeHtml(errors)}</li>`;
             } else if (typeof errors === 'object') {
                 const errorsHtml = Object.entries(errors)
                     .flatMap(([field, messages]) => {
                         const fieldArray = Array.isArray(messages) ? messages : [messages];
-                        return fieldArray.map(msg => `<li>${field}: ${msg}</li>`);
+                        return fieldArray.map(msg => `<li>${escapeHtml(field)}: ${escapeHtml(String(msg))}</li>`);
                     })
                     .join('');
                 errorList.innerHTML = errorsHtml || '<li>Une erreur est survenue</li>';

@@ -40,6 +40,13 @@ RUN echo 'server { \
     root /usr/share/nginx/html; \
     index index.html; \
     \
+    # En-têtes de sécurité \
+    add_header X-Content-Type-Options "nosniff" always; \
+    add_header X-Frame-Options "SAMEORIGIN" always; \
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always; \
+    add_header Content-Security-Policy "default-src '"'"'self'"'"'; script-src '"'"'self'"'"' '"'"'unsafe-inline'"'"'; style-src '"'"'self'"'"' '"'"'unsafe-inline'"'"'; img-src '"'"'self'"'"' https: data:; font-src '"'"'self'"'"'; connect-src '"'"'self'"'"' https://maen.kwzz.eu; frame-ancestors '"'"'none'"'"';" always; \
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always; \
+    \
     # Optimisations performances \
     sendfile on; \
     tcp_nopush on; \

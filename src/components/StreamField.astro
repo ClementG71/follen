@@ -14,11 +14,17 @@ interface Props {
 
 const { blocks, class: className = '' } = Astro.props;
 
-// Fonction utilitaire pour nettoyer le HTML
+// Sanitization côté serveur (SSG) — supprime les balises dangereuses
 function sanitizeHtml(html: string): string {
-    // En production, utiliser une vraie librairie de sanitization (DOMPurify)
-    // Pour l'instant, on retourne tel quel car Astro échappe déjà par défaut
-    return html;
+    if (!html || typeof html !== 'string') return '';
+    return html
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+        .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, '')
+        .replace(/javascript\s*:/gi, 'blocked:')
+        .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
+        .replace(/<embed\b[^>]*>/gi, '')
+        .replace(/<form\b[^<]*(?:(?!<\/form>)<[^<]*)*<\/form>/gi, '');
 }
 
 // Fonction pour rendre un bloc individuel
